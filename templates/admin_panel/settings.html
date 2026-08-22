@@ -1,0 +1,218 @@
+{% extends "admin_panel/base.html" %}
+
+{% block title %}
+Settings · GlobeTrotter
+{% endblock %}
+
+{% block breadcrumb %}
+Settings
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+
+        <div class="kicker">
+            ADMIN · SYSTEM
+        </div>
+
+        <h1 class="page-title">
+            Settings
+        </h1>
+
+        <p class="page-subtitle">
+            Manage your administrator profile and platform preferences.
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="settings-grid">
+
+
+    <!-- PROFILE -->
+
+    <section class="panel">
+
+        <div class="panel-header">
+
+            <div>
+
+                <div class="panel-title">
+                    Administrator Profile
+                </div>
+
+                <div class="panel-subtitle">
+                    ACCOUNT INFORMATION
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <form method="POST" class="settings-form">
+
+            {% csrf_token %}
+
+
+            <div class="settings-avatar">
+                A
+            </div>
+
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label>
+                        First Name
+                    </label>
+
+                    <input
+                        type="text"
+                        name="first_name"
+                        value="{{ request.user.first_name }}"
+                        placeholder="First name"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Last Name
+                    </label>
+
+                    <input
+                        type="text"
+                        name="last_name"
+                        value="{{ request.user.last_name }}"
+                        placeholder="Last name"
+                    >
+
+                </div>
+
+
+                <div class="form-group form-full">
+
+                    <label>
+                        Email Address
+                    </label>
+
+                    <input
+                        type="email"
+                        name="email"
+                        value="{{ request.user.email }}"
+                        placeholder="admin@example.com"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="settings-actions">
+
+                <button
+                    type="submit"
+                    class="primary-action"
+                    style="border:0; cursor:pointer;"
+                >
+                    Save Changes
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+
+    <!-- SYSTEM INFO -->
+
+    <section class="panel">
+
+        <div class="panel-header">
+
+            <div>
+
+                <div class="panel-title">
+                    System Information
+                </div>
+
+                <div class="panel-subtitle">
+                    GLOBETROTTER ADMIN
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="system-list">
+
+            <div class="system-row">
+
+                <span>
+                    Platform
+                </span>
+
+                <strong>
+                    GlobeTrotter
+                </strong>
+
+            </div>
+
+
+            <div class="system-row">
+
+                <span>
+                    Panel
+                </span>
+
+                <strong>
+                    Administrator
+                </strong>
+
+            </div>
+
+
+            <div class="system-row">
+
+                <span>
+                    Environment
+                </span>
+
+                <span class="badge badge-orange">
+                    Development
+                </span>
+
+            </div>
+
+
+            <div class="system-row">
+
+                <span>
+                    Status
+                </span>
+
+                <span class="badge badge-green">
+                    ● Online
+                </span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+</div>
+
+{% endblock %}

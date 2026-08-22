@@ -1,0 +1,339 @@
+{% extends "admin_panel/base.html" %}
+
+{% block title %}
+Popular Cities · GlobeTrotter
+{% endblock %}
+
+{% block breadcrumb %}
+Popular Cities
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+
+        <div class="kicker">
+            ADMIN · DESTINATIONS
+        </div>
+
+        <h1 class="page-title">
+            Popular Cities
+        </h1>
+
+        <p class="page-subtitle">
+            Manage destinations available to GlobeTrotter travellers.
+        </p>
+
+    </div>
+
+    <a
+        href="{% url 'admin_panel:city_create' %}"
+        class="primary-action"
+    >
+        + Add City
+    </a>
+
+</div>
+
+
+<!-- STAT CARDS -->
+
+<div class="stats-grid">
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+            <div class="stat-icon">
+                ⌖
+            </div>
+        </div>
+
+        <div class="stat-label">
+            TOTAL CITIES
+        </div>
+
+        <div class="stat-number">
+            {{ total_cities }}
+        </div>
+
+        <div class="stat-footer">
+            <span class="stat-up">
+                ● Available
+            </span>
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+            <div class="stat-icon orange">
+                ★
+            </div>
+        </div>
+
+        <div class="stat-label">
+            POPULAR DESTINATIONS
+        </div>
+
+        <div class="stat-number">
+            {{ cities|length }}
+        </div>
+
+        <div class="stat-footer">
+            <span class="stat-muted">
+                Based on popularity
+            </span>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- CITIES TABLE -->
+
+<section class="panel" style="margin-top:16px;">
+
+    <div class="panel-header">
+
+        <div>
+
+            <div class="panel-title">
+                All Cities
+            </div>
+
+            <div class="panel-subtitle">
+                DESTINATION MANAGEMENT
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- SEARCH -->
+
+    <div class="user-toolbar">
+
+        <form method="GET" class="user-search">
+
+            <span>⌕</span>
+
+            <input
+                type="text"
+                name="search"
+                value="{{ search }}"
+                placeholder="Search city, country or region..."
+            >
+
+            <button type="submit">
+                Search
+            </button>
+
+        </form>
+
+
+        <div class="toolbar-actions">
+
+            <a
+                href="?sort=popularity"
+                class="filter-btn"
+            >
+                Popularity
+            </a>
+
+            <a
+                href="?sort=name"
+                class="filter-btn"
+            >
+                Name
+            </a>
+
+            <a
+                href="?sort=cost"
+                class="filter-btn"
+            >
+                Cost
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- TABLE -->
+
+    <div class="table-wrap">
+
+        <table class="data-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>City</th>
+
+                    <th>Country</th>
+
+                    <th>Region</th>
+
+                    <th>Popularity</th>
+
+                    <th>Cost Index</th>
+
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+            {% for city in cities %}
+
+                <tr>
+
+                    <td>
+
+                        <div class="user-cell">
+
+                            <div class="user-avatar">
+                                {{ city.name|first|upper }}
+                            </div>
+
+                            <div>
+
+                                <div class="user-name">
+                                    {{ city.name }}
+                                </div>
+
+                                <span class="user-email">
+                                    Destination
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </td>
+
+
+                    <td>
+                        {{ city.country }}
+                    </td>
+
+
+                    <td>
+                        {{ city.region|default:"—" }}
+                    </td>
+
+
+                    <td>
+
+                        <span class="badge badge-purple">
+                            {{ city.popularity }}
+                        </span>
+
+                    </td>
+
+
+                    <td>
+
+                        <span class="badge badge-orange">
+                            {{ city.cost_index }}
+                        </span>
+
+                    </td>
+
+
+                    <td>
+
+                        <div style="
+                            display:flex;
+                            gap:6px;
+                        ">
+
+                            <a
+                                href="{% url 'admin_panel:city_edit' city.id %}"
+                                class="badge badge-purple"
+                            >
+                                Edit
+                            </a>
+
+
+                            <form
+                                method="POST"
+                                action="{% url 'admin_panel:city_delete' city.id %}"
+                                onsubmit="return confirm('Delete this city?');"
+                            >
+
+                                {% csrf_token %}
+
+                                <button
+                                    type="submit"
+                                    class="badge badge-red"
+                                    style="
+                                        border:0;
+                                        cursor:pointer;
+                                    "
+                                >
+                                    Delete
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+
+            {% empty %}
+
+                <tr>
+
+                    <td
+                        colspan="6"
+                        style="
+                            text-align:center;
+                            padding:60px;
+                            color:#999;
+                        "
+                    >
+
+                        <div style="font-size:32px;">
+                            ⌖
+                        </div>
+
+                        <strong style="
+                            display:block;
+                            margin-top:10px;
+                        ">
+                            No cities found
+                        </strong>
+
+                        <span>
+                            Add your first destination.
+                        </span>
+
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+{% endblock %}

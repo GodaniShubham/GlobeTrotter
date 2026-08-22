@@ -55,6 +55,8 @@ INSTALLED_APPS = [
     'activities',
     'expenses',
     'transport',
+    # admin panel app
+    'admin_panel',
 ]
 
 MIDDLEWARE = [

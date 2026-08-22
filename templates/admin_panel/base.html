@@ -1,0 +1,714 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color" content="#714B67">
+
+    <title>{% block title %}GlobeTrotter Admin{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'admin/css/admin.css' %}">
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+
+<div class="admin-layout">
+
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="admin-sidebar" id="adminSidebar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                G
+            </div>
+
+            <div class="brand-text">
+                <strong>GlobeTrotter</strong>
+                <span>ADMIN PANEL</span>
+            </div>
+
+            <button class="sidebar-close" id="sidebarClose">
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="sidebar-section-title">
+            MANAGEMENT
+        </div>
+
+
+        <nav class="admin-nav">
+
+            <a href="/admin-panel/"
+               class="nav-item {% if request.path == '/admin-panel/' %}active{% endif %}">
+
+                <span class="nav-icon">⌂</span>
+                <span>Dashboard</span>
+
+            </a>
+
+
+            <a href="/admin-panel/users/"
+               class="nav-item {% if '/users/' in request.path %}active{% endif %}">
+
+                <span class="nav-icon">♙</span>
+                <span>Manage Users</span>
+
+            </a>
+
+
+            <a href="/admin-panel/cities/"
+               class="nav-item {% if '/cities/' in request.path %}active{% endif %}">
+
+                <span class="nav-icon">⌖</span>
+                <span>Popular Cities</span>
+
+            </a>
+
+
+            <a href="/admin-panel/activities/"
+               class="nav-item {% if '/activities/' in request.path %}active{% endif %}">
+
+                <span class="nav-icon">✦</span>
+                <span>Popular Activities</span>
+
+            </a>
+
+
+            <a href="/admin-panel/analytics/"
+               class="nav-item {% if '/analytics/' in request.path %}active{% endif %}">
+
+                <span class="nav-icon">◫</span>
+                <span>Analytics</span>
+
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-section-title bottom-section">
+            SYSTEM
+        </div>
+
+
+        <nav class="admin-nav">
+
+         <a
+    href="{% url 'admin_panel:settings' %}"
+    class="nav-item {% if '/settings/' in request.path %}active{% endif %}"
+>
+    <span class="nav-icon">⚙</span>
+    <span>Settings</span>
+</a>
+
+          <a
+    href="{% url 'admin_panel:logout' %}"
+    class="nav-item logout-item"
+>
+    <span class="nav-icon">↪</span>
+    <span>Logout</span>
+</a>
+
+        </nav>
+
+
+        <!-- ADMIN PROFILE -->
+        <div class="sidebar-profile">
+
+            <div class="profile-avatar">
+                A
+            </div>
+
+            <div class="profile-details">
+
+                <strong>Admin</strong>
+
+                <span>Administrator</span>
+
+            </div>
+
+            <span class="profile-arrow">⋮</span>
+
+        </div>
+
+    </aside>
+
+
+    <!-- SIDEBAR OVERLAY MOBILE -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+
+    <!-- ================= MAIN ================= -->
+
+    <div class="admin-main">
+
+
+        <!-- TOPBAR -->
+       <!-- ================= TOPBAR ================= -->
+
+<header class="admin-topbar">
+
+    <div class="topbar-left">
+
+        <button
+            class="mobile-menu-btn"
+            id="mobileMenuBtn"
+            type="button"
+        >
+            ☰
+        </button>
+
+        <div class="breadcrumb">
+
+            <span>GlobeTrotter</span>
+
+            <span class="breadcrumb-arrow">›</span>
+
+            <strong>
+                {% block breadcrumb %}Dashboard{% endblock %}
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <div class="topbar-right">
+
+
+        <!-- ================= SEARCH ================= -->
+
+        <div class="top-search">
+
+            <span class="search-symbol">
+                ⌕
+            </span>
+
+            <input
+                type="text"
+                placeholder="Search..."
+                id="globalSearch"
+                autocomplete="off"
+            >
+
+            <kbd>⌘ K</kbd>
+
+
+            <!-- SEARCH RESULTS -->
+
+            <div
+                class="global-search-results"
+                id="globalSearchResults"
+            >
+
+                <a href="/admin-panel/">
+                    <span>⌂</span>
+                    Dashboard
+                </a>
+
+                <a href="/admin-panel/users/">
+                    <span>♙</span>
+                    Manage Users
+                </a>
+
+                <a href="/admin-panel/cities/">
+                    <span>⌖</span>
+                    Popular Cities
+                </a>
+
+                <a href="/admin-panel/activities/">
+                    <span>✦</span>
+                    Popular Activities
+                </a>
+
+                <a href="/admin-panel/analytics/">
+                    <span>◫</span>
+                    Analytics
+                </a>
+
+                <a href="{% url 'admin_panel:settings' %}">
+                    <span>⚙</span>
+                    Settings
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= NOTIFICATION ================= -->
+
+        <div class="notification-wrapper">
+
+            <button
+                type="button"
+                class="top-icon-btn notification-btn"
+                id="notificationBtn"
+            >
+
+                ♧
+
+                <span
+                    class="notification-badge"
+                    id="notificationBadge"
+                ></span>
+
+            </button>
+
+
+            <div
+                class="notification-dropdown"
+                id="notificationDropdown"
+            >
+
+                <div class="dropdown-header">
+
+                    <strong>
+                        Notifications
+                    </strong>
+
+                    <button
+                        type="button"
+                        id="markNotificationsRead"
+                    >
+                        Mark all read
+                    </button>
+
+                </div>
+
+
+                <div
+                    class="notification-list"
+                    id="notificationList"
+                >
+
+                    <div class="notification-item">
+
+                        <div class="notification-icon purple">
+                            ✓
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Admin Panel Ready
+                            </strong>
+
+                            <span>
+                                Your dashboard is running successfully.
+                            </span>
+
+                            <small>
+                                Just now
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="notification-item">
+
+                        <div class="notification-icon orange">
+                            ✦
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                GlobeTrotter
+                            </strong>
+
+                            <span>
+                                Keep your cities and activities updated.
+                            </span>
+
+                            <small>
+                                Today
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= ADMIN ACCOUNT ================= -->
+
+        <div
+            class="admin-account"
+            id="adminAccount"
+        >
+
+            <div class="account-avatar">
+                A
+            </div>
+
+            <div class="account-info">
+
+                <strong>
+                    Admin
+                </strong>
+
+                <span>
+                    Administrator
+                </span>
+
+            </div>
+
+            <span class="account-arrow">
+                ▾
+            </span>
+
+
+            <!-- PROFILE DROPDOWN -->
+
+            <div
+                class="account-dropdown"
+                id="accountDropdown"
+            >
+
+                <div class="account-dropdown-header">
+
+                    <div class="dropdown-avatar">
+                        A
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Admin
+                        </strong>
+
+                        <span>
+                            Administrator
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="dropdown-divider"></div>
+
+
+                <a href="{% url 'admin_panel:settings' %}">
+                    <span>⚙</span>
+                    Account Settings
+                </a>
+
+
+                <a href="{% url 'admin_panel:logout' %}"
+                   class="dropdown-logout">
+
+                    <span>↪</span>
+                    Logout
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+        <!-- PAGE CONTENT -->
+
+        <main class="admin-content">
+
+            {% block content %}
+
+            {% endblock %}
+
+        </main>
+
+
+        <!-- FOOTER -->
+
+        <footer class="admin-footer">
+
+            <span>
+                © 2026 GlobeTrotter
+            </span>
+
+            <span>
+                Admin Dashboard
+            </span>
+
+        </footer>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   MOBILE SIDEBAR
+========================================================= */
+
+const menuBtn = document.getElementById("mobileMenuBtn");
+const sidebar = document.getElementById("adminSidebar");
+const overlay = document.getElementById("sidebarOverlay");
+const closeBtn = document.getElementById("sidebarClose");
+
+
+if (menuBtn) {
+
+    menuBtn.addEventListener("click", () => {
+
+        sidebar.classList.add("open");
+
+        overlay.classList.add("show");
+
+    });
+
+}
+
+
+if (closeBtn) {
+
+    closeBtn.addEventListener("click", () => {
+
+        sidebar.classList.remove("open");
+
+        overlay.classList.remove("show");
+
+    });
+
+}
+
+
+if (overlay) {
+
+    overlay.addEventListener("click", () => {
+
+        sidebar.classList.remove("open");
+
+        overlay.classList.remove("show");
+
+    });
+
+}
+
+
+/* =========================================================
+   GLOBAL SEARCH
+========================================================= */
+
+const globalSearch =
+    document.getElementById("globalSearch");
+
+const searchResults =
+    document.getElementById("globalSearchResults");
+
+
+if (globalSearch) {
+
+    globalSearch.addEventListener("focus", () => {
+
+        searchResults.classList.add("show");
+
+    });
+
+
+    globalSearch.addEventListener("input", () => {
+
+        const query =
+            globalSearch.value.toLowerCase().trim();
+
+        const links =
+            searchResults.querySelectorAll("a");
+
+
+        links.forEach(link => {
+
+            const text =
+                link.textContent.toLowerCase();
+
+            if (!query || text.includes(query)) {
+
+                link.style.display = "flex";
+
+            } else {
+
+                link.style.display = "none";
+
+            }
+
+        });
+
+        searchResults.classList.add("show");
+
+    });
+
+
+    globalSearch.addEventListener("keydown", (e) => {
+
+        if (e.key === "Enter") {
+
+            const firstVisible =
+                [...searchResults.querySelectorAll("a")]
+                .find(link => link.style.display !== "none");
+
+
+            if (firstVisible) {
+
+                window.location.href =
+                    firstVisible.href;
+
+            }
+
+        }
+
+    });
+
+}
+
+
+/* =========================================================
+   NOTIFICATIONS
+========================================================= */
+
+const notificationBtn =
+    document.getElementById("notificationBtn");
+
+const notificationDropdown =
+    document.getElementById("notificationDropdown");
+
+const notificationBadge =
+    document.getElementById("notificationBadge");
+
+const markNotificationsRead =
+    document.getElementById("markNotificationsRead");
+
+
+if (notificationBtn) {
+
+    notificationBtn.addEventListener("click", (e) => {
+
+        e.stopPropagation();
+
+        notificationDropdown.classList.toggle("show");
+
+        accountDropdown.classList.remove("show");
+
+        searchResults.classList.remove("show");
+
+    });
+
+}
+
+
+if (markNotificationsRead) {
+
+    markNotificationsRead.addEventListener("click", () => {
+
+        notificationBadge.classList.add("hidden");
+
+    });
+
+}
+
+
+/* =========================================================
+   ADMIN PROFILE
+========================================================= */
+
+const adminAccount =
+    document.getElementById("adminAccount");
+
+const accountDropdown =
+    document.getElementById("accountDropdown");
+
+
+if (adminAccount) {
+
+    adminAccount.addEventListener("click", (e) => {
+
+        e.stopPropagation();
+
+        accountDropdown.classList.toggle("show");
+
+        notificationDropdown.classList.remove("show");
+
+        searchResults.classList.remove("show");
+
+    });
+
+}
+
+
+/* =========================================================
+   CLICK OUTSIDE
+========================================================= */
+
+document.addEventListener("click", () => {
+
+    if (searchResults) {
+
+        searchResults.classList.remove("show");
+
+    }
+
+    if (notificationDropdown) {
+
+        notificationDropdown.classList.remove("show");
+
+    }
+
+    if (accountDropdown) {
+
+        accountDropdown.classList.remove("show");
+
+    }
+
+});
+
+
+/* =========================================================
+   CMD / CTRL + K
+========================================================= */
+
+document.addEventListener("keydown", (e) => {
+
+    if (
+        (e.ctrlKey || e.metaKey)
+        &&
+        e.key.toLowerCase() === "k"
+    ) {
+
+        e.preventDefault();
+
+        if (globalSearch) {
+
+            globalSearch.focus();
+
+        }
+
+    }
+
+});
+
+</script>
+
+{% block extra_js %}{% endblock %}
+
+</body>
+</html>
