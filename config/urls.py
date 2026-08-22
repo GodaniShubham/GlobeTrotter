@@ -16,6 +16,7 @@ urlpatterns = [
     path('trips/new/', views.create_trip, name='create_trip'),
     path('trips/', views.trips, name='trips'),
     path('trip/builder/', views.builder, name='builder'),
+    path("forgot-password/", views.forgot_password, name="forgot_password"),
     path('trip/itinerary/', views.itinerary, name='itinerary'),
     path('discover/cities/', views.city_search, name='cities'),
     path('discover/activities/', views.activity_search, name='activities'),

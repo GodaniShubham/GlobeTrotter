@@ -10,7 +10,8 @@ def _render(request, template, title, **context):
     context.setdefault("page_title", title)
     return render(request, template, context)
 
-
+def forgot_password(request):
+    return render(request, "pages/forgot_password.html")
 def landing(request):
     return _render(request, "pages/landing.html", "GlobeTrotter — Plan travel beautifully", public=True)
 
