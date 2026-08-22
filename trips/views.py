@@ -106,12 +106,15 @@ def create_trip_view(request):
                         defaults={'description': act_desc, 'estimated_cost': act_cost, 'activity_type': 'Sightseeing'}
                     )
                     
-                    # Fetch Image for new activities
-                    if act_created and not activity_obj.image:
-                        act_image_url = get_wikipedia_image_url(f"{act_name} {city_name}")
-                        if act_image_url:
-                            ext = act_image_url.split('.')[-1][:4] if '.' in act_image_url else 'jpg'
-                            download_and_save_image(act_image_url, activity_obj, 'image', f"act_{activity_obj.id}.{ext}")
+                    # Fetch Image for new activities (limit to first 2 to save time!)
+                    if act_created and not activity_obj.image and act_order <= 2:
+                        try:
+                            act_image_url = get_wikipedia_image_url(f"{act_name} {city_name}")
+                            if act_image_url:
+                                ext = act_image_url.split('.')[-1][:4] if '.' in act_image_url else 'jpg'
+                                download_and_save_image(act_image_url, activity_obj, 'image', f"act_{activity_obj.id}.{ext}")
+                        except:
+                            pass
                     
                     # Add to itinerary
                     ItineraryActivity.objects.create(

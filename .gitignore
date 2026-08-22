@@ -6,3 +6,5 @@ db.sqlite3
 frontend.sqlite3
 media/
 *.zip
+activities/
+trip_covers/

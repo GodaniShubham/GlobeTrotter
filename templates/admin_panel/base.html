@@ -721,7 +721,7 @@ document.addEventListener("keydown", (e) => {
             t.className='gt-toast'; 
             t.textContent="{{ message|escapejs }}"; 
             document.body.appendChild(t); 
-            setTimeout(()=>t.remove(), 2200); 
+            setTimeout(()=>t.remove(), 5000); 
         }
       }, {{ forloop.counter0 }} * 500);
     {% endfor %}
