@@ -5,7 +5,7 @@
 <div class="route-banner"><span class="route-note">sort the story, then keep moving</span><span class="route-line"></span></div><div class="toolbar"><div class="filters"><button class="filter-chip active" data-trip-filter="all">All trips</button><button class="filter-chip" data-trip-filter="upcoming">Upcoming</button><button class="filter-chip" data-trip-filter="draft">Drafts</button><button class="filter-chip" data-trip-filter="ready">Ready</button></div><div class="searchbox"><i class="hgi-stroke hgi-search-01"></i><input type="search" placeholder="Search trips..." data-trip-search></div></div>
 <div class="grid grid-3" data-trip-grid>
   {% for trip in trips %}
-  <a href="{% url 'builder' trip.id %}" style="text-decoration:none;color:inherit;display:block">
+  <a href="{% url 'builder' %}?trip={{ trip.id }}" style="text-decoration:none;color:inherit;display:block">
   <article class="trip-card trip-item" data-status="upcoming" data-search="{{ trip.name|lower }}">
     <div class="trip-cover" style="background-color:#E8E6EB;">
         <div class="trip-cover-label">{{ trip.name }}</div>

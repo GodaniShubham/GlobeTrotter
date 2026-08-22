@@ -1,126 +1,103 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>{{ page_title|default:"GlobeTrotter" }}</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'css/site.css' %}">
-  <style>
-    html,body{margin:0;min-height:100%;background:#fff}
-    .gt-auth{min-height:100vh;display:grid;grid-template-columns:minmax(0,1fr) minmax(420px,47vw);overflow:hidden;font-family:Inter,system-ui,sans-serif;color:#28252d}
-    .gt-auth-visual{position:relative;min-height:100vh;overflow:hidden;background:#eee7de}
-    .gt-auth-photo{position:absolute;inset:0;background:center/cover no-repeat url("https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1800&q=90")}
-    .gt-auth-photo::after{content:"";position:absolute;inset:0;background:rgba(246,242,237,.76)}
-    .gt-auth-brand{position:absolute;top:28px;left:38px;z-index:2;display:flex;align-items:center;gap:8px}
-    .gt-auth-brand a{font-size:24px;font-weight:800;letter-spacing:-.06em;text-decoration:none}
-    .gt-globe{color:#714B67}.gt-trotter{color:#2f7c72}
-    .gt-auth-brand .x{color:#aaa3aa;font-size:13px}
-    .gt-auth-brand img{width:70px;height:auto}
-    .gt-auth-copy{position:absolute;left:40px;right:34px;top:34%;max-width:660px;z-index:2}
-    .gt-auth-kicker{font-size:9px;font-weight:800;letter-spacing:.17em;color:#714B67}
-    .gt-auth-copy h1{margin:13px 0 0;font-size:clamp(58px,5.2vw,82px);line-height:.92;letter-spacing:-.075em;font-weight:750}
-    .gt-auth-copy h1 span{color:#24222a}
-    .gt-auth-copy h1 span::after{content:"";display:block;width:64%;height:7px;margin-top:-4px;background:rgba(55,123,116,.22);border-radius:60%;transform:rotate(-1deg)}
-    .gt-auth-copy p{max-width:590px;margin:22px 0 0;font-size:14px;line-height:1.62;color:#5f5a63}
-    .gt-auth-note{display:flex;align-items:center;gap:9px;margin-top:18px;font:500 18px Caveat,cursive;color:#73586a}
-    .gt-auth-note i{width:30px;height:5px;border-radius:60%;background:rgba(243,169,40,.52);transform:rotate(-4deg)}
-    .gt-auth-footer{position:absolute;left:40px;bottom:24px;color:rgba(67,63,70,.52);font-size:8px;font-weight:700;letter-spacing:.14em}
-    .gt-auth-panel{display:flex;align-items:center;justify-content:center;padding:56px 62px;background:#fff}
-    .gt-auth-form{width:min(100%,410px)}
-    .gt-auth-kicker2{font-size:9px;font-weight:800;letter-spacing:.17em;color:#714B67}
-    .gt-auth-form h2{margin:8px 0 0;font-size:38px;line-height:1;letter-spacing:-.06em;font-weight:700}
-    .gt-auth-intro{margin:10px 0 24px;color:#858089;font-size:12px;line-height:1.55}
-    .gt-auth-errors{margin:0 0 14px;padding:10px 12px;border:1px solid #eadde6;border-radius:10px;background:#fbf6f9;color:#714B67;font-size:10px}
-    .gt-auth-field{margin-top:16px}.gt-auth-field label{display:block;margin-bottom:7px;font-size:10px;font-weight:700;color:#4f4b53}
-    .gt-auth-field input{box-sizing:border-box;width:100%;height:48px;padding:0 14px;border:1px solid #ddd8de;border-radius:10px;background:#fff;color:#2c2930;font:400 12px Inter,sans-serif;outline:none}
-    .gt-auth-field input:focus{border-color:#a991a4;box-shadow:0 0 0 3px rgba(113,75,103,.07)}
-    .gt-auth-password{position:relative}.gt-auth-password input{padding-right:48px}
-    .gt-auth-eye{position:absolute;right:7px;top:7px;width:34px;height:34px;border:0;border-radius:8px;background:transparent;color:#858089;cursor:pointer}
-    .gt-auth-eye svg{width:18px;height:18px}
-    .gt-auth-name{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .gt-auth-row{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
-    .gt-auth-row a,.gt-auth-footer-form a{color:#714B67;font-size:10px;font-weight:800;text-decoration:none}
-    .gt-auth-submit{width:100%;height:48px;margin-top:20px;border:0;border-radius:10px;background:#714B67;color:#fff;font:700 11px Inter,sans-serif;cursor:pointer}
-    .gt-auth-submit span{margin-left:8px}
-    .gt-auth-terms{display:flex;gap:7px;margin-top:13px;color:#7b7780;font-size:10px;line-height:1.45}
-    .gt-auth-footer-form{margin-top:22px;padding-top:16px;border-top:1px solid #ece8ed;text-align:center;color:#96919a;font-size:10px}
-    @media(max-width:900px){.gt-auth{grid-template-columns:1fr;overflow:visible}.gt-auth-visual{min-height:480px}.gt-auth-panel{padding:42px 24px 54px}.gt-auth-copy{top:31%}}
-    @media(max-width:600px){.gt-auth-visual{min-height:430px}.gt-auth-brand{left:20px;top:20px}.gt-auth-copy{left:20px;right:18px}.gt-auth-copy h1{font-size:46px}.gt-auth-panel{padding:34px 20px 46px}.gt-auth-name{grid-template-columns:1fr}}
-  </style>
-</head>
-<body>
-<div class="gt-auth">
-  <section class="gt-auth-visual">
-    <div class="gt-auth-photo"></div>
-    <div class="gt-auth-brand">
-      <a href="{% url 'home' %}"><span class="gt-globe">Globe</span><span class="gt-trotter">Trotter</span></a>
-      <span class="x">×</span>
-      <img src="https://www.odoo.com/web/static/img/odoo_logo.svg" alt="Odoo">
+{% extends 'base.html' %}
+{% block shell %}
+<div class="auth-safe">
+  <section class="auth-safe-visual">
+    <div class="auth-safe-brand">
+      <a href="{% url 'home' %}" class="auth-safe-brand-gt">GlobeTrotter</a>
+      <span class="auth-safe-brand-x">×</span>
+      <img src="https://www.odoo.com/web/static/img/odoo_logo.svg" alt="Odoo" class="auth-safe-brand-odoo">
     </div>
-    <div class="gt-auth-copy">
-      <div class="gt-auth-kicker">PERSONALIZED MULTI-CITY TRAVEL</div>
+
+    <div class="auth-safe-photo {% if auth_mode == 'signup' %}auth-safe-photo-signup{% endif %}"></div>
+    <div class="auth-safe-photo-wash"></div>
+
+    <div class="auth-safe-copy">
+      <div class="auth-safe-kicker">PERSONALIZED MULTI-CITY TRAVEL</div>
       <h1>Plan beautifully.<br><span>Travel freely.</span></h1>
       <p>Build the route, shape the days, watch the budget and keep the whole journey together in one calm workspace.</p>
-      <div class="gt-auth-note"><i></i>From the first idea to the last stop.</div>
+      <div class="auth-safe-note"><span></span>From the first idea to the last stop.</div>
     </div>
-    <div class="gt-auth-footer">GLOBETROTTER · TRAVEL PLANNING WORKSPACE</div>
+
+    <div class="auth-safe-footer">GLOBETROTTER · TRAVEL PLANNING WORKSPACE</div>
   </section>
 
-  <section class="gt-auth-panel">
-    <div class="gt-auth-form">
-      {% if messages %}
-        <div class="gt-auth-errors">
-          {% for message in messages %}{{ message }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
-        </div>
-      {% endif %}
-
-      {% if auth_mode == "signup" %}
-        <div class="gt-auth-kicker2">START PLANNING</div>
-        <h2>Create your account</h2>
-        <p class="gt-auth-intro">A workspace for routes, activities, budgets and memorable journeys.</p>
-        <form method="post" action="{% url 'signup' %}">
-          {% csrf_token %}
-          <div class="gt-auth-name">
-            <div class="gt-auth-field"><label for="first_name">First name</label><input id="first_name" name="first_name" required autocomplete="given-name" placeholder="Alex"></div>
-            <div class="gt-auth-field"><label for="last_name">Last name</label><input id="last_name" name="last_name" required autocomplete="family-name" placeholder="Kapoor"></div>
-          </div>
-          <div class="gt-auth-field"><label for="signup_email">Email address</label><input id="signup_email" type="email" name="email" required autocomplete="email" placeholder="you@example.com"></div>
-          <div class="gt-auth-field"><label for="signup_password">Password</label><div class="gt-auth-password"><input id="signup_password" type="password" name="password" minlength="8" required autocomplete="new-password" placeholder="At least 8 characters"><button class="gt-auth-eye" type="button" data-toggle-password="signup_password" aria-label="Show password">◉</button></div></div>
-          <label class="gt-auth-terms"><input type="checkbox" required> <span>I agree to the product terms and privacy policy.</span></label>
-          <button class="gt-auth-submit" type="submit">Create account <span>→</span></button>
-        </form>
-        <div class="gt-auth-footer-form">Already have an account? <a href="{% url 'login' %}">Sign in</a></div>
-      {% else %}
-        <div class="gt-auth-kicker2">WELCOME BACK</div>
+  <section class="auth-safe-form-pane">
+    <div class="auth-safe-form">
+      {% if auth_mode == 'login' %}
+        <div class="auth-safe-eyebrow">WELCOME BACK</div>
         <h2>Sign in</h2>
-        <p class="gt-auth-intro">Pick up where you left your next journey.</p>
-        <form method="post" action="{% url 'login' %}">
+        <p class="auth-safe-intro">Pick up where you left your next journey.</p>
+
+        <form method="POST">
           {% csrf_token %}
-          <div class="gt-auth-field"><label for="login_email">Email address</label><input id="login_email" type="email" name="email" required autocomplete="email" placeholder="you@example.com"></div>
-          <div class="gt-auth-field"><label for="login_password">Password</label><div class="gt-auth-password"><input id="login_password" type="password" name="password" required autocomplete="current-password" placeholder="Enter your password"><button class="gt-auth-eye" type="button" data-toggle-password="login_password" aria-label="Show password">◉</button></div></div>
-          <div class="gt-auth-row"><span></span><a href="{% url 'forgot_password' %}">Forgot password?</a></div>
-          <button class="gt-auth-submit" type="submit">Sign in <span>→</span></button>
+          <div class="auth-safe-field">
+            <label for="login-email">Email address</label>
+            <input id="login-email" type="email" name="email" placeholder="you@example.com" autocomplete="email" required>
+          </div>
+
+          <div class="auth-safe-field">
+            <label for="login-password">Password</label>
+            <div class="auth-safe-password">
+              <input id="login-password" type="password" name="password" placeholder="Enter your password" autocomplete="current-password" required minlength="8">
+              <button type="button" class="auth-safe-eye" data-auth-password="login-password" aria-label="Show password">
+                <i class="hgi-stroke hgi-view"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="auth-safe-options">
+            <span></span>
+            <a class="tiny-link" href="{% url 'forgot_password' %}">Forgot password?</a>
+          </div>
+
+          <button class="btn btn-primary auth-safe-submit" type="submit">Sign in <i class="hgi-stroke hgi-arrow-right-02"></i></button>
         </form>
-        <div class="gt-auth-footer-form">New to GlobeTrotter? <a href="{% url 'signup' %}">Create an account</a></div>
+
+        <div class="auth-safe-footer-form">New to GlobeTrotter? <a href="{% url 'signup' %}">Create an account</a></div>
+      {% else %}
+        <div class="auth-safe-eyebrow">START PLANNING</div>
+        <h2>Create your account</h2>
+        <p class="auth-safe-intro">A workspace for your routes, stays, activities and budget.</p>
+
+        <form method="POST">
+          {% csrf_token %}
+          <div class="auth-safe-name-grid">
+            <div class="auth-safe-field">
+              <label for="signup-first-name">First name</label>
+              <input id="signup-first-name" type="text" name="first_name" placeholder="Alex" autocomplete="given-name" required>
+            </div>
+            <div class="auth-safe-field">
+              <label for="signup-last-name">Last name</label>
+              <input id="signup-last-name" type="text" name="last_name" placeholder="Kapoor" autocomplete="family-name" required>
+            </div>
+          </div>
+
+          <div class="auth-safe-field">
+            <label for="signup-email">Email address</label>
+            <input id="signup-email" type="email" name="email" placeholder="you@example.com" autocomplete="email" required>
+          </div>
+
+          <div class="auth-safe-field">
+            <label for="signup-password">Password</label>
+            <div class="auth-safe-password">
+              <input id="signup-password" type="password" name="password" placeholder="Create a password (min 8 characters)" autocomplete="new-password" required minlength="8">
+              <button type="button" class="auth-safe-eye" data-auth-password="signup-password" aria-label="Show password">
+                <i class="hgi-stroke hgi-view"></i>
+              </button>
+            </div>
+          </div>
+
+          <label class="auth-safe-terms">
+            <input type="checkbox" required>
+            <span>I agree to the product terms and privacy policy.</span>
+          </label>
+
+          <button class="btn btn-primary auth-safe-submit" type="submit">Create account <i class="hgi-stroke hgi-arrow-right-02"></i></button>
+        </form>
+
+        <div class="auth-safe-footer-form">Already have an account? <a href="{% url 'login' %}">Sign in</a></div>
       {% endif %}
     </div>
   </section>
 </div>
-<script>
-document.querySelectorAll('[data-toggle-password]').forEach(function(btn){
-  btn.addEventListener('click',function(){
-    const input=document.getElementById(btn.dataset.togglePassword);
-    if(!input)return;
-    const show=input.type==='password';
-    input.type=show?'text':'password';
-    btn.setAttribute('aria-label',show?'Hide password':'Show password');
-    btn.textContent=show?'○':'◉';
-  });
-});
-</script>
-</body>
-</html>
+{% endblock %}
