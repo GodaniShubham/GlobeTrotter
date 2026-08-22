@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load currency_tags %}
 {% block crumb %}Itinerary view{% endblock %}
 {% block content %}
 <div class="page-header"><div><div class="kicker">{% for stop in stops %}{{ stop.city.name|upper }}{% if not forloop.last %} → {% endif %}{% endfor %}</div><h1 class="page-title">{{ trip.name }}</h1><p class="page-subtitle">{{ trip.start_date|date:"j F" }}–{{ trip.end_date|date:"j F Y" }} · {{ trip.end_date|timeuntil:trip.start_date }} · {{ stops|length }} cities</p></div><div class="actions"><a class="btn btn-secondary" href="{% url 'calendar' trip.id %}"><i class="hgi-stroke hgi-calendar-03"></i> Calendar</a><a class="btn btn-primary" href="{% url 'public_itinerary' trip.id %}"><i class="hgi-stroke hgi-share-08"></i> Share</a></div></div>

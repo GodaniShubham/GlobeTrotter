@@ -80,6 +80,6 @@
       </div>
     </section>
   </main>
-  <footer class="landing-footer"><div><strong><span style="color:#714B67">o</span>doo × GlobeTrotter</strong><span>Personalized multi-city travel planning.</span></div><div class="landing-footer-links"><a href="{% url 'dashboard' %}">Workspace</a><a href="{% url 'public_itinerary' %}">Shared trip</a><a href="{% url 'profile' %}">Profile</a></div></footer>
+  <footer class="landing-footer"><div><strong><span style="color:#714B67">o</span>doo × GlobeTrotter</strong><span>Personalized multi-city travel planning.</span></div><div class="landing-footer-links"><a href="{% url 'dashboard' %}">Workspace</a>{% if public_trip %}<a href="{% url 'public_itinerary' public_trip.id %}">Shared trip</a>{% endif %}<a href="{% url 'profile' %}">Profile</a></div></footer>
 </div>
 {% endblock %}

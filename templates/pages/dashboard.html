@@ -10,7 +10,7 @@
     {% with next_trip=upcoming_trips.0 %}
     <h1>{{ next_trip.name }} <span class="marker-word">in one rhythm.</span></h1><div class="visual-rule"></div>
     <p>{{ next_trip.description|default:"A new journey awaits." }}</p>
-    <div class="actions" style="margin-top:18px"><a class="btn btn-primary" href="{% url 'builder' %}">Continue itinerary</a><a class="btn btn-secondary" href="{% url 'itinerary' %}">Preview</a></div>
+    <div class="actions" style="margin-top:18px"><a class="btn btn-primary" href="{% url 'builder' next_trip.id %}">Continue itinerary</a><a class="btn btn-secondary" href="{% url 'itinerary' next_trip.id %}">Preview</a></div>
     {% endwith %}
     {% else %}
     <h1>No upcoming trips <span style="color:var(--purple)">yet.</span></h1>

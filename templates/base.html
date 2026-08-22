@@ -29,15 +29,19 @@
             <a href="{% url 'dashboard' %}" class="side-link {% if active == 'dashboard' %}is-active{% endif %}"><i class="hgi-stroke hgi-home-01"></i><span>Dashboard</span></a>
             <a href="{% url 'trips' %}" class="side-link {% if active == 'trips' %}is-active{% endif %}"><i class="hgi-stroke hgi-briefcase-01"></i><span>My trips</span></a>
             <a href="{% url 'create_trip' %}" class="side-link {% if active == 'create' %}is-active{% endif %}"><i class="hgi-stroke hgi-add-01"></i><span>Plan a trip</span></a>
-            <a href="{% url 'builder' %}" class="side-link {% if active == 'builder' %}is-active{% endif %}"><i class="hgi-stroke hgi-route-02"></i><span>Itinerary builder</span></a>
-            <a href="{% url 'itinerary' %}" class="side-link {% if active == 'itinerary' %}is-active{% endif %}"><i class="hgi-stroke hgi-list-view"></i><span>Itinerary view</span></a>
+            {% if trip %}
+            <a href="{% url 'builder' trip.id %}" class="side-link {% if active == 'builder' %}is-active{% endif %}"><i class="hgi-stroke hgi-route-02"></i><span>Itinerary builder</span></a>
+            <a href="{% url 'itinerary' trip.id %}" class="side-link {% if active == 'itinerary' %}is-active{% endif %}"><i class="hgi-stroke hgi-list-view"></i><span>Itinerary view</span></a>
+            {% endif %}
         </nav>
         <div class="sidebar-label">Discover</div>
         <nav class="side-nav">
             <a href="{% url 'cities' %}" class="side-link {% if active == 'cities' %}is-active{% endif %}"><i class="hgi-stroke hgi-location-01"></i><span>Cities</span></a>
             <a href="{% url 'activities' %}" class="side-link {% if active == 'activities' %}is-active{% endif %}"><i class="hgi-stroke hgi-compass-01"></i><span>Activities</span></a>
-            <a href="{% url 'budget' %}" class="side-link {% if active == 'budget' %}is-active{% endif %}"><i class="hgi-stroke hgi-wallet-01"></i><span>Budget</span></a>
-            <a href="{% url 'calendar' %}" class="side-link {% if active == 'calendar' %}is-active{% endif %}"><i class="hgi-stroke hgi-calendar-03"></i><span>Calendar</span></a>
+            {% if trip %}
+            <a href="{% url 'budget' trip.id %}" class="side-link {% if active == 'budget' %}is-active{% endif %}"><i class="hgi-stroke hgi-wallet-01"></i><span>Budget</span></a>
+            <a href="{% url 'calendar' trip.id %}" class="side-link {% if active == 'calendar' %}is-active{% endif %}"><i class="hgi-stroke hgi-calendar-03"></i><span>Calendar</span></a>
+            {% endif %}
         </nav>
         <div class="sidebar-label">Community</div>
         <nav class="side-nav community-nav-wrap">
@@ -73,8 +77,26 @@
                 <span>{% block crumb %}Workspace{% endblock %}</span>
             </div>
             <div class="topbar-actions">
-                <a class="icon-btn" href="{% url 'public_itinerary' %}" aria-label="Open shared itinerary"><i class="hgi-stroke hgi-share-08"></i></a>
-                <button class="icon-btn" type="button" aria-label="Notifications"><i class="hgi-stroke hgi-notification-02"></i><span class="notification-dot"></span></button>
+                {% if trip %}
+                <a class="icon-btn" href="{% url 'public_itinerary' trip.id %}" aria-label="Open shared itinerary"><i class="hgi-stroke hgi-share-08"></i></a>
+                {% endif %}
+                <div class="dropdown" data-dropdown="notifications">
+                    <button class="icon-btn" type="button" aria-label="Notifications" data-dropdown-trigger><i class="hgi-stroke hgi-notification-02"></i><span class="notification-dot"></span></button>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-header">Notifications</div>
+                        <div class="dropdown-list">
+                            <a href="#" class="dropdown-item">
+                                <span class="avatar avatar-purple" style="width:32px;height:32px;font-size:12px;margin-right:12px;background:#F9F5F8;color:#714B67"><i class="hgi-stroke hgi-share-08"></i></span>
+                                <div><strong>Shubham shared a trip</strong><p style="margin:2px 0 0;font-size:11px;color:#777981">You have access to "Japan in one rhythm".</p></div>
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <span class="avatar avatar-green" style="width:32px;height:32px;font-size:12px;margin-right:12px;background:#F1F8F5;color:#107548"><i class="hgi-stroke hgi-wallet-01"></i></span>
+                                <div><strong>Budget optimization</strong><p style="margin:2px 0 0;font-size:11px;color:#777981">Your accommodation estimate was updated.</p></div>
+                            </a>
+                        </div>
+                        <a href="#" class="dropdown-footer">View all notifications</a>
+                    </div>
+                </div>
                 {% if request.user.is_authenticated %}
                 <a class="topbar-profile" href="{% url 'profile' %}"><span class="avatar avatar-purple">{{ request.user.first_name|first }}{{ request.user.last_name|first }}</span><span>{{ request.user.first_name|default:request.user.username }}</span><i class="hgi-stroke hgi-arrow-down-01"></i></a>
                 <a class="icon-btn" href="{% url 'logout' %}" title="Logout"><i class="hgi-stroke hgi-logout-01"></i></a>

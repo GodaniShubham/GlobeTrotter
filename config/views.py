@@ -1,18 +1,114 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-
+from django.contrib.auth.models import User
+from django.contrib import messages
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+import random
 
 def page(template, title="GlobeTrotter", **context):
     context.setdefault("page_title", title)
     return render(None, template, context)
-
 
 def _render(request, template, title, **context):
     context.setdefault("page_title", title)
     return render(request, template, context)
 
 def forgot_password(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        if email and User.objects.filter(email=email).exists():
+            # Generate 6-digit OTP
+            otp = str(random.randint(100000, 999999))
+            request.session['reset_otp'] = otp
+            request.session['reset_email'] = email
+            
+            try:
+                html_msg = render_to_string('emails/otp_email.html', {'otp': otp})
+                send_mail(
+                    subject='Your GlobeTrotter Password Reset OTP',
+                    message=f'Hi there,\n\nWe received a request to reset your password.\nYour One-Time Password (OTP) is: {otp}\n\nIf you did not request this, please ignore this email.\n\nThe GlobeTrotter Team',
+                    from_email='godanishubham30@gmail.com',
+                    recipient_list=[email],
+                    html_message=html_msg,
+                    fail_silently=True,
+                )
+            except Exception as e:
+                print(f"Error sending forgot password email: {e}")
+                
+            return redirect('otp_verify')
+        else:
+            messages.success(request, 'If your email exists in our system, you will receive a reset link shortly.')
+        
     return render(request, "pages/forgot_password.html")
+
+def otp_verify(request):
+    # Ensure user has started the flow
+    if 'reset_email' not in request.session or 'reset_otp' not in request.session:
+        return redirect('forgot_password')
+        
+    email = request.session['reset_email']
+    
+    if request.method == 'POST':
+        if 'resend' in request.POST:
+            # Resend OTP
+            otp = str(random.randint(100000, 999999))
+            request.session['reset_otp'] = otp
+            
+            try:
+                html_msg = render_to_string('emails/otp_email.html', {'otp': otp})
+                send_mail(
+                    subject='Your GlobeTrotter Password Reset OTP (Resent)',
+                    message=f'Hi there,\n\nHere is your new One-Time Password (OTP): {otp}\n\nIf you did not request this, please ignore this email.\n\nThe GlobeTrotter Team',
+                    from_email='godanishubham30@gmail.com',
+                    recipient_list=[email],
+                    html_message=html_msg,
+                    fail_silently=True,
+                )
+                messages.success(request, 'A new OTP has been sent to your email.')
+            except Exception as e:
+                print(f"Error resending OTP email: {e}")
+                
+        else:
+            # Verify OTP
+            entered_otp = request.POST.get('otp', '').strip()
+            if entered_otp == request.session['reset_otp']:
+                request.session['otp_verified'] = True
+                return redirect('reset_password')
+            else:
+                messages.error(request, 'Invalid OTP. Please try again.')
+                
+    return render(request, 'pages/otp_verify.html', {'email': email})
+
+def reset_password(request):
+    if not request.session.get('otp_verified'):
+        return redirect('forgot_password')
+        
+    email = request.session.get('reset_email')
+    
+    if request.method == 'POST':
+        password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
+        
+        if len(password) < 8:
+            messages.error(request, 'Password must be at least 8 characters long.')
+        elif password != confirm_password:
+            messages.error(request, 'Passwords do not match.')
+        else:
+            # Update password
+            user = User.objects.get(email=email)
+            user.set_password(password)
+            user.save()
+            
+            # Clear session
+            request.session.pop('reset_email', None)
+            request.session.pop('reset_otp', None)
+            request.session.pop('otp_verified', None)
+            
+            messages.success(request, 'Your password has been successfully reset. You can now log in.')
+            return redirect('login')
+            
+    return render(request, 'pages/reset_password.html', {'email': email})
 def community(request):
     return render(request, "pages/community.html")
 def landing(request):

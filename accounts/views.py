@@ -3,6 +3,8 @@ from django.contrib.auth import authenticate, login as auth_login, logout as aut
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -61,6 +63,21 @@ def signup_view(request):
                 first_name=first_name,
                 last_name=last_name
             )
+            
+            # Send welcome email
+            try:
+                html_msg = render_to_string('emails/welcome_email.html', {'first_name': first_name or username})
+                send_mail(
+                    subject='Welcome to GlobeTrotter!',
+                    message=f'Hi {first_name or username},\n\nWelcome to GlobeTrotter! Your workspace is ready for your next big journey.\n\nHappy travels,\nThe GlobeTrotter Team',
+                    from_email='godanishubham30@gmail.com',
+                    recipient_list=[email],
+                    html_message=html_msg,
+                    fail_silently=True,
+                )
+            except Exception as e:
+                print(f"Error sending welcome email: {e}")
+
             auth_login(request, user)
             return redirect('dashboard')
             
