@@ -1,35 +1,98 @@
 {% extends 'base.html' %}
 {% block shell %}
-<div class="auth-page">
+<div class="auth-page auth-page-v5">
   <section class="auth-visual">
-    <div class="auth-copy"><div class="auth-corner-stroke" aria-hidden="true"></div>
-      <a class="public-logo" href="{% url 'home' %}" style="position:relative;z-index:2"><span class="public-brand-mark"><span style="color:#714B67">o</span>doo</span><span style="color:#C7C2C5">×</span><strong>GlobeTrotter</strong></a>
-      <div><div class="kicker">ODOO × GLOBETROTTER</div><div class="auth-hero-title">Travel planning,<br><span class="auth-highlight-word">with a point of view.</span></div><div class="auth-hand-note"><span>built around your route, your pace, your way</span></div><div class="script-label" style="margin-top:12px;transform:rotate(-3deg);">made for the routes you actually want</div><div class="auth-quote">A clear plan. Plenty of room to wander.<span class="auth-arrow-note">your trip, thoughtfully arranged <span class="auth-arrow">↘</span></span></div></div>
-      <div style="font-size:10px;color:#6F6A66;position:relative;z-index:2">Personalized multi-city travel planning · built for focused journeys.</div>
+    <div class="auth-topbar">
+      <a class="auth-brand" href="{% url 'home' %}" aria-label="GlobeTrotter home">
+        <span class="auth-brand-name">GlobeTrotter</span>
+        <span class="auth-brand-x">×</span>
+        <img class="auth-brand-odoo" src="https://www.odoo.com/web/static/img/odoo_logo.svg" alt="Odoo">
+      </a>
+      <span class="auth-topnote">Travel workspace</span>
+    </div>
+
+    <div class="auth-visual-inner">
+      <div class="auth-kicker">PERSONALIZED MULTI-CITY TRAVEL</div>
+      <h1 class="auth-v5-title">
+        Plan beautifully.<br>
+        <span class="auth-v5-highlight">Travel freely.</span>
+      </h1>
+      <p class="auth-v5-subtitle">
+        Build the route, shape the days, watch the budget and keep the whole journey in one calm workspace.
+      </p>
+
+      <div class="auth-route-note">
+        <span class="auth-route-stroke"></span>
+        <span>from the first idea to the last stop</span>
+      </div>
+
+      <div class="auth-feature-row">
+        <div class="auth-feature"><strong>Plan</strong><span>multi-city routes</span></div>
+        <div class="auth-feature"><strong>Shape</strong><span>day-by-day plans</span></div>
+        <div class="auth-feature"><strong>Share</strong><span>beautiful itineraries</span></div>
+      </div>
+
+      <div class="auth-photo-card" aria-hidden="true">
+        <div class="auth-photo"></div>
+        <div class="auth-photo-label">
+          <span>One journey.</span>
+          <strong>Many stories.</strong>
+        </div>
+      </div>
+
+      <div class="auth-annotation">
+        <span class="auth-annotation-line"></span>
+        <span class="auth-annotation-text">make room for one unexpected stop</span>
+      </div>
     </div>
   </section>
+
   <section class="auth-form-wrap">
-    <div class="auth-form"><div class="auth-form-topline"><span class="auth-dot"></span><span>YOUR TRAVEL WORKSPACE</span></div>
+    <div class="auth-form auth-form-v5">
+      <div class="auth-form-brandline">
+        <span class="auth-form-dot"></span>
+        <span>GLOBETROTTER WORKSPACE</span>
+      </div>
+
       {% if auth_mode == 'login' %}
-      <div class="kicker">WELCOME BACK</div><h2>Sign in</h2><p>Pick up where you left your next journey.</p>
+      <div class="auth-kicker auth-form-kicker">WELCOME BACK</div>
+      <h2>Sign in to your trips.</h2>
+      <p class="auth-form-intro">Pick up where you left your next journey.</p>
+
       <form class="auth-form-fields" onsubmit="return demoSubmit(event,'Dashboard')">
         <div class="field"><label>Email address</label><input type="email" placeholder="you@example.com" required></div>
-        <div class="field"><label>Password</label><input type="password" placeholder="••••••••" required></div>
-        <div style="display:flex;justify-content:flex-end;margin-top:8px"><a class="tiny-link" href="#">Forgot password?</a></div>
-        <button class="btn btn-primary btn-callout auth-submit" style="width:100%;margin-top:18px" type="submit">Sign in <i class="hgi-stroke hgi-arrow-right-02"></i></button>
+        <div class="field"><label>Password</label><input type="password" placeholder="Enter your password" required></div>
+
+        <div class="auth-form-options">
+          <label class="auth-check"><input type="checkbox"> <span>Remember me</span></label>
+          <a class="tiny-link" href="#">Forgot password?</a>
+        </div>
+
+        <button class="btn btn-primary auth-submit-v5" type="submit">Sign in <i class="hgi-stroke hgi-arrow-right-02"></i></button>
       </form>
-      <div class="auth-form-note"><span class="auth-mini-stroke"></span> Your plan stays yours.</div>
+
+      <div class="auth-security-note"><span class="auth-mini-stroke"></span> Your travel plans stay private to your account.</div>
       <div class="auth-footer">New to GlobeTrotter? <a href="{% url 'signup' %}">Create an account</a></div>
+
       {% else %}
-      <div class="kicker">START PLANNING</div><h2>Create your account</h2><p>A workspace for your routes, stays, activities and budget.</p>
+      <div class="auth-kicker auth-form-kicker">START PLANNING</div>
+      <h2>Create your travel workspace.</h2>
+      <p class="auth-form-intro">Keep routes, stays, activities and budget together from day one.</p>
+
       <form class="auth-form-fields" onsubmit="return demoSubmit(event,'Dashboard')">
-        <div class="form-grid"><div class="field"><label>First name</label><input type="text" placeholder="Alex" required></div><div class="field"><label>Last name</label><input type="text" placeholder="Kapoor" required></div></div>
+        <div class="form-grid auth-name-grid">
+          <div class="field"><label>First name</label><input type="text" placeholder="Alex" required></div>
+          <div class="field"><label>Last name</label><input type="text" placeholder="Kapoor" required></div>
+        </div>
         <div class="field"><label>Email address</label><input type="email" placeholder="you@example.com" required></div>
         <div class="field"><label>Password</label><input type="password" placeholder="Create a password" required></div>
-        <label style="display:flex;gap:8px;align-items:flex-start;font-size:10px;color:#7B7C83;margin-top:13px"><input type="checkbox" required style="margin-top:2px"> I agree to the product terms and privacy policy.</label>
-        <button class="btn btn-primary btn-callout auth-submit" style="width:100%;margin-top:18px" type="submit">Create account <i class="hgi-stroke hgi-arrow-right-02"></i></button>
+
+        <label class="auth-check auth-terms"><input type="checkbox" required> <span>I agree to the product terms and privacy policy.</span></label>
+
+        <button class="btn btn-primary auth-submit-v5" type="submit">Create account <i class="hgi-stroke hgi-arrow-right-02"></i></button>
       </form>
-      <div class="auth-form-note"><span class="auth-mini-stroke"></span> Your plan stays yours.</div>
+
+      <div class="auth-security-note"><span class="auth-mini-stroke"></span> Start simple. Refine the journey as you go.</div>
       <div class="auth-footer">Already have an account? <a href="{% url 'login' %}">Sign in</a></div>
       {% endif %}
     </div>
