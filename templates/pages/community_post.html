@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block crumb %}Community post{% endblock %}
+{% block content %}
+<div class="page-header community-detail-head">
+  <div>
+    <div class="kicker">{% if post.city %}{{ post.city.name|upper }} · {% endif %}{{ post.get_category_display|upper }}</div>
+    <h1 class="page-title">{{ post.title }}</h1>
+    <p class="page-subtitle">{{ post.author.get_full_name|default:post.author.username }} · {{ post.created_at|timesince }} ago</p>
+  </div>
+  <div class="actions">
+    <a class="btn btn-secondary" href="{% url 'community' %}">Back</a>
+    <button class="btn btn-secondary js-community-share" type="button"
+            data-share-url="{{ request.scheme }}://{{ request.get_host }}{% url 'community_post' post.pk %}"
+            data-share-title="{{ post.title|escapejs }}"
+            data-share-record-url="{% url 'community_share' post.pk %}">Share <small data-community-share-count>{{ post.shares.count }}</small></button>
+    {% if request.user.is_authenticated %}
+      <button class="btn btn-primary js-community-save {% if post.is_saved %}is-active{% endif %}" type="button" data-url="{% url 'community_save' post.pk %}" data-post="{{ post.pk }}"><i class="hgi-stroke hgi-bookmark-02"></i> <span class="js-save-label">{% if post.is_saved %}Saved{% else %}Save{% endif %}</span> <small data-save-count="{{ post.pk }}">{{ post.save_count }}</small></button>
+    {% endif %}
+  </div>
+</div>
+
+<div class="community-detail-grid">
+  <main class="panel panel-pad community-thread-panel" data-thread-id="{{ post.pk }}" data-updates-url="{% url 'community_updates' post.pk %}">
+    <div class="community-detail-author">
+      <span class="community-avatar">{{ post.author.first_name|first|default:post.author.username|first|upper }}{{ post.author.last_name|first }}</span>
+      <div><strong>{{ post.author.get_full_name|default:post.author.username }}</strong><small>{{ post.created_at|date:"d M Y, H:i" }}</small></div>
+    </div>
+
+    <div class="community-post-category community-detail-category">{{ post.get_category_display }}{% if post.city %} · {{ post.city.name }}{% endif %}</div>
+    <div class="community-detail-body">{{ post.body|linebreaks }}</div>
+
+    <div class="community-detail-toolbar">
+      <div class="community-post-stats">
+        <span><i class="hgi-stroke hgi-message-02"></i> <b data-thread-reply-count>{{ post.reply_count }}</b></span>
+        <button class="community-stat-button js-community-like {% if post.is_liked %}is-active{% endif %}" type="button" data-url="{% url 'community_like' post.pk %}" data-post="{{ post.pk }}"><i class="hgi-stroke hgi-thumbs-up"></i> <b data-like-count="{{ post.pk }}">{{ post.like_count }}</b></button>
+      </div>
+      {% if request.user.is_authenticated %}
+      <button class="btn btn-quiet js-community-like {% if post.is_liked %}is-active{% endif %}" type="button" data-url="{% url 'community_like' post.pk %}" data-post="{{ post.pk }}"><i class="hgi-stroke hgi-thumbs-up"></i> Like</button>
+      {% endif %}
+    </div>
+
+    <div class="rule"></div>
+    <div class="community-thread-head">
+      <div><h3><span data-thread-reply-count>{{ post.reply_count }}</span> replies</h3><div class="eyebrow">CONVERSATION</div></div>
+      <span class="community-live-badge" data-community-live-state>LIVE</span>
+    </div>
+
+    <div class="community-replies" data-replies-list>
+      {% for reply in replies %}
+      <article class="community-reply" data-reply-id="{{ reply.pk }}" data-parent-id="{{ reply.parent_id|default:'' }}" style="--reply-depth: {{ reply.depth }}">
+        <span class="community-avatar {{ forloop.counter|divisibleby:2|yesno:'avatar-blue,avatar-green' }}">{{ reply.initials }}</span>
+        <div class="community-reply-main">
+          <div class="community-reply-meta">
+            <strong>{{ reply.author_display }}</strong><small>{{ reply.created_at|timesince }} ago</small>
+          </div>
+          <p>{{ reply.body|linebreaksbr }}</p>
+          <div class="community-reply-actions">
+            {% if request.user.is_authenticated %}
+            <button class="community-text-action js-community-reply-like {% if reply.is_liked %}is-active{% endif %}" type="button" data-url="{% url 'community_reply_like' reply.pk %}" data-reply="{{ reply.pk }}">Like <span data-reply-like-count="{{ reply.pk }}">{{ reply.like_count }}</span></button>
+            <button class="community-text-action js-community-reply-button" type="button" data-reply="{{ reply.pk }}" data-author="{{ reply.author_display }}">Reply</button>
+            {% endif %}
+            {% if request.user == reply.author or request.user.is_staff %}
+            <button class="community-text-action community-danger js-community-reply-delete" type="button" data-url="{% url 'community_reply_delete' reply.pk %}" data-reply="{{ reply.pk }}">Delete</button>
+            {% endif %}
+          </div>
+        </div>
+      </article>
+      {% empty %}
+      <div class="community-no-replies">No replies yet. Be the first useful voice in the thread.</div>
+      {% endfor %}
+    </div>
+
+    {% if reply_form %}
+    <form class="community-reply-box" method="post" action="{% url 'community_reply' post.pk %}" data-reply-form>
+      {% csrf_token %}
+      <div class="kicker" data-reply-heading>JOIN THE CONVERSATION</div>
+      <div class="community-reply-target" data-reply-target hidden></div>
+      {{ reply_form.body }}
+      <input type="hidden" name="parent_id" data-parent-input value="">
+      {% if reply_form.body.errors %}<div class="community-form-error">{{ reply_form.body.errors|striptags }}</div>{% endif %}
+      <div class="community-compose-footer">
+        <span class="muted">Tip: mention another traveller with <strong>@username</strong>.</span>
+        <div class="actions"><button class="btn btn-secondary" type="button" data-reply-cancel hidden>Cancel</button><button class="btn btn-primary" type="submit">Reply <span>→</span></button></div>
+      </div>
+    </form>
+    {% elif not request.user.is_authenticated %}
+      <div class="community-login-note">Sign in to join the conversation.</div>
+    {% endif %}
+  </main>
+
+  <aside class="community-sidebar">
+    {% if request.user.is_authenticated and report_form %}
+    <div class="panel-head"><div><h3>Keep it useful</h3><div class="eyebrow">COMMUNITY CARE</div></div></div>
+    <div class="community-care">See something that breaks the rules or feels misleading? You can report it privately.</div>
+    <form method="post" action="{% url 'community_report' post.pk %}" class="community-report-form">
+      {% csrf_token %}
+      <div class="community-field"><label>Reason</label>{{ report_form.reason }}</div>
+      <div class="community-field"><label>Note</label>{{ report_form.note }}</div>
+      <button class="btn btn-secondary" type="submit">Report post</button>
+    </form>
+    {% endif %}
+
+    <div class="community-related-title">POPULAR CONVERSATIONS</div>
+    {% for related in popular_posts %}
+      <a class="community-topic" href="{% url 'community_post' related.pk %}"><strong>{{ related.title|truncatechars:54 }}</strong><span>{{ related.reply_count }} replies</span></a>
+    {% empty %}
+      <div class="community-topic"><strong>More conversations will appear as the community grows.</strong></div>
+    {% endfor %}
+  </aside>
+</div>
+{% endblock %}
+{% block extra_js %}<script src="{% static 'js/community.js' %}"></script>{% endblock %}

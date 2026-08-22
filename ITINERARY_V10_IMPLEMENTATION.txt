@@ -1,0 +1,25 @@
+GlobeTrotter Itinerary V10
+
+Production workflow added:
+  - Trip-aware builder and itinerary pages.
+  - Real TripStop creation from Discover Cities.
+  - Real ItineraryActivity creation from Discover Activities.
+  - Stop reorder + delete.
+  - Activity delete.
+  - Date/time validation.
+  - Ownership checks on every mutation.
+  - Dynamic trip summary and spend.
+  - Dynamic itinerary day list.
+  - Dynamic calendar event list.
+  - City/activity search runs from actual Django models.
+  - City/activity cards now use database content and add directly to the selected trip.
+  - Existing models are reused; no destructive schema changes required.
+
+Backend developer:
+  1. Run python manage.py check
+  2. Run python manage.py migrate (no new migration is required by this patch)
+  3. Start the server.
+
+Important:
+  Trip dates remain the source of truth. Activities cannot be scheduled outside their stop
+  dates and stop dates cannot be moved outside the parent trip range.

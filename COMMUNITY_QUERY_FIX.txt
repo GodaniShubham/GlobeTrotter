@@ -1,0 +1,14 @@
+Fixed:
+  TypeError: Cannot reorder a query once a slice has been taken.
+
+Cause:
+  popular_posts queryset was sliced with [:50] before _annotated_posts()
+  and then reordered with order_by(...).
+
+Correct pattern:
+  1. Build the unsliced queryset.
+  2. Annotate it.
+  3. Apply the final order_by().
+  4. Slice the final result.
+
+Applied to both community feed and post detail popular-conversation queries.

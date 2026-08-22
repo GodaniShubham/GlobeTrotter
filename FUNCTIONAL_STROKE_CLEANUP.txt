@@ -1,0 +1,1 @@
+Removed decorative paint-stroke/marker/doodle accents from app-shell functional pages only. Landing/auth marketing surfaces retain their editorial decorations. Functional typography and Caveat notes remain, but decorative painted underlines and button strokes are hidden.

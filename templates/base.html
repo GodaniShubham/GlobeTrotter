@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://use.hugeicons.com/font/icons.css">
     <link rel="stylesheet" href="{% static 'css/site.css' %}">
+    <link rel="stylesheet" href="{% static 'css/community.css' %}">
     {% block extra_css %}{% endblock %}
 </head>
 <body class="{% block body_class %}{% endblock %}">
@@ -18,7 +19,7 @@
 <div class="app-shell">
     <aside class="sidebar" id="sidebar">
         <div class="brand-lockup">
-            <a class="brand-globetrotter" href="{% url 'home' %}" aria-label="GlobeTrotter">GlobeTrotter</a>
+            <a class="brand-globetrotter" href="{% url 'home' %}" aria-label="GlobeTrotter"><span class="brand-globe">Globe</span><span class="brand-trotter">Trotter</span></a>
             <span class="brand-x">×</span>
             <a class="odoo-brand-image" href="https://www.odoo.com/" target="_blank" rel="noreferrer" aria-label="Odoo">
                 <img src="https://www.odoo.com/web/static/img/odoo_logo.svg" alt="Odoo">
@@ -28,45 +29,33 @@
         <nav class="side-nav">
             <a href="{% url 'dashboard' %}" class="side-link {% if active == 'dashboard' %}is-active{% endif %}"><i class="hgi-stroke hgi-home-01"></i><span>Dashboard</span></a>
             <a href="{% url 'trips' %}" class="side-link {% if active == 'trips' %}is-active{% endif %}"><i class="hgi-stroke hgi-briefcase-01"></i><span>My trips</span></a>
-            {% if trip %}
-            <a href="{% url 'builder' trip.id %}" class="side-link {% if active == 'builder' %}is-active{% endif %}"><i class="hgi-stroke hgi-route-02"></i><span>Itinerary builder</span></a>
-            <a href="{% url 'itinerary' trip.id %}" class="side-link {% if active == 'itinerary' %}is-active{% endif %}"><i class="hgi-stroke hgi-list-view"></i><span>Itinerary view</span></a>
-            {% endif %}
+            <a href="{% url 'create_trip' %}" class="side-link {% if active == 'create' %}is-active{% endif %}"><i class="hgi-stroke hgi-add-01"></i><span>Plan a trip</span></a>
+            <a href="{% url 'builder' %}" class="side-link {% if active == 'builder' %}is-active{% endif %}"><i class="hgi-stroke hgi-route-02"></i><span>Itinerary builder</span></a>
+            <a href="{% url 'itinerary' %}" class="side-link {% if active == 'itinerary' %}is-active{% endif %}"><i class="hgi-stroke hgi-list-view"></i><span>Itinerary view</span></a>
         </nav>
         <div class="sidebar-label">Discover</div>
         <nav class="side-nav">
             <a href="{% url 'cities' %}" class="side-link {% if active == 'cities' %}is-active{% endif %}"><i class="hgi-stroke hgi-location-01"></i><span>Cities</span></a>
             <a href="{% url 'activities' %}" class="side-link {% if active == 'activities' %}is-active{% endif %}"><i class="hgi-stroke hgi-compass-01"></i><span>Activities</span></a>
-            {% if trip %}
-            <a href="{% url 'budget' trip.id %}" class="side-link {% if active == 'budget' %}is-active{% endif %}"><i class="hgi-stroke hgi-wallet-01"></i><span>Budget</span></a>
-            <a href="{% url 'calendar' trip.id %}" class="side-link {% if active == 'calendar' %}is-active{% endif %}"><i class="hgi-stroke hgi-calendar-03"></i><span>Calendar</span></a>
-            {% endif %}
+            <a href="{% url 'budget' %}" class="side-link {% if active == 'budget' %}is-active{% endif %}"><i class="hgi-stroke hgi-wallet-01"></i><span>Budget</span></a>
+            <a href="{% url 'calendar' %}" class="side-link {% if active == 'calendar' %}is-active{% endif %}"><i class="hgi-stroke hgi-calendar-03"></i><span>Calendar</span></a>
         </nav>
         <div class="sidebar-label">Community</div>
         <nav class="side-nav community-nav-wrap">
             <a href="{% url 'community' %}" class="side-link {% if active == 'community' %}is-active{% endif %}"><i class="hgi-stroke hgi-user-group"></i><span>Community</span></a>
         </nav>
         <div class="sidebar-spacer"></div>
-        <div class="sidebar-card">
-            <div class="sidebar-card-kicker">ODOO TRAVEL SUITE</div>
-            <strong>Everything for one memorable journey.</strong>
-            <p>Plan, budget, schedule and share from one workspace.</p>
-        </div>
-        {% if request.user.is_authenticated %}
-        <a href="{% url 'profile' %}" class="profile-mini {% if active == 'profile' %}is-active{% endif %}">
-            <span class="avatar avatar-purple">{{ request.user.first_name|first }}{{ request.user.last_name|first }}</span>
-            <span class="profile-mini-copy"><strong>{{ request.user.get_full_name|default:request.user.username }}</strong><small>Traveller account</small></span>
-        <a href="{% url 'profile' %}" class="sidebar-settings-link {% if active == 'profile' %}is-active{% endif %}" aria-label="Settings">
-            <i class="hgi-stroke hgi-settings-02"></i>
-            <span>Settings</span>
-        </a>
-        {% else %}
-        <a href="{% url 'login' %}" class="profile-mini">
-            <span class="avatar avatar-purple">?</span>
-            <span class="profile-mini-copy"><strong>Sign in</strong><small>To save your trips</small></span>
+        {% if request.user.is_superuser %}
+        <a href="{% url 'admin_panel:dashboard' %}" class="sidebar-settings-link" aria-label="Open admin panel">
+            <i class="hgi-stroke hgi-dashboard-speed-01"></i><span>Admin panel</span>
         </a>
         {% endif %}
-</aside>
+        {% if request.user.is_authenticated %}
+        <a href="{% url 'profile' %}" class="sidebar-settings-link {% if active == 'profile' %}is-active{% endif %}" aria-label="Settings">
+            <i class="hgi-stroke hgi-settings-02"></i><span>Settings</span>
+        </a>
+        {% endif %}
+    </aside>
     <div class="main-frame">
         <header class="topbar">
             <button class="icon-btn mobile-menu" type="button" data-sidebar-toggle aria-label="Open navigation"><i class="hgi-stroke hgi-menu-01"></i></button>
@@ -76,26 +65,34 @@
                 <span>{% block crumb %}Workspace{% endblock %}</span>
             </div>
             <div class="topbar-actions">
-                {% if trip %}
-                <a class="icon-btn" href="{% url 'public_itinerary' trip.id %}" aria-label="Open shared itinerary"><i class="hgi-stroke hgi-share-08"></i></a>
-                {% endif %}
-                <div class="dropdown" data-dropdown="notifications">
-                    <button class="icon-btn" type="button" aria-label="Notifications" data-dropdown-trigger><i class="hgi-stroke hgi-notification-02"></i><span class="notification-dot"></span></button>
-                    <div class="dropdown-menu">
-                        <div class="dropdown-header">Notifications</div>
-                        <div class="dropdown-list">
-                            <a href="#" class="dropdown-item">
-                                <span class="avatar avatar-purple" style="width:32px;height:32px;font-size:12px;margin-right:12px;background:#F9F5F8;color:#714B67"><i class="hgi-stroke hgi-share-08"></i></span>
-                                <div><strong>Shubham shared a trip</strong><p style="margin:2px 0 0;font-size:11px;color:#777981">You have access to "Japan in one rhythm".</p></div>
-                            </a>
-                            <a href="#" class="dropdown-item">
-                                <span class="avatar avatar-green" style="width:32px;height:32px;font-size:12px;margin-right:12px;background:#F1F8F5;color:#107548"><i class="hgi-stroke hgi-wallet-01"></i></span>
-                                <div><strong>Budget optimization</strong><p style="margin:2px 0 0;font-size:11px;color:#777981">Your accommodation estimate was updated.</p></div>
-                            </a>
+                <button class="icon-btn topbar-share-button" type="button"
+                    aria-label="Share this page" title="Share this page"
+                    data-global-share>
+                    <i class="hgi-stroke hgi-share-08"></i>
+                </button>
+                {% if request.user.is_authenticated %}
+                <div class="community-notification-wrap">
+                    <button class="icon-btn community-notification-button" type="button" aria-label="Notifications" title="Notifications" data-community-notifications>
+                        <i class="hgi-stroke hgi-notification-02"></i><span class="community-notification-count" hidden>0</span>
+                    </button>
+                    <div class="community-notification-panel" data-community-notification-panel hidden>
+                        <div class="community-notification-head">
+                            <div><strong>Activity</strong><span data-community-notification-unread-label></span></div>
+                            <button type="button" class="community-notification-clear" data-community-notification-read-all>Mark all read</button>
                         </div>
-                        <a href="#" class="dropdown-footer">View all notifications</a>
+                        <div class="community-notification-filters" role="tablist" aria-label="Notification filters">
+                            <button type="button" class="active" data-notification-filter="all">All</button>
+                            <button type="button" data-notification-filter="community">Community</button>
+                            <button type="button" data-notification-filter="trip">Trips</button>
+                        </div>
+                        <div class="community-notification-list" data-community-notification-list>
+                            <div class="community-notification-empty">No new activity yet.</div>
+                        </div>
                     </div>
                 </div>
+                {% else %}
+                <button class="icon-btn" type="button" aria-label="Notifications" title="Notifications"><i class="hgi-stroke hgi-notification-02"></i></button>
+                {% endif %}
                 {% if request.user.is_authenticated %}
                 <a class="topbar-profile" href="{% url 'profile' %}"><span class="avatar avatar-purple">{{ request.user.first_name|first }}{{ request.user.last_name|first }}</span><span>{{ request.user.first_name|default:request.user.username }}</span><i class="hgi-stroke hgi-arrow-down-01"></i></a>
                 <a class="icon-btn" href="{% url 'logout' %}" title="Logout"><i class="hgi-stroke hgi-logout-01"></i></a>
@@ -110,6 +107,36 @@
     </div>
 </div>
 {% endblock %}
+
+<div class="global-share-dialog" data-global-share-dialog hidden aria-hidden="true">
+    <div class="global-share-backdrop" data-global-share-close></div>
+    <section class="global-share-sheet" role="dialog" aria-modal="true" aria-labelledby="global-share-title">
+        <button class="global-share-close icon-btn" type="button" aria-label="Close share dialog" data-global-share-close>
+            <i class="hgi-stroke hgi-cancel-01"></i>
+        </button>
+        <div class="global-share-kicker">SHARE</div>
+        <h2 id="global-share-title">Share this workspace</h2>
+        <p class="global-share-description" data-global-share-description>Send a useful page to someone you are planning with.</p>
+        <div class="global-share-preview">
+            <div class="global-share-preview-icon"><i class="hgi-stroke hgi-share-08"></i></div>
+            <div class="global-share-preview-copy">
+                <strong data-global-share-label>GlobeTrotter</strong>
+                <span data-global-share-url></span>
+            </div>
+        </div>
+        <div class="global-share-options">
+            <button type="button" class="global-share-option" data-share-action="native"><span class="global-share-option-icon"><i class="hgi-stroke hgi-share-08"></i></span><strong>Share</strong><small>Device sharing</small></button>
+            <button type="button" class="global-share-option" data-share-action="copy"><span class="global-share-option-icon"><i class="hgi-stroke hgi-link-01"></i></span><strong>Copy link</strong><small>Paste anywhere</small></button>
+            <button type="button" class="global-share-option" data-share-action="whatsapp"><span class="global-share-option-icon"><i class="hgi-stroke hgi-whatsapp"></i></span><strong>WhatsApp</strong><small>Send to a traveller</small></button>
+            <button type="button" class="global-share-option" data-share-action="email"><span class="global-share-option-icon"><i class="hgi-stroke hgi-mail-01"></i></span><strong>Email</strong><small>Send by email</small></button>
+        </div>
+        <div class="global-share-footer">
+            <span data-global-share-status></span>
+            <button type="button" class="btn btn-secondary" data-global-share-close>Done</button>
+        </div>
+    </section>
+</div>
+
 <script src="{% static 'js/site.js' %}"></script>
 {% if messages %}
 <script>
@@ -117,7 +144,7 @@
     {% for message in messages %}
       setTimeout(() => {
         if(typeof toast === 'function') toast("{{ message|escapejs }}");
-        else { const t = document.createElement('div'); t.className='gt-toast'; t.textContent="{{ message|escapejs }}"; document.body.appendChild(t); setTimeout(()=>t.remove(), 5000); }
+        else { const t = document.createElement('div'); t.className='gt-toast'; t.textContent="{{ message|escapejs }}"; document.body.appendChild(t); setTimeout(()=>t.remove(), 2200); }
       }, {{ forloop.counter0 }} * 500);
     {% endfor %}
   });

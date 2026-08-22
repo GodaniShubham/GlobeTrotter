@@ -1,0 +1,22 @@
+Community v4 fix
+
+1. Fixed the Django template crash in community_post.html by removing invalid
+   `|default:empty_list`. Django templates do not have an `empty_list` variable.
+   The template now safely iterates `popular_posts` directly.
+
+2. Added a lightweight real-time thread update endpoint:
+     /community/post/<id>/updates/
+   It polls every 4 seconds on the post-detail page and updates:
+     - new replies
+     - reply count
+     - live status
+
+3. New replies created by any user are stored in the same configured database.
+   A second logged-in user will see them without refreshing the page.
+
+4. Search/filter feed and existing like/save/reply actions remain database-backed.
+
+Note:
+  This is near-real-time polling, not WebSockets. It requires no Redis/Channels
+  infrastructure and is safe for the current Django setup. For very high traffic,
+  replace the polling endpoint with Django Channels/WebSockets later.

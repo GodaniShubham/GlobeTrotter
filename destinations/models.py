@@ -8,6 +8,7 @@ class City(AuditModel):
     region = models.CharField(max_length=150, blank=True)
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='cities/', null=True, blank=True)
+    external_image_url = models.URLField(max_length=1000, blank=True)
     cost_index = models.PositiveIntegerField(default=50, help_text="0-100 scale of how expensive it is")
     popularity = models.PositiveIntegerField(default=50, help_text="0-100 scale of popularity")
 

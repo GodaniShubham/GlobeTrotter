@@ -1,18 +1,62 @@
 {% extends 'base.html' %}
-{% load currency_tags %}
+{% load static %}
 {% block crumb %}Itinerary view{% endblock %}
 {% block content %}
-<div class="page-header"><div><div class="kicker">{% for stop in stops %}{{ stop.city.name|upper }}{% if not forloop.last %} → {% endif %}{% endfor %}</div><h1 class="page-title">{{ trip.name }}</h1><p class="page-subtitle">{{ trip.start_date|date:"j F" }}–{{ trip.end_date|date:"j F Y" }} · {{ trip.end_date|timeuntil:trip.start_date }} · {{ stops|length }} cities</p></div><div class="actions"><a class="btn btn-secondary" href="{% url 'calendar' trip.id %}"><i class="hgi-stroke hgi-calendar-03"></i> Calendar</a><a class="btn btn-primary" href="{% url 'public_itinerary' trip.id %}"><i class="hgi-stroke hgi-share-08"></i> Share</a></div></div>
-<div class="panel" style="margin-bottom:16px"><div class="panel-body" style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap"><div><div class="eyebrow">TRIP SUMMARY</div><div style="font-size:20px;font-weight:800;letter-spacing:-.04em;margin-top:4px">{{ stops|length }} cities · {{ trip.end_date|timeuntil:trip.start_date }}</div></div><div class="actions"><span class="pill pill-purple">Planned</span><a class="btn btn-soft" href="{% url 'budget' trip.id %}">Review budget</a></div></div></div>
-<div class="grid grid-3">
-    {% for stop in stops %}
-    <article class="panel"><div class="panel-body"><div class="kicker">DAY {{ stop.order|stringformat:"02d" }} · {{ stop.city.name|upper }}</div><h2 style="font-size:20px;margin:4px 0 12px;letter-spacing:-.04em">Exploring {{ stop.city.name }}.</h2><div class="tag-row"><span class="tag">AI Generated</span></div><div class="rule"></div><div class="agenda">
-        {% for act in stop.itinerary_activities.all %}
-        <div class="agenda-row"><div class="agenda-time">09:00</div><div class="agenda-main"><strong>{{ act.activity.name }}</strong><span>{{ act.activity.activity_type }} · {{ act.activity.duration }} min</span></div><b>{{ act.custom_cost|default:act.activity.estimated_cost|convert:request.user }}</b></div>
+<div class="page-header itinerary-page-head">
+  <div>
+    <div class="kicker">{{ trip.name|upper }}</div>
+    <h1 class="page-title">The route, at a glance.</h1>
+    <p class="page-subtitle">{{ trip.start_date|date:"d M Y" }} — {{ trip.end_date|date:"d M Y" }} · {{ days_count }} days · {{ stops|length }} destinations</p>
+  </div>
+  <div class="actions">
+    <a class="btn btn-secondary" href="{% url 'calendar' %}?trip={{ trip.pk }}">Calendar</a>
+    <a class="btn btn-primary" href="{% url 'builder' %}?trip={{ trip.pk }}">Edit itinerary</a>
+  </div>
+</div>
+
+<div class="itinerary-view-grid">
+  <main class="itinerary-view-main">
+    <div class="itinerary-overview-card">
+      <div><span class="eyebrow">TRIP SUMMARY</span><h2>{{ stops|length }} stops · {{ trip_activities|length }} activities · ₹{{ total_cost|floatformat:0 }} estimated</h2></div>
+      <div class="overview-stat"><span>{{ days_count }}</span><small>days</small></div>
+    </div>
+
+    {% for day in itinerary_days %}
+    <section class="view-day-card">
+      <header class="view-day-head">
+        <div><span class="view-day-kicker">DAY {{ forloop.counter|stringformat:"02d" }}</span><h2>{{ day.date|date:"l, d F" }}</h2><p>{% if day.stop %}{{ day.stop.city.name }}{% else %}Open day{% endif %}</p></div>
+        <span class="pill {% if day.activities %}pill-purple{% endif %}">{{ day.activities|length }} activities</span>
+      </header>
+      <div class="view-day-list">
+        {% for item in day.activities %}
+        <article class="view-activity">
+          <div class="view-activity-time">{% if item.start_time %}{{ item.start_time|time:"H:i" }}{% else %}Open{% endif %}</div>
+          <div class="view-activity-copy"><strong>{{ item.activity.name }}</strong><span>{{ item.activity.activity_type }} · {{ item.activity.city.name }}</span>{% if item.notes %}<small>{{ item.notes }}</small>{% endif %}</div>
+          <div class="view-activity-cost">₹{{ item.custom_cost|default:item.activity.estimated_cost|floatformat:0 }}</div>
+        </article>
         {% empty %}
-        <div class="muted">No activities planned yet.</div>
+        <div class="view-day-empty">Nothing scheduled yet. <a href="{% url 'builder' %}?trip={{ trip.pk }}">Add an activity →</a></div>
         {% endfor %}
-    </div></div></article>
+      </div>
+    </section>
     {% endfor %}
+  </main>
+
+  <aside class="itinerary-view-side">
+    <section class="panel itinerary-side-card">
+      <div class="panel-head"><div><h3>Route</h3><div class="eyebrow">YOUR STOPS</div></div></div>
+      {% for stop in stops %}
+      <div class="route-stop-row"><span>{{ forloop.counter|stringformat:"02d" }}</span><div><strong>{{ stop.city.name }}</strong><small>{{ stop.arrival_date|date:"d M" }} — {{ stop.departure_date|date:"d M" }}</small></div></div>
+      {% empty %}
+      <div class="itinerary-empty-panel">No stops added yet.</div>
+      {% endfor %}
+    </section>
+    <section class="panel itinerary-side-card">
+      <div class="panel-head"><div><h3>Planning health</h3><div class="eyebrow">LIVE</div></div></div>
+      <div class="summary-metric"><span>Stops</span><strong>{{ stops|length }}</strong></div>
+      <div class="summary-metric"><span>Activities</span><strong>{{ trip_activities|length }}</strong></div>
+      <div class="summary-metric"><span>Estimated spend</span><strong>₹{{ total_cost|floatformat:0 }}</strong></div>
+    </section>
+  </aside>
 </div>
 {% endblock %}

@@ -1,0 +1,8 @@
+Community search/filter update
+
+- Search is server-side and supports title, body, city, country, first name and last name.
+- Category filters preserve the search query.
+- Active filter styling is explicit and mobile-safe.
+- Search has an explicit submit control and clear-search action.
+- Results count reflects the filtered database queryset.
+- Popular list is ranked using annotated likes/replies instead of only created date.

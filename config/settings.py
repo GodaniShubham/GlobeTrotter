@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'destinations',
     'activities',
     'expenses',
+    'community',
     'transport',
     # admin panel app
     'admin_panel',
@@ -95,13 +96,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # the backend developer finishes the MySQL integration. Set FRONTEND_ONLY=False
 # in .env when the project is ready to use MySQL.
 
-USE_LOCAL_DB = os.getenv("USE_LOCAL_DB", "0") == "1"
-
-if USE_LOCAL_DB:
+if FRONTEND_ONLY:
     DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "frontend.sqlite3",
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'frontend.sqlite3',
         }
     }
 else:

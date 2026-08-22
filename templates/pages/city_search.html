@@ -1,14 +1,56 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block crumb %}Discover cities{% endblock %}
 {% block content %}
-<div class="page-header"><div><div class="kicker">DISCOVER DESTINATIONS</div><h1 class="page-title annotated-title">Find your next stop.<span class="hand-note">follow the good idea</span></h1><p class="page-subtitle">Search cities, compare travel context, then add the ones that fit your route.</p></div><div class="actions">{% if trip %}<a class="btn btn-secondary" href="{% url 'builder' trip.id %}">Back to builder</a>{% else %}<a class="btn btn-secondary" href="{% url 'dashboard' %}">Back to dashboard</a>{% endif %}</div></div>
-<div class="toolbar"><div class="searchbox" style="flex:1"><i class="hgi-stroke hgi-search-01"></i><input type="search" placeholder="Search cities, countries or regions..." data-discover-search></div><div class="filters"><button class="filter-chip active" data-discover-filter="all">All</button><button class="filter-chip" data-discover-filter="Asia">Asia</button><button class="filter-chip" data-discover-filter="Europe">Europe</button><button class="filter-chip" data-discover-filter="Americas">Americas</button></div></div>
-<div class="city-grid" data-discover-grid>
-  <article class="discover-card discover-item" data-region="Asia" data-search="tokyo japan asia"><div class="discover-image" style="background-image:url('https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=900&q=84')"></div><div class="discover-body"><div class="discover-top"><h3>Tokyo</h3><span class="pill pill-purple">Popular</span></div><p>High-energy neighbourhoods, design, food and rail connections.</p><div class="discover-meta"><span class="pill">Japan</span><span class="pill">Cost 4 / 5</span></div><div class="discover-action"><span class="eyebrow">12,840 saves</span><button class="btn btn-soft" data-add="Tokyo">Add to trip <i class="hgi-stroke hgi-arrow-up-right-02"></i></button></div></div></article>
-  <article class="discover-card discover-item" data-region="Europe" data-search="paris france europe"><div class="discover-image" style="background-image:url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=900&q=84')"></div><div class="discover-body"><div class="discover-top"><h3>Paris</h3><span class="pill">Classic</span></div><p>Museums, cafés, river walks and a dense, walkable centre.</p><div class="discover-meta"><span class="pill">France</span><span class="pill">Cost 4 / 5</span></div><div class="discover-action"><span class="eyebrow">10,210 saves</span><button class="btn btn-soft" data-add="Paris">Add to trip <i class="hgi-stroke hgi-arrow-up-right-02"></i></button></div></div></article>
-  <article class="discover-card discover-item" data-region="Asia" data-search="kyoto japan asia"><div class="discover-image" style="background-image:url('https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=900&q=84')"></div><div class="discover-body"><div class="discover-top"><h3>Kyoto</h3><span class="pill pill-green">Slow</span></div><p>Temples, gardens, tea houses and early-morning walks.</p><div class="discover-meta"><span class="pill">Japan</span><span class="pill">Cost 3 / 5</span></div><div class="discover-action"><span class="eyebrow">8,924 saves</span><button class="btn btn-soft" data-add="Kyoto">Add to trip <i class="hgi-stroke hgi-arrow-up-right-02"></i></button></div></div></article>
-  <article class="discover-card discover-item" data-region="Europe" data-search="lisbon portugal europe"><div class="discover-image" style="background-image:url('https://images.unsplash.com/photo-1555881400-74d7acaacd8b?auto=format&fit=crop&w=900&q=84')"></div><div class="discover-body"><div class="discover-top"><h3>Lisbon</h3><span class="pill pill-orange">Value</span></div><p>Hills, tiles, neighbourhood cafés and easy day trips.</p><div class="discover-meta"><span class="pill">Portugal</span><span class="pill">Cost 2 / 5</span></div><div class="discover-action"><span class="eyebrow">7,615 saves</span><button class="btn btn-soft" data-add="Lisbon">Add to trip <i class="hgi-stroke hgi-arrow-up-right-02"></i></button></div></div></article>
-  <article class="discover-card discover-item" data-region="Europe" data-search="santorini greece europe"><div class="discover-image" style="background-image:url('https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=900&q=84')"></div><div class="discover-body"><div class="discover-top"><h3>Santorini</h3><span class="pill">Scenic</span></div><p>Clifftop views, swimming coves and slow evenings by the sea.</p><div class="discover-meta"><span class="pill">Greece</span><span class="pill">Cost 4 / 5</span></div><div class="discover-action"><span class="eyebrow">6,882 saves</span><button class="btn btn-soft" data-add="Santorini">Add to trip <i class="hgi-stroke hgi-arrow-up-right-02"></i></button></div></div></article>
-  <article class="discover-card discover-item" data-region="Asia" data-search="bali indonesia asia"><div class="discover-image" style="background-image:url('https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=900&q=84')"></div><div class="discover-body"><div class="discover-top"><h3>Bali</h3><span class="pill pill-green">Relaxed</span></div><p>Beaches, rice terraces, cafés and easy day-trip options.</p><div class="discover-meta"><span class="pill">Indonesia</span><span class="pill">Cost 3 / 5</span></div><div class="discover-action"><span class="eyebrow">12,120 saves</span><button class="btn btn-soft" data-add="Bali">Add to trip <i class="hgi-stroke hgi-arrow-up-right-02"></i></button></div></div></article>
+<div class="page-header">
+  <div><div class="kicker">DISCOVER DESTINATIONS</div><h1 class="page-title">Find your next stop.</h1><div class="functional-script-note">choose the place, then shape the days</div><p class="page-subtitle">Cities in your database, ready to add directly to the selected trip.</p></div>
+  <div class="actions">
+    {% if trip %}<a class="btn btn-secondary" href="{% url 'builder' %}?trip={{ trip.pk }}">Back to builder</a>{% endif %}
+  </div>
+</div>
+
+<div class="toolbar discover-toolbar">
+  <form class="searchbox discover-search-form" method="get">
+    {% if trip %}<input type="hidden" name="trip" value="{{ trip.pk }}">{% endif %}
+    <i class="hgi-stroke hgi-search-01"></i><input name="q" value="{{ request.GET.q }}" type="search" placeholder="Search cities, countries or regions..." autocomplete="off">
+  </form>
+  <div class="filters">
+    <a class="filter-chip {% if not request.GET.region %}active{% endif %}" href="?{% if trip %}trip={{ trip.pk }}{% endif %}">All</a>
+    {% for region in regions %}
+      <a class="filter-chip {% if request.GET.region == region %}active{% endif %}" href="?region={{ region|urlencode }}{% if trip %}&trip={{ trip.pk }}{% endif %}">{{ region }}</a>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="city-grid discover-real-grid">
+  {% for city in cities %}
+  <article class="discover-card discover-item">
+    {% if city.image %}<div class="discover-image" style="background-image:url('{{ city.image.url }}')"></div>{% elif city.external_image_url %}<div class="discover-image" style="background-image:url('{{ city.external_image_url }}')"></div>{% else %}<div class="discover-image discover-image-fallback">{{ city.name|slice:":1" }}</div>{% endif %}
+    <div class="discover-body">
+      <div class="discover-top"><h3>{{ city.name }}</h3><span class="pill pill-purple">{{ city.region|default:"Travel" }}</span></div>
+      <p>{{ city.description|default:"Build this destination into your trip and make the route your own."|truncatechars:135 }}</p>
+      <div class="discover-meta"><span class="pill">{{ city.country }}</span><span class="pill">Cost {{ city.cost_index }}/100</span><span class="pill">{{ city.popularity }}/100 popular</span></div>
+      <div class="discover-action">
+        <span class="eyebrow">{{ city.activity_count }} activities</span>
+        {% if trip %}
+          {% if city.pk in selected_city_ids %}
+            <span class="discover-added-label">Already in trip</span>
+          {% else %}
+            <button class="btn btn-soft js-add-city" type="button" data-url="{% url 'trip_stop_add' %}" data-trip="{{ trip.pk }}" data-city="{{ city.pk }}"><i class="hgi-stroke hgi-add-01"></i> Add to trip</button>
+          {% endif %}
+        {% else %}
+          <a class="btn btn-soft" href="{% url 'trips' %}">Choose a trip</a>
+        {% endif %}
+      </div>
+    </div>
+  </article>
+  {% empty %}
+  <div class="itinerary-empty-state">
+    <div class="kicker">DESTINATION LIBRARY</div>
+    <h2>No cities match this search.</h2>
+    <p>Load the GlobeTrotter travel catalog from the database, or add your own destinations through Django Admin. Once a city exists in the City table, it appears here automatically.</p>
+  </div>
+  {% endfor %}
 </div>
 {% endblock %}
+{% block extra_js %}<script src="{% static 'js/itinerary.js' %}"></script>{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "admin_panel/base.html" %}
+{% block title %}{{ user.get_full_name|default:user.username }} · Users{% endblock %}
+{% block content %}
+<div class="admin-page-head">
+  <div>
+    <div class="admin-kicker">USER PROFILE</div>
+    <h1>{{ user.get_full_name|default:user.username }}</h1>
+    <p>Account details and travel history.</p>
+  </div>
+  <a href="{% url 'admin_panel:users' %}" class="admin-btn secondary">Back to users</a>
+</div>
+
+<div class="admin-grid">
+  <section class="admin-card">
+    <div class="admin-card-head"><strong>Account</strong><span class="admin-muted">{{ user.username }}</span></div>
+    <dl class="admin-definition-list">
+      <div><dt>Name</dt><dd>{{ user.get_full_name|default:"—" }}</dd></div>
+      <div><dt>Email</dt><dd>{{ user.email|default:"—" }}</dd></div>
+      <div><dt>Joined</dt><dd>{{ user.date_joined|date:"d M Y, H:i" }}</dd></div>
+      <div><dt>Status</dt><dd>{% if user.is_active %}Active{% else %}Inactive{% endif %}</dd></div>
+      <div><dt>Staff</dt><dd>{% if user.is_staff %}Yes{% else %}No{% endif %}</dd></div>
+      <div><dt>Superuser</dt><dd>{% if user.is_superuser %}Yes{% else %}No{% endif %}</dd></div>
+    </dl>
+  </section>
+
+  <section class="admin-card">
+    <div class="admin-card-head"><strong>Trips</strong><span class="admin-muted">{{ user_trips|length }} total</span></div>
+    {% for trip in user_trips %}
+      <div class="admin-list-row">
+        <div><strong>{{ trip.name }}</strong><span>{{ trip.start_date|date:"d M Y" }}{% if trip.end_date %} — {{ trip.end_date|date:"d M Y" }}{% endif %}</span></div>
+        <span class="admin-badge">{{ trip.is_public|yesno:"Public,Private" }}</span>
+      </div>
+    {% empty %}
+      <div class="admin-empty">No trips created yet.</div>
+    {% endfor %}
+  </section>
+</div>
+{% endblock %}
