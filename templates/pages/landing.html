@@ -10,10 +10,13 @@
   <main>
     <section class="landing-hero">
       <div class="landing-hero-copy">
-        <div class="hero-mark"><span class="orange-stroke"></span> ODOO TRAVEL WORKSPACE</div>
-        <h1>Build a trip that feels <span class="orange-note">yours.</span></h1>
+        <div class="hero-mark hero-mark-odoo"><span class="brush-dash dash-orange"></span> ODOO TRAVEL WORKSPACE</div>
+        <h1>Build a trip that feels <span class="stroke-word stroke-word-orange">yours.</span></h1>
         <p>GlobeTrotter brings cities, activities, dates, budgets and sharing into one calm workspace — inspired by Odoo's product clarity and designed for the joy of travel.</p>
-        <div class="actions" style="margin-top:22px"><a href="{% url 'signup' %}" class="btn btn-primary">Create your first trip <i class="hgi-stroke hgi-arrow-up-right-02"></i></a><a href="{% url 'public_itinerary' %}" class="btn btn-secondary">View shared trip</a></div>
+        <div class="landing-cta-wrap">
+          <div class="landing-cta-arrow" aria-hidden="true"><span class="script-note">Start here</span><img src="{% static 'art/arrow-purple.svg' %}" alt=""></div>
+          <div class="actions landing-actions"><a href="{% url 'signup' %}" class="btn btn-primary btn-hero"><span>Create your first trip</span><i class="hgi-stroke hgi-arrow-up-right-02"></i></a><a href="{% url 'public_itinerary' %}" class="btn btn-secondary">View shared trip</a></div>
+        </div>
         <div class="landing-trust"><span>Multi-city</span><span>Budget-aware</span><span>Calendar-ready</span><span>Shareable</span></div>
       </div>
       <div class="landing-hero-art">
@@ -31,8 +34,8 @@
       </div>
     </section>
 
-    <section id="journey" class="landing-section">
-      <div class="landing-section-head"><div><div class="kicker">ONE WORKSPACE</div><h2>From a blank page to a trip you can actually follow.</h2></div><p>Every part of the product is structured around the same simple flow: create, discover, arrange, budget, view and share.</p></div>
+    <section id="journey" class="landing-section landing-journey">
+      <div class="landing-section-head"><div><div class="kicker">ONE WORKSPACE</div><h2>From a blank page to a trip you can <span class="stroke-word stroke-word-blue">actually follow.</span></h2></div><p>Every part of the product is structured around the same simple flow: create, discover, arrange, budget, view and share.</p></div>
       <div class="process-grid">
         <article class="process-card"><span>01</span><i class="hgi-stroke hgi-add-circle"></i><h3>Start with the trip</h3><p>Name it, set dates, add a cover and choose your pace.</p></article>
         <article class="process-card"><span>02</span><i class="hgi-stroke hgi-location-01"></i><h3>Build the route</h3><p>Find cities, set stop dates and arrange a multi-city journey.</p></article>
@@ -42,7 +45,8 @@
     </section>
 
     <section id="discover" class="landing-section landing-cream">
-      <div class="landing-section-head"><div><div class="kicker">DESTINATION EDITORIAL</div><h2>Travel inspiration without turning the interface into a brochure.</h2></div><a class="tiny-link" href="{% url 'cities' %}">Explore cities →</a></div>
+      <div class="landing-doodle-row"><span class="script-note script-note-purple">Nothing that seamless.</span><img src="{% static 'art/arrow-purple.svg' %}" alt=""></div>
+      <div class="landing-section-head"><div><div class="kicker">DESTINATION EDITORIAL</div><h2>Travel inspiration <span class="stroke-word stroke-word-teal">without the noise.</span></h2></div><a class="tiny-link" href="{% url 'cities' %}">Explore cities →</a></div>
       <div class="landing-editorial">
         <article class="editorial-feature" style="background-image:url('https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=1200&q=84')"><div><small>GREECE · 5 DAYS</small><h3>Santorini, slow mornings and blue-hour dinners.</h3><a href="{% url 'cities' %}">See destination</a></div></article>
         <div class="editorial-list">
@@ -53,10 +57,11 @@
       </div>
     </section>
 
-    <section id="planning" class="landing-section">
+    <section id="planning" class="landing-section landing-planning">
+      <div class="planning-intro"><div class="script-note script-note-blue">Built for people who plan beautifully.</div></div>
       <div class="planning-banner">
-        <div><div class="kicker">ODOO INSPIRED PRODUCT DESIGN</div><h2>Clear enough for your first trip. Deep enough for the tenth.</h2><p>One consistent shell, clear actions, structured information and a calm visual system — the product language is intentionally close to Odoo's professional clarity while giving travel the editorial edge it deserves.</p></div>
-        <a href="{% url 'dashboard' %}" class="btn btn-primary">Open workspace</a>
+        <div><div class="kicker">ODOO INSPIRED PRODUCT DESIGN</div><h2>Clear enough for your first trip. <span class="stroke-word stroke-word-orange">Deep enough for the tenth.</span></h2><p>One consistent shell, clear actions, structured information and a calm visual system — the product language is intentionally close to Odoo's professional clarity while giving travel the editorial edge it deserves.</p></div>
+        <div class="planning-action-wrap"><span class="script-note script-note-purple">One calm workspace</span><a href="{% url 'dashboard' %}" class="btn btn-primary">Open workspace <i class="hgi-stroke hgi-arrow-up-right-02"></i></a><img class="planning-arrow" src="{% static 'art/arrow-blue.svg' %}" alt=""></div>
       </div>
     </section>
   </main>
