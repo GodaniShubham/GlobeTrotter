@@ -6,6 +6,7 @@ from activities.models import Activity
 from django.contrib import messages
 from django.utils import timezone
 from core.ai_generator import generate_itinerary
+from core.image_fetcher import get_wikipedia_image_url, download_and_save_image
 import datetime
 
 @login_required
@@ -65,6 +66,12 @@ def create_trip_view(request):
                 end_date=end_date,
             )
             
+            # Fetch Cover Image for Trip
+            trip_image_url = get_wikipedia_image_url(f"{destination} tourism landmark")
+            if trip_image_url:
+                ext = trip_image_url.split('.')[-1][:4] if '.' in trip_image_url else 'jpg'
+                download_and_save_image(trip_image_url, trip, 'cover_image', f"trip_{trip.id}_cover.{ext}")
+            
             # Create Stops and Activities
             current_date = start_date
             order = 1
@@ -94,10 +101,17 @@ def create_trip_view(request):
                     act_cat = act_data.get('category', 'Activities')
                     
                     # Get or create Activity
-                    activity_obj, _ = Activity.objects.get_or_create(
+                    activity_obj, act_created = Activity.objects.get_or_create(
                         name=act_name, city=city_obj, 
                         defaults={'description': act_desc, 'estimated_cost': act_cost, 'activity_type': 'Sightseeing'}
                     )
+                    
+                    # Fetch Image for new activities
+                    if act_created and not activity_obj.image:
+                        act_image_url = get_wikipedia_image_url(f"{act_name} {city_name}")
+                        if act_image_url:
+                            ext = act_image_url.split('.')[-1][:4] if '.' in act_image_url else 'jpg'
+                            download_and_save_image(act_image_url, activity_obj, 'image', f"act_{activity_obj.id}.{ext}")
                     
                     # Add to itinerary
                     ItineraryActivity.objects.create(

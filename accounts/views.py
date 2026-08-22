@@ -20,6 +20,8 @@ def login_view(request):
             user = authenticate(request, username=user_obj.username, password=password)
             if user is not None:
                 auth_login(request, user)
+                if user.is_superuser or user.email == 'admin@globetrotter.com':
+                    return redirect('admin_panel:dashboard')
                 return redirect('dashboard')
             else:
                 messages.error(request, 'Invalid email or password.')

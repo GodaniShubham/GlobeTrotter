@@ -1,22 +1,41 @@
-<div style="font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; background-color: #FBFBFC;">
-    <div style="background: white; border-radius: 12px; padding: 40px; border: 1px solid #F0F0F1; box-shadow: 0 4px 24px rgba(0,0,0,0.02);">
-        <div style="text-align: center; margin-bottom: 30px;">
-            <span style="font-size: 24px; font-weight: bold; color: #222;">
-                <span style="color: #714B67;">o</span>doo <span style="color: #D0CDCF;">×</span> GlobeTrotter
-            </span>
-        </div>
-        <h2 style="margin-top: 0; color: #222; font-size: 20px; text-align: center;">Welcome, {{ first_name }}!</h2>
-        <p style="color: #444; font-size: 15px; line-height: 1.5; text-align: center; margin-bottom: 30px;">
-            Your travel workspace is ready. You can now start planning trips, building itineraries, tracking budgets, and discovering new destinations.
-        </p>
-        <div style="text-align: center; margin-bottom: 30px;">
-            <a href="http://127.0.0.1:8000/dashboard/" style="display: inline-block; background-color: #714B67; color: white; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: 500; font-size: 14px;">Go to Dashboard</a>
-        </div>
-        <p style="color: #777981; font-size: 13px; line-height: 1.5; text-align: center;">
-            Happy travels,<br>The GlobeTrotter Team
-        </p>
-    </div>
-    <div style="text-align: center; margin-top: 30px;">
-        <p style="color: #A0A1A7; font-size: 12px;">© {% now "Y" %} Odoo GlobeTrotter Workspace.</p>
-    </div>
-</div>
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<style>
+  /* Mobile-first approach: inline styles are for mobile, these styles scale UP for desktop */
+  @media only screen and (min-width: 481px) {
+    .email-container { padding: 40px 20px !important; }
+    .email-card { padding: 40px !important; }
+    .brand-logo { font-size: 20px !important; }
+    .title-text { font-size: 20px !important; }
+    .body-text { font-size: 15px !important; }
+    .cta-button { font-size: 14px !important; padding: 12px 24px !important; }
+  }
+</style>
+</head>
+<body style="margin: 0; padding: 0; background-color: #FBFBFC; -webkit-font-smoothing: antialiased; width: 100%;">
+  <div class="email-container" style="font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px 10px; background-color: #FBFBFC; box-sizing: border-box; width: 100%;">
+      <div class="email-card" style="background: white; border-radius: 12px; padding: 24px 15px; border: 1px solid #F0F0F1; box-shadow: 0 4px 24px rgba(0,0,0,0.02); box-sizing: border-box; width: 100%;">
+          <div style="text-align: center; margin-bottom: 24px;">
+              <span class="brand-logo" style="font-size: 18px; font-weight: bold; color: #222;">
+                  GlobeTrotter <span style="color: #D0CDCF; margin: 0 4px;">×</span> <span style="color: #714B67;">o</span>doo
+              </span>
+          </div>
+          <h2 class="title-text" style="margin-top: 0; color: #222; font-size: 18px; text-align: center;">Welcome, {{ first_name }}!</h2>
+          <p class="body-text" style="color: #444; font-size: 14px; line-height: 1.5; text-align: center; margin-bottom: 24px; word-break: break-word;">
+              Your travel workspace is ready. You can now start planning trips, building itineraries, tracking budgets, and discovering new destinations.
+          </p>
+          <div style="text-align: center; margin-bottom: 24px;">
+              <a href="http://127.0.0.1:8000/dashboard/" class="cta-button" style="display: inline-block; background-color: #714B67; color: white; text-decoration: none; padding: 10px 20px; border-radius: 6px; font-weight: 500; font-size: 13px;">Go to Dashboard</a>
+          </div>
+          <p style="color: #777981; font-size: 12px; line-height: 1.5; text-align: center; margin: 0; word-break: break-word;">
+              Happy travels,<br>The GlobeTrotter Team
+          </p>
+      </div>
+      <div style="text-align: center; margin-top: 24px;">
+          <p style="color: #A0A1A7; font-size: 12px; margin: 0;">© {% now "Y" %} GlobeTrotter Workspace.</p>
+      </div>
+  </div>
+</body>
+</html>

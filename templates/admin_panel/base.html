@@ -710,5 +710,41 @@ document.addEventListener("keydown", (e) => {
 
 {% block extra_js %}{% endblock %}
 
+{% if messages %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    {% for message in messages %}
+      setTimeout(() => {
+        if(typeof toast === 'function') toast("{{ message|escapejs }}");
+        else { 
+            const t = document.createElement('div'); 
+            t.className='gt-toast'; 
+            t.textContent="{{ message|escapejs }}"; 
+            document.body.appendChild(t); 
+            setTimeout(()=>t.remove(), 2200); 
+        }
+      }, {{ forloop.counter0 }} * 500);
+    {% endfor %}
+  });
+</script>
+<style>
+    .gt-toast {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background: #2B2528;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        font-size: 14px;
+        z-index: 9999;
+        animation: slideIn 0.3s ease forwards, fadeOut 0.3s ease 1.9s forwards;
+    }
+    @keyframes slideIn { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+</style>
+{% endif %}
+
 </body>
 </html>

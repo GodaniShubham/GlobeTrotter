@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import User
 from django.db.models import Count
 from django.db.models.functions import TruncMonth
@@ -14,9 +15,28 @@ from django.shortcuts import redirect
 
 
 
+@user_passes_test(lambda u: u.is_superuser, login_url='/login/')
 def dashboard(request):
+    from datetime import timedelta
+    from django.utils import timezone
+
+    now = timezone.now()
+    eight_weeks_ago = now - timedelta(weeks=8)
+    
+    recent_users_qs = User.objects.filter(date_joined__gte=eight_weeks_ago)
+    
+    weeks_data = [0] * 8
+    for u in recent_users_qs:
+        delta_days = (u.date_joined - eight_weeks_ago).days
+        week_idx = delta_days // 7
+        if 0 <= week_idx < 8:
+            weeks_data[week_idx] += 1
+            
+    max_val = max(weeks_data) if max(weeks_data) > 0 else 1
+    user_growth_percentages = [(val / max_val) * 100 for val in weeks_data]
 
     context = {
+        "user_growth_percentages": user_growth_percentages,
         "total_users": User.objects.count(),
         "total_trips": Trip.objects.count(),
         "total_cities": City.objects.count(),
@@ -42,6 +62,7 @@ def dashboard(request):
 # USERS
 # =========================================================
 
+@user_passes_test(lambda u: u.is_superuser, login_url='/login/')
 def users(request):
 
     search = request.GET.get("search", "").strip()
@@ -68,6 +89,7 @@ def users(request):
     )
 
 
+@user_passes_test(lambda u: u.is_superuser, login_url='/login/')
 def user_detail(request, user_id):
 
     user = get_object_or_404(
@@ -91,6 +113,7 @@ def user_detail(request, user_id):
     )
 
 
+@user_passes_test(lambda u: u.is_superuser, login_url='/login/')
 def delete_user(request, user_id):
 
     if request.method == "POST":
@@ -109,6 +132,7 @@ def delete_user(request, user_id):
 
     return redirect("admin_panel:users")
 
+@user_passes_test(lambda u: u.is_superuser, login_url='/login/')
 def users(request):
     search = request.GET.get("search", "").strip()
 
@@ -129,6 +153,7 @@ def users(request):
     return render(request, "admin_panel/users.html", context)
 
 
+@user_passes_test(lambda u: u.is_superuser, login_url='/login/')
 def user_detail(request, user_id):
     user = get_object_or_404(User, id=user_id)
 
@@ -146,6 +171,7 @@ def user_detail(request, user_id):
     )
 
 
+@user_passes_test(lambda u: u.is_superuser, login_url='/login/')
 def delete_user(request, user_id):
     if request.method == "POST":
         user = get_object_or_404(User, id=user_id)
@@ -171,6 +197,7 @@ def delete_user(request, user_id):
 # CITIES
 # =========================================================
 
+@user_passes_test(lambda u: u.is_superuser, login_url='/login/')
 def cities(request):
 
     search = request.GET.get("search", "").strip()
@@ -210,6 +237,7 @@ def cities(request):
     )
 
 
+@user_passes_test(lambda u: u.is_superuser, login_url='/login/')
 def city_create(request):
 
     if request.method == "POST":
@@ -255,6 +283,7 @@ def city_create(request):
     )
 
 
+@user_passes_test(lambda u: u.is_superuser, login_url='/login/')
 def city_edit(request, city_id):
 
     city = get_object_or_404(
@@ -310,6 +339,7 @@ def city_edit(request, city_id):
     )
 
 
+@user_passes_test(lambda u: u.is_superuser, login_url='/login/')
 def city_delete(request, city_id):
 
     city = get_object_or_404(
@@ -336,6 +366,7 @@ def city_delete(request, city_id):
 # ACTIVITIES
 # =========================================================
 
+@user_passes_test(lambda u: u.is_superuser, login_url='/login/')
 def activities(request):
 
     search = request.GET.get("search", "").strip()
@@ -388,6 +419,7 @@ def activities(request):
     )
 
 
+@user_passes_test(lambda u: u.is_superuser, login_url='/login/')
 def activity_create(request):
 
     if request.method == "POST":
@@ -467,6 +499,7 @@ def activity_create(request):
     )
 
 
+@user_passes_test(lambda u: u.is_superuser, login_url='/login/')
 def activity_edit(request, activity_id):
 
     activity = get_object_or_404(
@@ -531,6 +564,7 @@ def activity_edit(request, activity_id):
     )
 
 
+@user_passes_test(lambda u: u.is_superuser, login_url='/login/')
 def activity_delete(request, activity_id):
 
     activity = get_object_or_404(
@@ -555,6 +589,7 @@ def activity_delete(request, activity_id):
         "admin_panel:activities"
     )
 
+@user_passes_test(lambda u: u.is_superuser, login_url='/login/')
 def analytics(request):
 
     total_users = User.objects.count()
@@ -605,6 +640,7 @@ def analytics(request):
         context
     )
 
+@user_passes_test(lambda u: u.is_superuser, login_url='/login/')
 def settings_page(request):
 
     if request.method == "POST":
@@ -645,6 +681,7 @@ def settings_page(request):
         "admin_panel/settings.html"
     )
 
+@user_passes_test(lambda u: u.is_superuser, login_url='/login/')
 def admin_logout(request):
     logout(request)
     return redirect("login")

@@ -44,7 +44,7 @@ Important: Make sure the total sum of `days` across all cities exactly equals th
     user_prompt = f"Destination: {destination}\nDuration: {days} days\nPace: {pace}\nInterests: {interests}"
 
     payload = {
-        "model": "llama3-70b-8192",
+        "model": "llama-3.3-70b-versatile",
         "messages": [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt}

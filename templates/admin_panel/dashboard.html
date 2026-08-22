@@ -230,39 +230,11 @@ Dashboard
         <div class="panel-body">
 
             <div class="chart-area">
-
+                {% for percentage in user_growth_percentages %}
                 <div class="chart-column">
-                    <div class="chart-bar" style="height:35%"></div>
+                    <div class="chart-bar" style="height:{{ percentage }}%"></div>
                 </div>
-
-                <div class="chart-column">
-                    <div class="chart-bar" style="height:45%"></div>
-                </div>
-
-                <div class="chart-column">
-                    <div class="chart-bar" style="height:42%"></div>
-                </div>
-
-                <div class="chart-column">
-                    <div class="chart-bar" style="height:58%"></div>
-                </div>
-
-                <div class="chart-column">
-                    <div class="chart-bar" style="height:52%"></div>
-                </div>
-
-                <div class="chart-column">
-                    <div class="chart-bar" style="height:70%"></div>
-                </div>
-
-                <div class="chart-column">
-                    <div class="chart-bar" style="height:76%"></div>
-                </div>
-
-                <div class="chart-column">
-                    <div class="chart-bar" style="height:90%"></div>
-                </div>
-
+                {% endfor %}
             </div>
 
 
@@ -323,122 +295,29 @@ Dashboard
 
             <div class="city-list">
 
-
+                {% for city in popular_cities %}
                 <div class="city-row">
-
                     <div class="city-rank">
-                        01
+                        {{ forloop.counter|stringformat:"02d" }}
                     </div>
-
                     <div>
-
                         <div class="city-name">
-                            Paris
+                            {{ city.name }}
                         </div>
-
                         <span class="city-country">
-                            France
+                            {{ city.country }}
                         </span>
-
                         <div class="progress">
-                            <span style="width:92%"></span>
+                            <span style="width:{{ city.popularity }}%"></span>
                         </div>
-
                     </div>
-
                     <div class="city-value">
-                        92%
+                        {{ city.popularity }}%
                     </div>
-
                 </div>
-
-
-                <div class="city-row">
-
-                    <div class="city-rank">
-                        02
-                    </div>
-
-                    <div>
-
-                        <div class="city-name">
-                            Dubai
-                        </div>
-
-                        <span class="city-country">
-                            UAE
-                        </span>
-
-                        <div class="progress">
-                            <span style="width:82%"></span>
-                        </div>
-
-                    </div>
-
-                    <div class="city-value">
-                        82%
-                    </div>
-
-                </div>
-
-
-                <div class="city-row">
-
-                    <div class="city-rank">
-                        03
-                    </div>
-
-                    <div>
-
-                        <div class="city-name">
-                            Goa
-                        </div>
-
-                        <span class="city-country">
-                            India
-                        </span>
-
-                        <div class="progress">
-                            <span style="width:74%"></span>
-                        </div>
-
-                    </div>
-
-                    <div class="city-value">
-                        74%
-                    </div>
-
-                </div>
-
-
-                <div class="city-row">
-
-                    <div class="city-rank">
-                        04
-                    </div>
-
-                    <div>
-
-                        <div class="city-name">
-                            Tokyo
-                        </div>
-
-                        <span class="city-country">
-                            Japan
-                        </span>
-
-                        <div class="progress">
-                            <span style="width:67%"></span>
-                        </div>
-
-                    </div>
-
-                    <div class="city-value">
-                        67%
-                    </div>
-
-                </div>
-
+                {% empty %}
+                <div style="padding: 20px; text-align: center; color: #999; font-size: 13px;">No cities added yet.</div>
+                {% endfor %}
 
             </div>
 
@@ -489,106 +368,26 @@ Dashboard
 
             <div class="activity-list">
 
-
+                {% for activity in popular_activities %}
                 <div class="activity-row">
-
                     <div class="activity-icon">
                         ✦
                     </div>
-
                     <div class="activity-copy">
-
                         <strong>
-                            Sightseeing
+                            {{ activity.name }}
                         </strong>
-
                         <span>
-                            Explore & discover
+                            {{ activity.category|default:"Experience" }}
                         </span>
-
                     </div>
-
                     <div class="activity-count">
-                        452
+                        {{ activity.city.name|default:"Unknown City" }}
                     </div>
-
                 </div>
-
-
-                <div class="activity-row">
-
-                    <div class="activity-icon">
-                        ◉
-                    </div>
-
-                    <div class="activity-copy">
-
-                        <strong>
-                            Food Tours
-                        </strong>
-
-                        <span>
-                            Food & culture
-                        </span>
-
-                    </div>
-
-                    <div class="activity-count">
-                        386
-                    </div>
-
-                </div>
-
-
-                <div class="activity-row">
-
-                    <div class="activity-icon">
-                        ◇
-                    </div>
-
-                    <div class="activity-copy">
-
-                        <strong>
-                            Adventure
-                        </strong>
-
-                        <span>
-                            Thrill & outdoor
-                        </span>
-
-                    </div>
-
-                    <div class="activity-count">
-                        291
-                    </div>
-
-                </div>
-
-
-                <div class="activity-row">
-
-                    <div class="activity-icon">
-                        ○
-                    </div>
-
-                    <div class="activity-copy">
-
-                        <strong>
-                            Beach & Relaxation
-                        </strong>
-
-                        <span>
-                            Leisure
-                        </span>
-
-                    </div>
-
-                    <div class="activity-count">
-                        244
-                    </div>
-
-                </div>
-
+                {% empty %}
+                <div style="padding: 20px; text-align: center; color: #999; font-size: 13px;">No activities added yet.</div>
+                {% endfor %}
 
             </div>
 
@@ -769,44 +568,6 @@ Dashboard
 
                 <tr>
 
-                    <td>
-
-                        <div class="user-cell">
-
-                            <div class="user-avatar">
-                                RK
-                            </div>
-
-                            <div>
-
-                                <div class="user-name">
-                                    Rajveer
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </td>
-
-                    <td>
-                        rajveer@example.com
-                    </td>
-
-                    <td>
-                        5
-                    </td>
-
-                    <td>
-                        <span class="badge badge-green">
-                            Active
-                        </span>
-                    </td>
-
-                    <td>
-                        Today
-                    </td>
-
                 </tr>
 
 
@@ -907,6 +668,75 @@ Dashboard
 </div>
 
 
+
+<!-- =====================================================
+     RECENT USERS
+===================================================== -->
+
+<div style="margin-top:16px;">
+
+<section class="panel">
+    <div class="panel-header">
+        <div>
+            <div class="panel-title">
+                Recent Users
+            </div>
+            <div class="panel-subtitle">
+                LATEST REGISTERED TRAVELLERS
+            </div>
+        </div>
+        <a href="/admin-panel/users/" class="badge badge-purple">
+            View all →
+        </a>
+    </div>
+
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Email</th>
+                    <th>Trips</th>
+                    <th>Status</th>
+                    <th>Joined</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in recent_users %}
+                <tr>
+                    <td>
+                        <div class="user-cell">
+                            <div class="user-avatar">
+                                {{ user.username|first|upper }}
+                            </div>
+                            <div>
+                                <div class="user-name">
+                                    {{ user.first_name|default:user.username }}
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.trip_set.count }}</td>
+                    <td>
+                        {% if user.is_active %}
+                        <span class="badge badge-green">Active</span>
+                        {% else %}
+                        <span class="badge badge-red">Inactive</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ user.date_joined|date:"M d, Y" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" style="text-align: center; padding: 20px; color: #999;">No users found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+</div>
 
 <!-- =====================================================
      FINAL CTA
