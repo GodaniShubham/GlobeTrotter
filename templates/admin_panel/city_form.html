@@ -184,7 +184,17 @@
 
         </div>
 
-    </form>
+    
+        <div class="admin-form-group">
+          <label>Local image</label>
+          <input type="file" name="image" accept="image/*">
+        </div>
+        <div class="admin-form-group">
+          <label>External image URL</label>
+          <input type="url" name="external_image_url" value="{{ city.external_image_url|default:activity.external_image_url }}" placeholder="https://...">
+        </div>
+
+</form>
 
 </section>
 

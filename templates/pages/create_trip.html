@@ -1,56 +1,106 @@
 {% extends 'base.html' %}
-{% block crumb %}Create trip{% endblock %}
+{% load static %}
+{% block crumb %}Plan a trip{% endblock %}
 {% block content %}
-<div class="page-header"><div><div class="kicker">NEW JOURNEY</div><h1 class="page-title">Create a trip</h1><p class="page-subtitle">Start with the basics. You can add cities, activities and budget details after saving.</p></div><div class="actions"><a class="btn btn-secondary" href="{% url 'trips' %}">Cancel</a><button type="submit" form="create-trip-form" class="btn btn-primary">Save trip <i class="hgi-stroke hgi-arrow-right-02"></i></button></div></div>
-<div class="split"><section class="panel panel-pad"><div class="kicker">TRIP DETAILS</div><h2 style="margin:0 0 18px;font-size:22px;letter-spacing:-.04em">Give this journey a shape.</h2>
-    <div class="create-shell">
-      <form method="POST" class="create-form" onsubmit="showGeneratingState()">
+<div class="manual-create">
+  <header class="manual-create-head">
+    <div>
+      <div class="kicker">MANUAL TRIP PLANNER</div>
+      <h1 class="page-title">Build it your way.</h1>
+      <p class="page-subtitle">Start with the trip frame, then choose every city, day and activity yourself. Nothing is auto-generated.</p>
+    </div>
+    <div class="manual-create-badge"><span>01</span> Trip basics</div>
+  </header>
+
+  <div class="manual-create-layout">
+    <section class="panel manual-create-card">
+      <div class="manual-step">
+        <div class="manual-step-no">01</div>
+        <div><div class="kicker">TRIP BASICS</div><h2>Name your journey.</h2><p>Give the trip a clear identity and set the dates you actually want to travel.</p></div>
+      </div>
+
+      {% if messages %}
+      <div class="manual-errors">
+        {% for message in messages %}<div>{{ message }}</div>{% endfor %}
+      </div>
+      {% endif %}
+
+      <form method="post" id="manual-create-form">
         {% csrf_token %}
-        <div class="field full"><label>Where do you want to go?</label><input type="text" name="destination" placeholder="e.g. Europe, Japan, or specific cities like Paris and Rome" required></div>
-        
-        <div class="form-grid">
-          <div class="field"><label>When are you leaving?</label><input type="date" name="start_date" required></div>
-          <div class="field"><label>How many days?</label><input type="number" name="days" value="7" min="1" max="60" required></div>
+        <div class="field full">
+          <label for="trip-name">Trip name</label>
+          <input id="trip-name" type="text" name="name" placeholder="Japan, in one rhythm" maxlength="200" required>
         </div>
-        
+
         <div class="form-grid">
-          <div class="field"><label>Pace</label>
-            <select name="pace">
-              <option value="Balanced">Balanced - A bit of everything</option>
-              <option value="Fast">Fast - See as much as possible</option>
-              <option value="Slow">Slow - Relaxed and immersive</option>
-            </select>
+          <div class="field">
+            <label for="trip-start">Start date</label>
+            <input id="trip-start" type="date" name="start_date" min="{{ today }}" required>
           </div>
-          <div class="field"><label>Main Focus</label>
-            <select name="interests">
-              <option value="Food & Culture">Food & Culture</option>
-              <option value="Nature & Adventure">Nature & Adventure</option>
-              <option value="History & Museums">History & Museums</option>
-              <option value="Shopping & City Life">Shopping & City Life</option>
-            </select>
+          <div class="field">
+            <label for="trip-end">End date</label>
+            <input id="trip-end" type="date" name="end_date" min="{{ today }}" required>
           </div>
         </div>
 
-        <div class="create-actions" style="margin-top: 24px;">
-          <button type="submit" class="btn btn-primary btn-large">Generate my trip ✨</button>
+        <div class="field full">
+          <label for="trip-description">Trip note <span class="optional">Optional</span></label>
+          <textarea id="trip-description" name="description" rows="4" placeholder="Food-focused, slow mornings, scenic trains, a little room to wander..."></textarea>
+        </div>
+
+        <div class="manual-create-preview">
+          <div><span>DATES</span><strong id="manual-preview-dates">Choose your dates</strong></div>
+          <div><span>DAYS</span><strong id="manual-preview-days">—</strong></div>
+          <div><span>PLANNING MODE</span><strong>100% manual</strong></div>
+        </div>
+
+        <div class="manual-create-actions">
+          <a class="btn btn-secondary" href="{% url 'dashboard' %}">Cancel</a>
+          <button class="btn btn-primary btn-large" type="submit">Start building <i class="hgi-stroke hgi-arrow-right-02"></i></button>
         </div>
       </form>
-      
-      <!-- Generating State Overlay -->
-      <div id="generatingState" style="display:none; position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.9); z-index:10; display:flex; flex-direction:column; justify-content:center; align-items:center; border-radius:16px;">
-        <div class="spinner" style="width:40px;height:40px;border:3px solid var(--purple-light);border-top-color:var(--purple);border-radius:50%;animation:spin 1s linear infinite;"></div>
-        <h3 style="margin-top:20px;">Generating your perfect trip...</h3>
-        <p class="muted">Our AI is finding the best cities and activities based on your preferences.</p>
-        <style>@keyframes spin { 100% { transform: rotate(360deg); } }</style>
+    </section>
+
+    <aside class="manual-create-side">
+      <div class="manual-visual">
+        <div class="manual-visual-grid"></div>
+        <div class="manual-visual-copy">
+          <span>YOUR PLAN</span>
+          <strong>Choose the places.<br>Shape the days.<br>Keep the rhythm.</strong>
+        </div>
+        <div class="manual-route-line"><i></i><i></i><i></i></div>
       </div>
-      <script>
-        function showGeneratingState() {
-          document.querySelector('.create-form').style.opacity = '0.3';
-          const overlay = document.getElementById('generatingState');
-          overlay.style.display = 'flex'; // It's hidden initially by the inline display:none vs flex below, I'll fix this:
-        }
-        // Initialize it to none properly
-        document.getElementById('generatingState').style.display = 'none';
-      </script>
-</section><aside class="panel panel-pad"><div class="kicker">TRIP PREVIEW</div><div class="trip-card" style="margin-top:10px"><div class="trip-cover" style="background-color:#E8E6EB;"><div class="trip-cover-label" id="preview-title">New Trip</div></div><div class="trip-body"><div class="trip-meta"><span id="preview-dates">Dates pending</span><span>·</span><span>0 days</span></div><div class="trip-title" id="preview-desc">A route with room to breathe.</div><div class="trip-desc">Once saved, build your route one stop at a time.</div></div></div><div class="rule"></div><div class="note"><strong>Next step</strong><br>Choose your first city, set stop dates, then add activities to each day.</div></aside></div>
+
+      <div class="manual-how panel">
+        <div class="kicker">HOW IT WORKS</div>
+        <div class="manual-how-row"><strong>1</strong><div><b>Add destinations</b><span>Choose cities from the travel library.</span></div></div>
+        <div class="manual-how-row"><strong>2</strong><div><b>Set stop dates</b><span>Decide exactly how long you stay in each city.</span></div></div>
+        <div class="manual-how-row"><strong>3</strong><div><b>Place activities</b><span>Pick activities and assign their day, time and cost.</span></div></div>
+        <div class="manual-how-row"><strong>4</strong><div><b>Review the route</b><span>See the final timeline, calendar and budget.</span></div></div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script>
+(function(){
+  const start=document.getElementById('trip-start');
+  const end=document.getElementById('trip-end');
+  const previewDates=document.getElementById('manual-preview-dates');
+  const previewDays=document.getElementById('manual-preview-days');
+  function update(){
+    if(!start.value || !end.value){ previewDates.textContent='Choose your dates'; previewDays.textContent='—'; return; }
+    const s=new Date(start.value+'T00:00:00');
+    const e=new Date(end.value+'T00:00:00');
+    const diff=Math.round((e-s)/86400000)+1;
+    if(diff<1){ previewDates.textContent='End date must follow start date'; previewDays.textContent='—'; return; }
+    const f=new Intl.DateTimeFormat(undefined,{day:'2-digit',month:'short',year:'numeric'});
+    previewDates.textContent=f.format(s)+' — '+f.format(e);
+    previewDays.textContent=diff+' day'+(diff===1?'':'s');
+  }
+  start.addEventListener('change',()=>{ end.min=start.value; update(); });
+  end.addEventListener('change',update);
+  update();
+})();
+</script>
 {% endblock %}

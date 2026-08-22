@@ -45,33 +45,17 @@
             <a href="{% url 'community' %}" class="side-link {% if active == 'community' %}is-active{% endif %}"><i class="hgi-stroke hgi-user-group"></i><span>Community</span></a>
         </nav>
         <div class="sidebar-spacer"></div>
-        <div class="sidebar-card">
-            <div class="sidebar-card-kicker">ODOO TRAVEL SUITE</div>
-            <strong>Everything for one memorable journey.</strong>
-            <p>Plan, budget, schedule and share from one workspace.</p>
-        </div>
-        {% if request.user.is_authenticated %}
-        <a href="{% url 'profile' %}" class="profile-mini {% if active == 'profile' %}is-active{% endif %}">
-            <span class="avatar avatar-purple">{{ request.user.first_name|first }}{{ request.user.last_name|first }}</span>
-            <span class="profile-mini-copy">
-                <strong>{{ request.user.get_full_name|default:request.user.username }}</strong>
-                <small>Traveller account</small>
-            </span>
-        </a>
-        <a href="{% url 'profile' %}" class="sidebar-settings-link {% if active == 'profile' %}is-active{% endif %}" aria-label="Settings">
-            <i class="hgi-stroke hgi-settings-02"></i>
-            <span>Settings</span>
-        </a>
-        {% else %}
-        <a href="{% url 'login' %}" class="profile-mini">
-            <span class="avatar avatar-purple">?</span>
-            <span class="profile-mini-copy">
-                <strong>Sign in</strong>
-                <small>To save your trips</small>
-            </span>
+        {% if request.user.is_superuser %}
+        <a href="{% url 'admin_panel:dashboard' %}" class="sidebar-settings-link" aria-label="Open admin panel">
+            <i class="hgi-stroke hgi-dashboard-speed-01"></i><span>Admin panel</span>
         </a>
         {% endif %}
-</aside>
+        {% if request.user.is_authenticated %}
+        <a href="{% url 'profile' %}" class="sidebar-settings-link {% if active == 'profile' %}is-active{% endif %}" aria-label="Settings">
+            <i class="hgi-stroke hgi-settings-02"></i><span>Settings</span>
+        </a>
+        {% endif %}
+    </aside>
     <div class="main-frame">
         <header class="topbar">
             <button class="icon-btn mobile-menu" type="button" data-sidebar-toggle aria-label="Open navigation"><i class="hgi-stroke hgi-menu-01"></i></button>

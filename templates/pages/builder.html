@@ -2,114 +2,160 @@
 {% load static %}
 {% block crumb %}Itinerary builder{% endblock %}
 {% block content %}
-<div class="page-header itinerary-page-head">
-  <div>
-    <div class="kicker">{{ trip.name|upper }}</div>
-    <h1 class="page-title">Shape the journey.</h1>
-    <p class="page-subtitle">{{ trip.start_date|date:"d M Y" }} — {{ trip.end_date|date:"d M Y" }} · {{ days_count }} days · {{ stops|length }} stops</p>
-  </div>
-  <div class="actions">
-    <a class="btn btn-secondary" href="{% url 'itinerary' %}?trip={{ trip.pk }}">Preview itinerary</a>
-    <a class="btn btn-primary" href="{% url 'cities' %}?trip={{ trip.pk }}">Add destination</a>
-  </div>
-</div>
-
-<div class="itinerary-workspace" data-itinerary-workspace data-trip-id="{{ trip.pk }}">
-  <aside class="itinerary-stops-panel">
-    <div class="panel-head">
-      <div><h3>Stops</h3><div class="eyebrow">{{ stops|length }} destinations</div></div>
-      <a class="icon-btn" href="{% url 'cities' %}?trip={{ trip.pk }}" aria-label="Add destination"><i class="hgi-stroke hgi-add-01"></i></a>
+<div class="manual-builder">
+  <header class="manual-builder-head">
+    <div>
+      <div class="kicker">{{ trip.name|upper }}</div>
+      <h1 class="page-title">Build the itinerary yourself.</h1>
+      <p class="page-subtitle">{{ trip.start_date|date:"d M Y" }} — {{ trip.end_date|date:"d M Y" }} · {{ days_count }} days · every stop and activity is yours to shape.</p>
     </div>
-    <div class="itinerary-stops-list" data-stop-list>
-      {% for stop in stops %}
-      <article class="itinerary-stop" data-stop-id="{{ stop.pk }}" draggable="true">
-        <div class="itinerary-stop-top">
-          <span class="stop-index">{{ forloop.counter|stringformat:"02d" }}</span>
-          <div class="stop-copy"><strong>{{ stop.city.name }}</strong><span>{{ stop.arrival_date|date:"d M" }} — {{ stop.departure_date|date:"d M" }}</span></div>
-          <button class="icon-btn icon-btn-quiet js-delete-stop" type="button" data-url="{% url 'trip_stop_delete' stop.pk %}" aria-label="Remove {{ stop.city.name }}"><i class="hgi-stroke hgi-delete-02"></i></button>
+    <div class="actions">
+      <a class="btn btn-secondary" href="{% url 'itinerary' %}?trip={{ trip.pk }}">Preview itinerary</a>
+      <a class="btn btn-primary" href="{% url 'calendar' %}?trip={{ trip.pk }}">Calendar</a>
+    </div>
+  </header>
+
+  <div class="manual-builder-workspace" data-itinerary-workspace data-trip-id="{{ trip.pk }}">
+    <section class="manual-route panel">
+      <div class="manual-panel-head">
+        <div><div class="kicker">ROUTE</div><h2>Your destinations.</h2><p>Add a city, decide its dates, then move to the next stop.</p></div>
+        <span class="manual-count">{{ stops|length }} / {{ cities|length }} available cities</span>
+      </div>
+
+      <form class="manual-add-stop" data-manual-add-stop data-url="{% url 'trip_stop_manual_add' %}">
+        {% csrf_token %}
+        <input type="hidden" name="trip_id" value="{{ trip.pk }}">
+        <div class="manual-add-city">
+          <label>Destination</label>
+          <select name="city_id" required>
+            <option value="">Choose a city…</option>
+            {% for city in cities %}
+              {% if city.id not in used_city_ids %}
+              <option value="{{ city.id }}">{{ city.name }} · {{ city.country }}</option>
+              {% endif %}
+            {% endfor %}
+          </select>
         </div>
-        <div class="stop-chip">{{ stop.itinerary_activities.all|length }} planned</div>
-      </article>
-      {% empty %}
-      <div class="itinerary-empty-panel"><strong>Your route is empty.</strong><span>Add a city to begin.</span><a class="btn btn-soft" href="{% url 'cities' %}?trip={{ trip.pk }}">Find a city</a></div>
-      {% endfor %}
-    </div>
-    {% if stops %}
-    <div class="itinerary-stops-foot">
-      <button class="btn btn-secondary" type="button" data-save-order>Save stop order</button>
-    </div>
-    {% endif %}
-  </aside>
+        <div><label>Arrive</label><input type="date" name="arrival_date" min="{{ trip.start_date|date:'Y-m-d' }}" max="{{ trip.end_date|date:'Y-m-d' }}" value="{{ trip.start_date|date:'Y-m-d' }}" required></div>
+        <div><label>Leave</label><input type="date" name="departure_date" min="{{ trip.start_date|date:'Y-m-d' }}" max="{{ trip.end_date|date:'Y-m-d' }}" value="{{ trip.start_date|date:'Y-m-d' }}" required></div>
+        <button class="btn btn-primary" type="submit"><i class="hgi-stroke hgi-add-01"></i>Add stop</button>
+      </form>
 
-  <main class="itinerary-plan-panel">
-    <div class="panel-head">
-      <div><h3>Day plan</h3><div class="eyebrow">ARRANGE STOPS AND EXPERIENCES</div></div>
-      <a class="btn btn-soft" href="{% url 'activities' %}?trip={{ trip.pk }}{% if stops %}&stop={{ stops.0.pk }}{% endif %}"><i class="hgi-stroke hgi-add-01"></i> Add activity</a>
-    </div>
-    <div class="itinerary-plan">
-      {% for stop in stops %}
-        <section class="day-section" data-stop-section="{{ stop.pk }}">
-          <div class="day-section-head">
-            <div>
-              <span class="day-section-kicker">STOP {{ forloop.counter|add:"0"|stringformat:"02d" }} · {{ stop.city.name|upper }}</span>
-              <h2>{{ stop.arrival_date|date:"l, d F" }}</h2>
-              <p>{{ stop.city.name }} · {{ stop.arrival_date|date:"d M" }} — {{ stop.departure_date|date:"d M" }}</p>
+      <div class="manual-stop-stack" data-stop-list>
+        {% for plan in stop_plans %}
+          {% with stop=plan.stop %}
+          <article class="manual-stop-card" data-stop-id="{{ stop.pk }}">
+            <div class="manual-stop-main">
+              <span class="stop-index">{{ forloop.counter|stringformat:"02d" }}</span>
+              <div><strong>{{ stop.city.name }}</strong><span>{{ stop.city.country }}</span></div>
             </div>
-            <a class="btn btn-secondary btn-small" href="{% url 'activities' %}?trip={{ trip.pk }}&stop={{ stop.pk }}">Browse activities</a>
+            <div class="manual-stop-dates">
+              <label>Arrive<input type="date" value="{{ stop.arrival_date|date:'Y-m-d' }}" data-stop-arrival data-stop-id="{{ stop.pk }}"></label>
+              <label>Leave<input type="date" value="{{ stop.departure_date|date:'Y-m-d' }}" data-stop-departure data-stop-id="{{ stop.pk }}"></label>
+            </div>
+            <div class="manual-stop-meta"><span>{{ stop.itinerary_activities.all|length }} activities</span><button type="button" class="icon-btn icon-btn-quiet js-delete-stop" data-url="{% url 'trip_stop_delete' stop.pk %}" title="Remove stop"><i class="hgi-stroke hgi-delete-02"></i></button></div>
+            <div class="manual-stop-actions"><button class="btn btn-secondary btn-small js-save-stop-dates" type="button" data-url="{% url 'trip_stop_update' stop.pk %}">Save dates</button></div>
+          </article>
+          {% endwith %}
+        {% empty %}
+          <div class="manual-empty-route"><div class="kicker">START HERE</div><h3>Your route is empty.</h3><p>Add your first city above. Then its activities will appear in the day planner.</p></div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="manual-days panel">
+      <div class="manual-panel-head">
+        <div><div class="kicker">DAY BY DAY</div><h2>Place every experience.</h2><p>No generated schedule — you choose the day, time and cost.</p></div>
+        <span class="manual-count">{{ trip_activities|length }} planned activities</span>
+      </div>
+
+      {% for plan in stop_plans %}
+        {% with stop=plan.stop %}
+        <article class="manual-city-block">
+          <div class="manual-city-head">
+            <div>
+              <span class="manual-city-kicker">STOP {{ forloop.counter|stringformat:"02d" }} · {{ stop.city.name|upper }}</span>
+              <h3>{{ stop.city.name }}</h3>
+              <span>{{ stop.arrival_date|date:"d M" }} — {{ stop.departure_date|date:"d M Y" }}</span>
+            </div>
+            <a class="btn btn-soft btn-small" href="{% url 'activities' %}?trip={{ trip.pk }}&stop={{ stop.pk }}">Browse activity library</a>
           </div>
 
-          <div class="day-activity-list">
+          <div class="manual-activity-add">
+            <div class="kicker">ADD ACTIVITY</div>
+            <div class="manual-activity-form" data-manual-add-activity data-url="{% url 'trip_activity_add' %}">
+              {% csrf_token %}
+              <input type="hidden" name="trip_stop_id" value="{{ stop.pk }}">
+              <select name="activity_id" required>
+                <option value="">Choose an activity in {{ stop.city.name }}…</option>
+                {% for activity in plan.activities %}
+                <option value="{{ activity.pk }}">{{ activity.name }} · ₹{{ activity.estimated_cost|floatformat:0 }}</option>
+                {% endfor %}
+              </select>
+              <input type="date" name="date" min="{{ stop.arrival_date|date:'Y-m-d' }}" max="{{ stop.departure_date|date:'Y-m-d' }}" value="{{ stop.arrival_date|date:'Y-m-d' }}" required>
+              <input type="time" name="start_time" value="09:00">
+              <input type="time" name="end_time" value="10:30">
+              <input type="number" name="custom_cost" min="0" step="0.01" placeholder="Cost">
+              <input type="text" name="notes" maxlength="500" placeholder="Note (optional)">
+              <button class="btn btn-primary btn-small" type="submit">Add activity</button>
+            </div>
+          </div>
+
+          <div class="manual-activity-list">
             {% for item in stop.itinerary_activities.all %}
-            <article class="day-activity" data-activity-id="{{ item.pk }}">
-              <div class="day-activity-time">
-                {% if item.start_time %}{{ item.start_time|time:"H:i" }}{% else %}Open{% endif %}
-                {% if item.end_time %}<span>{{ item.end_time|time:"H:i" }}</span>{% endif %}
+            <article class="manual-activity-card" data-activity-id="{{ item.pk }}">
+              <div class="manual-activity-time">
+                <span>{{ item.date|date:"d M" }}</span>
+                <strong>{% if item.start_time %}{{ item.start_time|time:"H:i" }}{% else %}Open{% endif %}</strong>
+                {% if item.end_time %}<small>{{ item.end_time|time:"H:i" }}</small>{% endif %}
               </div>
-              <div class="day-activity-main">
+              <div class="manual-activity-body">
                 <strong>{{ item.activity.name }}</strong>
                 <span>{{ item.activity.activity_type }} · {{ item.activity.city.name }}</span>
                 {% if item.notes %}<small>{{ item.notes }}</small>{% endif %}
               </div>
-              <div class="day-activity-cost">₹{{ item.custom_cost|default:item.activity.estimated_cost|floatformat:0 }}</div>
-              <button class="icon-btn icon-btn-quiet js-delete-activity" type="button" data-url="{% url 'trip_activity_delete' item.pk %}" aria-label="Remove activity"><i class="hgi-stroke hgi-delete-02"></i></button>
+              <div class="manual-activity-cost">
+                <label>Cost<input type="number" step="0.01" min="0" value="{{ item.custom_cost|default:item.activity.estimated_cost }}" data-activity-cost></label>
+              </div>
+              <div class="manual-activity-edit">
+                <input type="date" value="{{ item.date|date:'Y-m-d' }}" data-activity-date>
+                <input type="time" value="{{ item.start_time|time:'H:i' }}" data-activity-start>
+                <input type="time" value="{{ item.end_time|time:'H:i' }}" data-activity-end>
+                <input type="text" value="{{ item.notes }}" data-activity-notes maxlength="500" placeholder="Notes">
+                <button class="btn btn-secondary btn-small js-save-activity" type="button" data-url="{% url 'trip_activity_update' item.pk %}">Save</button>
+                <button class="icon-btn icon-btn-quiet js-delete-activity" type="button" data-url="{% url 'trip_activity_delete' item.pk %}" title="Remove"><i class="hgi-stroke hgi-delete-02"></i></button>
+              </div>
             </article>
             {% empty %}
-            <div class="day-empty">
-              <span>No activities planned yet.</span>
-              <a href="{% url 'activities' %}?trip={{ trip.pk }}&stop={{ stop.pk }}">Browse {{ stop.city.name }} activities →</a>
-            </div>
+              <div class="manual-no-activities">No activities yet. Pick one above and place it on this stop.</div>
             {% endfor %}
           </div>
-        </section>
+        </article>
+        {% endwith %}
       {% empty %}
-        <div class="itinerary-empty-state">
-          <div class="kicker">START WITH A PLACE</div>
-          <h2>Your itinerary becomes easier once the first city is in.</h2>
-          <p>Add a destination, then fill its days with activities. Every change is saved to this trip.</p>
-          <a class="btn btn-primary" href="{% url 'cities' %}?trip={{ trip.pk }}">Choose a destination</a>
+        <div class="manual-empty-route">
+          <div class="kicker">YOUR DAYS ARE READY</div>
+          <h3>Add a destination first.</h3>
+          <p>The planner will open a dedicated section for each city you choose.</p>
         </div>
       {% endfor %}
-    </div>
-  </main>
+    </section>
 
-  <aside class="itinerary-summary-panel">
-    <div class="panel-head">
-      <div><h3>Trip snapshot</h3><div class="eyebrow">LIVE FROM YOUR PLAN</div></div>
-      <span class="status-dot green"></span>
-    </div>
-    <div class="itinerary-summary-body">
-      <div class="summary-metric featured"><span>Planning progress</span><strong>{{ stops|length }} stops</strong><div class="summary-bar"><span style="width:{% if days_count %}{% widthratio stops|length days_count 100 %}{% else %}0{% endif %}%"></span></div></div>
-      <div class="summary-grid">
-        <div class="summary-metric"><span>Days</span><strong>{{ days_count }}</strong></div>
-        <div class="summary-metric"><span>Activities</span><strong>{{ trip_activities|length }}</strong></div>
+    <aside class="manual-summary panel">
+      <div class="manual-panel-head"><div><div class="kicker">TRIP SNAPSHOT</div><h2>Planning health.</h2></div></div>
+      <div class="manual-summary-stat"><span>Trip length</span><strong>{{ days_count }} days</strong><small>{{ trip.start_date|date:"d M" }} — {{ trip.end_date|date:"d M Y" }}</small></div>
+      <div class="manual-summary-grid">
+        <div><span>Stops</span><strong>{{ stops|length }}</strong></div>
+        <div><span>Activities</span><strong>{{ trip_activities|length }}</strong></div>
       </div>
-      <div class="summary-metric"><span>Planned spend</span><strong>₹{{ total_cost|floatformat:0 }}</strong><small>based on activity estimates</small></div>
-      <div class="summary-actions">
-        <a class="btn btn-secondary" href="{% url 'itinerary' %}?trip={{ trip.pk }}">Open itinerary</a>
+      <div class="manual-summary-stat"><span>Planned spend</span><strong>₹{{ total_cost|floatformat:0 }}</strong><small>Uses activity estimates or your custom cost.</small></div>
+      <div class="manual-summary-links">
+        <a class="btn btn-secondary" href="{% url 'itinerary' %}?trip={{ trip.pk }}">Preview timeline</a>
         <a class="btn btn-secondary" href="{% url 'calendar' %}?trip={{ trip.pk }}">Open calendar</a>
+        <a class="btn btn-primary" href="{% url 'budget' %}?trip={{ trip.pk }}">Review budget</a>
       </div>
-    </div>
-  </aside>
+    </aside>
+  </div>
 </div>
 {% endblock %}
 {% block extra_js %}<script src="{% static 'js/itinerary.js' %}"></script>{% endblock %}

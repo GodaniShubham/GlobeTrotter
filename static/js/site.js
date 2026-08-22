@@ -87,19 +87,6 @@
   const sidebar=document.getElementById('sidebar'); const toggle=document.querySelector('[data-sidebar-toggle]');
   if(toggle && sidebar) toggle.addEventListener('click',()=>sidebar.classList.toggle('is-open'));
 
-  // Dropdowns
-  document.addEventListener('click', e => {
-    const trigger = e.target.closest('[data-dropdown-trigger]');
-    if (trigger) {
-      const dropdown = trigger.closest('.dropdown');
-      const isOpen = dropdown.classList.contains('is-open');
-      document.querySelectorAll('.dropdown.is-open').forEach(d => d.classList.remove('is-open'));
-      if (!isOpen) dropdown.classList.add('is-open');
-    } else if (!e.target.closest('.dropdown-menu')) {
-      document.querySelectorAll('.dropdown.is-open').forEach(d => d.classList.remove('is-open'));
-    }
-  });
-
   const setupFilters=(selector, itemSelector, filterAttr, searchSelector, searchAttr)=>{
     const buttons=[...document.querySelectorAll(selector)]; const items=[...document.querySelectorAll(itemSelector)]; const search=document.querySelector(searchSelector); let current='all';
     const apply=()=>{ const term=(search?.value||'').toLowerCase().trim(); items.forEach(item=>{const okFilter=current==='all'||item.getAttribute(filterAttr)===current; const okSearch=!term||(item.getAttribute(searchAttr)||'').toLowerCase().includes(term); item.style.display=(okFilter&&okSearch)?'':'none';}); };
@@ -293,4 +280,23 @@
   document.addEventListener('click',e=>{if(notifPanel&&!e.target.closest('.community-notification-wrap'))notifPanel.hidden=true;});
   loadNotifications();
   window.setInterval(loadNotifications,5000);
+})();
+
+
+/* AUTH SAFE FINAL JS */
+(function(){
+  document.querySelectorAll('[data-auth-password]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var input = document.getElementById(btn.getAttribute('data-auth-password'));
+      if(!input) return;
+      var visible = input.type === 'text';
+      input.type = visible ? 'password' : 'text';
+      btn.setAttribute('aria-label', visible ? 'Show password' : 'Hide password');
+      btn.setAttribute('title', visible ? 'Show password' : 'Hide password');
+      var icon = btn.querySelector('i');
+      if(icon){
+        icon.className = visible ? 'hgi-stroke hgi-view' : 'hgi-stroke hgi-view-off';
+      }
+    });
+  });
 })();

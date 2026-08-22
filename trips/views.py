@@ -89,6 +89,7 @@ def trips_view(request):
     )
 
 
+
 @login_required
 def create_trip_view(request):
     if request.method == "POST":
@@ -109,13 +110,18 @@ def create_trip_view(request):
                 start_date=start_date,
                 end_date=end_date,
             )
-            messages.success(request, f'"{trip.name}" is ready. Start shaping the route.')
+            messages.success(request, f'"{trip.name}" is ready. Build your itinerary stop by stop.')
             return redirect(f"/trip/builder/?trip={trip.pk}")
 
+    today = timezone.now().date()
     return render(
         request,
         "pages/create_trip.html",
-        {"page_title": "Create trip — GlobeTrotter", "active": "create"},
+        {
+            "page_title": "Plan a trip — GlobeTrotter",
+            "active": "create",
+            "today": today.isoformat(),
+        },
     )
 
 
@@ -127,20 +133,41 @@ def builder_view(request):
         return redirect("create_trip")
 
     stops, activities, unique_days, total_cost = _trip_context(trip)
+
+    # Provide the city-specific activity catalog for the manual planner.
+    activity_catalog = {
+        city_id: list(
+            Activity.objects.filter(city_id=city_id)
+            .order_by("name")
+        )
+        for city_id in {stop.city_id for stop in stops}
+    }
+    stop_plans = [
+        {
+            "stop": stop,
+            "activities": activity_catalog.get(stop.city_id, []),
+        }
+        for stop in stops
+    ]
+
     cities = City.objects.order_by("name")
+    used_city_ids = {stop.city_id for stop in stops}
+
     return render(
         request,
         "pages/builder.html",
         {
-            "page_title": f"{trip.name} — Itinerary builder",
+            "page_title": f"{trip.name} — Manual itinerary builder",
             "active": "builder",
             "trip": trip,
             "stops": stops,
+            "stop_plans": stop_plans,
             "trip_activities": activities,
             "days_count": (trip.end_date - trip.start_date).days + 1,
             "unique_days": unique_days,
             "total_cost": total_cost,
             "cities": cities,
+            "used_city_ids": used_city_ids,
         },
     )
 
@@ -191,6 +218,49 @@ def itinerary_view(request):
             "days_count": (trip.end_date - trip.start_date).days + 1,
         },
     )
+
+
+@login_required
+@require_POST
+def add_stop_manual(request):
+    trip = _owned_trip(request, request.POST.get("trip_id"))
+    city = get_object_or_404(City, pk=request.POST.get("city_id"))
+
+    if TripStop.objects.filter(trip=trip, city=city).exists():
+        return JsonResponse({"ok": False, "message": f"{city.name} is already in this trip."}, status=400)
+
+    arrival = _date(request.POST.get("arrival_date")) or trip.start_date
+    departure = _date(request.POST.get("departure_date")) or arrival
+
+    if arrival < trip.start_date or departure > trip.end_date:
+        return JsonResponse({"ok": False, "message": "Stop dates must stay inside the trip dates."}, status=400)
+    if departure < arrival:
+        return JsonResponse({"ok": False, "message": "Departure must be on or after arrival."}, status=400)
+
+    last_order = (
+        TripStop.objects.filter(trip=trip)
+        .aggregate(max_order=Max("order"))
+        .get("max_order")
+        or 0
+    )
+
+    stop = TripStop.objects.create(
+        trip=trip,
+        city=city,
+        arrival_date=arrival,
+        departure_date=departure,
+        order=last_order + 1,
+    )
+
+    return JsonResponse({
+        "ok": True,
+        "stop": {
+            "id": stop.pk,
+            "city": city.name,
+            "arrival": stop.arrival_date.isoformat(),
+            "departure": stop.departure_date.isoformat(),
+        },
+    })
 
 
 @login_required

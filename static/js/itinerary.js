@@ -94,4 +94,68 @@
       catch(e){notify(e.message);}
     });
   }
+
+  // Manual planner: add destination with exact dates.
+  document.querySelectorAll('[data-manual-add-stop]').forEach(form=>{
+    form.addEventListener('submit', async (event)=>{
+      event.preventDefault();
+      const button=form.querySelector('button[type="submit"]');
+      button.disabled=true;
+      try{
+        await post(form.dataset.url, new FormData(form));
+        notify('Destination added to your route.');
+        window.location.reload();
+      }catch(e){notify(e.message);button.disabled=false;}
+    });
+  });
+
+  // Manual planner: save exact stop dates.
+  document.querySelectorAll('.js-save-stop-dates').forEach(button=>{
+    button.addEventListener('click', async ()=>{
+      const card=button.closest('[data-stop-id]');
+      const arrival=card.querySelector('[data-stop-arrival]').value;
+      const departure=card.querySelector('[data-stop-departure]').value;
+      button.disabled=true;
+      try{
+        await post(button.dataset.url,{arrival_date:arrival,departure_date:departure});
+        notify('Stop dates saved.');
+        window.location.reload();
+      }catch(e){notify(e.message);button.disabled=false;}
+    });
+  });
+
+  // Manual planner: add activity at a chosen date/time/cost.
+  document.querySelectorAll('[data-manual-add-activity]').forEach(form=>{
+    form.addEventListener('submit',async(event)=>{
+      event.preventDefault();
+      const button=form.querySelector('button[type="submit"]');
+      button.disabled=true;
+      try{
+        await post(form.dataset.url,new FormData(form));
+        notify('Activity added to your itinerary.');
+        window.location.reload();
+      }catch(e){notify(e.message);button.disabled=false;}
+    });
+  });
+
+  // Manual planner: edit an existing activity.
+  document.querySelectorAll('.js-save-activity').forEach(button=>{
+    button.addEventListener('click',async()=>{
+      const card=button.closest('[data-activity-id]');
+      const data={
+        date:card.querySelector('[data-activity-date]').value,
+        start_time:card.querySelector('[data-activity-start]').value,
+        end_time:card.querySelector('[data-activity-end]').value,
+        custom_cost:card.querySelector('[data-activity-cost]').value,
+        notes:card.querySelector('[data-activity-notes]').value
+      };
+      button.disabled=true;
+      try{
+        await post(button.dataset.url,data);
+        notify('Activity updated.');
+        window.location.reload();
+      }catch(e){notify(e.message);button.disabled=false;}
+    });
+  });
+
 })();
