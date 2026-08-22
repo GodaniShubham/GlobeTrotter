@@ -1,0 +1,378 @@
+{% extends "admin_panel/base.html" %}
+
+{% block title %}
+Analytics · GlobeTrotter
+{% endblock %}
+
+{% block breadcrumb %}
+Analytics
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+
+        <div class="kicker">
+            ADMIN · INSIGHTS
+        </div>
+
+        <h1 class="page-title">
+            Analytics
+        </h1>
+
+        <p class="page-subtitle">
+            Understand how users are using the GlobeTrotter platform.
+        </p>
+
+    </div>
+
+    <span class="badge badge-purple">
+        Live Data
+    </span>
+
+</div>
+
+
+<!-- STATISTICS -->
+
+<div class="stats-grid">
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+            <div class="stat-icon">
+                ♙
+            </div>
+        </div>
+
+        <div class="stat-label">
+            TOTAL USERS
+        </div>
+
+        <div class="stat-number">
+            {{ total_users }}
+        </div>
+
+        <div class="stat-footer">
+            Registered travellers
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+            <div class="stat-icon orange">
+                ✈
+            </div>
+        </div>
+
+        <div class="stat-label">
+            TOTAL TRIPS
+        </div>
+
+        <div class="stat-number">
+            {{ total_trips }}
+        </div>
+
+        <div class="stat-footer">
+            Trips created
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+            <div class="stat-icon green">
+                ⌖
+            </div>
+        </div>
+
+        <div class="stat-label">
+            CITIES
+        </div>
+
+        <div class="stat-number">
+            {{ total_cities }}
+        </div>
+
+        <div class="stat-footer">
+            Available destinations
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+            <div class="stat-icon blue">
+                ✦
+            </div>
+        </div>
+
+        <div class="stat-label">
+            ACTIVITIES
+        </div>
+
+        <div class="stat-number">
+            {{ total_activities }}
+        </div>
+
+        <div class="stat-footer">
+            Travel experiences
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ANALYTICS GRID -->
+
+<div class="analytics-grid">
+
+
+    <!-- USER GROWTH -->
+
+    <section class="panel analytics-card">
+
+        <div class="panel-header">
+
+            <div>
+
+                <div class="panel-title">
+                    User Growth
+                </div>
+
+                <div class="panel-subtitle">
+                    USER REGISTRATION TREND
+                </div>
+
+            </div>
+
+            <span class="badge badge-purple">
+                Users
+            </span>
+
+        </div>
+
+
+        <div class="analytics-content">
+
+            <div class="chart-placeholder">
+
+                {% for item in user_growth %}
+
+                    <div
+                        class="chart-bar"
+                        style="height:
+                        {% widthratio item.total total_users 100 %}%"
+                    >
+                        <span>
+                            {{ item.total }}
+                        </span>
+                    </div>
+
+                {% empty %}
+
+                    <div class="empty-chart">
+                        No user data available
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- TRIP GROWTH -->
+
+    <section class="panel analytics-card">
+
+        <div class="panel-header">
+
+            <div>
+
+                <div class="panel-title">
+                    Trip Growth
+                </div>
+
+                <div class="panel-subtitle">
+                    TRIPS CREATED OVER TIME
+                </div>
+
+            </div>
+
+            <span class="badge badge-orange">
+                Trips
+            </span>
+
+        </div>
+
+
+        <div class="analytics-content">
+
+            <div class="chart-placeholder orange-chart">
+
+                {% for item in trip_growth %}
+
+                    <div
+                        class="chart-bar"
+                        style="height:
+                        {% widthratio item.total total_trips 100 %}%"
+                    >
+                        <span>
+                            {{ item.total }}
+                        </span>
+                    </div>
+
+                {% empty %}
+
+                    <div class="empty-chart">
+                        No trip data available
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- POPULAR CITIES -->
+
+    <section class="panel analytics-card">
+
+        <div class="panel-header">
+
+            <div>
+
+                <div class="panel-title">
+                    Popular Cities
+                </div>
+
+                <div class="panel-subtitle">
+                    TOP DESTINATIONS
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="ranking-list">
+
+        {% for city in popular_cities %}
+
+            <div class="ranking-item">
+
+                <div class="rank-number">
+                    {{ forloop.counter|stringformat:"02d" }}
+                </div>
+
+                <div class="rank-info">
+
+                    <strong>
+                        {{ city.name }}
+                    </strong>
+
+                    <span>
+                        {{ city.country }}
+                    </span>
+
+                </div>
+
+                <div class="rank-value">
+                    {{ city.popularity }}
+                </div>
+
+            </div>
+
+        {% empty %}
+
+            <div class="empty-state">
+                No cities available.
+            </div>
+
+        {% endfor %}
+
+        </div>
+
+    </section>
+
+
+    <!-- POPULAR ACTIVITIES -->
+
+    <section class="panel analytics-card">
+
+        <div class="panel-header">
+
+            <div>
+
+                <div class="panel-title">
+                    Popular Activities
+                </div>
+
+                <div class="panel-subtitle">
+                    TOP EXPERIENCES
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="ranking-list">
+
+        {% for activity in popular_activities %}
+
+            <div class="ranking-item">
+
+                <div class="rank-number">
+                    {{ forloop.counter|stringformat:"02d" }}
+                </div>
+
+                <div class="rank-info">
+
+                    <strong>
+                        {{ activity.name }}
+                    </strong>
+
+                    <span>
+                        {{ activity.city.name }}
+                    </span>
+
+                </div>
+
+                <div class="rank-value">
+                    ₹{{ activity.estimated_cost }}
+                </div>
+
+            </div>
+
+        {% empty %}
+
+            <div class="empty-state">
+                No activities available.
+            </div>
+
+        {% endfor %}
+
+        </div>
+
+    </section>
+
+</div>
+
+{% endblock %}
