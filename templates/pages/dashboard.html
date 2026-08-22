@@ -2,15 +2,15 @@
 {% load currency_tags %}
 {% block crumb %}Dashboard{% endblock %}
 {% block content %}
-<div class="page-header"><div><div class="kicker">{% now "l · j F" %}</div><h1 class="page-title">Good morning, {{ request.user.first_name|default:request.user.username }}.</h1><p class="page-subtitle">Your travel desk is ready. Continue your route, discover a new city, or start a fresh plan.</p></div><div class="actions"><a href="{% url 'create_trip' %}" class="btn btn-primary"><i class="hgi-stroke hgi-add-01"></i> Plan new trip</a></div></div>
+<div class="page-header"><div><div class="kicker">{% now "l · j F" %}</div><h1 class="page-title annotated-title">Good morning, {{ request.user.first_name|default:request.user.username }}.<span class="hand-note">let’s map something memorable</span></h1><p class="page-subtitle">Your travel desk is ready. Continue your route, discover a new city, or start a fresh plan.</p></div><div class="actions"><a href="{% url 'create_trip' %}" class="btn btn-primary btn-callout"><i class="hgi-stroke hgi-add-01"></i> Plan new trip</a></div></div>
 <div class="hero-panel">
   <div class="hero-copy">
     <div class="hero-mark"><span class="orange-stroke"></span> NEXT JOURNEY</div>
     {% if upcoming_trips %}
     {% with next_trip=upcoming_trips.0 %}
-    <h1>{{ next_trip.name }} <span style="color:var(--purple)">in one rhythm.</span></h1>
+    <h1>{{ next_trip.name }} <span class="marker-word">in one rhythm.</span></h1><div class="visual-rule"></div>
     <p>{{ next_trip.description|default:"A new journey awaits." }}</p>
-    <div class="actions" style="margin-top:18px"><a class="btn btn-primary" href="{% url 'builder' %}">Continue itinerary</a><a class="btn btn-secondary" href="{% url 'itinerary' %}">Preview</a></div>
+    <div class="actions" style="margin-top:18px"><a class="btn btn-primary" href="{% url 'builder' next_trip.id %}">Continue itinerary</a><a class="btn btn-secondary" href="{% url 'itinerary' next_trip.id %}">Preview</a></div>
     {% endwith %}
     {% else %}
     <h1>No upcoming trips <span style="color:var(--purple)">yet.</span></h1>
@@ -20,12 +20,13 @@
   </div>
   <div class="hero-image" aria-label="Mountain travel image"></div>
 </div>
-<div class="grid grid-4" style="margin-top:18px"><div class="stat"><div class="stat-label">Upcoming trips</div><div class="stat-value">{{ upcoming_trips|length }}</div><div class="stat-meta up">Total trips: {{ total_trips }}</div></div><div class="stat"><div class="stat-label">Cities explored</div><div class="stat-value">{{ cities_explored }}</div><div class="stat-meta">Across {{ total_trips }} routes</div></div><div class="stat"><div class="stat-label">Average daily cost</div><div class="stat-value">{{ 145|convert:request.user }}</div><div class="stat-meta">Budget tracking</div></div><div class="stat"><div class="stat-label">Saved destinations</div><div class="stat-value">0</div><div class="stat-meta">Ready to explore</div></div></div>
-<div class="section-title"><div><h2>Continue planning</h2><p>Your most recent routes.</p></div><a href="{% url 'trips' %}" class="tiny-link">View all trips →</a></div>
+<div class="grid grid-4" style="margin-top:18px"><div class="route-banner" style="grid-column:1/-1"><span class="route-note">your travel desk</span><span class="route-line"></span><span class="eyebrow">4 routes · 26 days</span></div><div class="stat editorial-stat"><div class="stat-label">Upcoming trips</div><div class="stat-value">{{ upcoming_trips|length }}</div><div class="stat-meta up">Total trips: {{ total_trips }}</div></div><div class="stat editorial-stat"><div class="stat-label">Cities explored</div><div class="stat-value">{{ cities_explored }}</div><div class="stat-meta">Across {{ total_trips }} routes</div></div><div class="stat editorial-stat"><div class="stat-label">Average daily cost</div><div class="stat-value">{{ 145|convert:request.user }}</div><div class="stat-meta">Budget tracking</div></div><div class="stat editorial-stat"><div class="stat-label">Saved destinations</div><div class="stat-value">0</div><div class="stat-meta">Ready to explore</div></div></div>
+<div class="section-title editorial"><div><h2>Continue planning</h2><p>Your most recent routes. <span class="hand-note">pick up the thread</span></p></div><a href="{% url 'trips' %}" class="tiny-link">View all trips →</a></div>
 <div class="grid grid-3">
   {% for trip in upcoming_trips|slice:":3" %}
+  <a href="{% url 'builder' trip.id %}" style="text-decoration:none;color:inherit;display:block">
   <article class="trip-card">
-    <div class="trip-cover" style="background-color:#E8E6EB;">
+    <div class="trip-cover" {% if trip.cover_image %}style="background-image:url('{{ trip.cover_image.url }}')"{% else %}style="background-color:#E8E6EB;"{% endif %}>
         <div class="trip-cover-label">{{ trip.name }}</div>
     </div>
     <div class="trip-body">
@@ -38,10 +39,11 @@
         <div class="trip-desc">{{ trip.description|default:"No description yet." }}</div>
         <div class="trip-footer">
             <span class="pill pill-purple">Draft</span>
-            <a class="tiny-link" href="{% url 'builder' %}">Open →</a>
+            <span class="tiny-link">Open →</span>
         </div>
     </div>
   </article>
+  </a>
   {% empty %}
   <div style="grid-column: 1 / -1; padding: 40px; text-align: center; background: #fff; border-radius: 16px; border: 1px solid #E8E6EB;">
       <h3 style="margin-bottom:8px">Welcome to GlobeTrotter!</h3>

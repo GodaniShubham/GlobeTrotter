@@ -1,0 +1,2 @@
+Global branding is now consistently rendered as: GlobeTrotter × Odoo.
+GlobeTrotter is always the primary wordmark, Odoo is the secondary brand mark, and the lockup is used in the sidebar and auth/recovery screens.

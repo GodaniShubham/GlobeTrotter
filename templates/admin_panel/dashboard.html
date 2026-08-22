@@ -1,0 +1,804 @@
+{% extends 'admin_panel/base.html' %}
+
+{% block title %}
+GlobeTrotter Admin Dashboard
+{% endblock %}
+
+{% block breadcrumb %}
+Dashboard
+{% endblock %}
+
+
+{% block content %}
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<div class="page-header">
+
+    <div>
+
+        <div class="kicker">
+            ADMIN · OVERVIEW
+        </div>
+
+        <h1 class="page-title">
+            Good morning, Admin 👋
+        </h1>
+
+        <p class="page-subtitle">
+            Here's what's happening across your GlobeTrotter travel platform.
+        </p>
+
+    </div>
+
+
+    <div>
+
+        <span class="badge badge-purple">
+            ● Live Dashboard
+        </span>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     STAT CARDS
+===================================================== -->
+
+<div class="stats-grid">
+
+
+    <!-- USERS -->
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+
+            <div class="stat-icon">
+                ♙
+            </div>
+
+        </div>
+
+        <div class="stat-label">
+            TOTAL USERS
+        </div>
+
+        <div class="stat-number">
+            {{ total_users|default:"0" }}
+        </div>
+
+        <div class="stat-footer">
+
+            <span class="stat-up">
+                ↗ Active platform
+            </span>
+
+            <span class="stat-muted">
+                users
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- TRIPS -->
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+
+            <div class="stat-icon orange">
+                ✈
+            </div>
+
+        </div>
+
+        <div class="stat-label">
+            TOTAL TRIPS
+        </div>
+
+        <div class="stat-number">
+            {{ total_trips|default:"0" }}
+        </div>
+
+        <div class="stat-footer">
+
+            <span class="stat-up">
+                ↗
+            </span>
+
+            <span class="stat-muted">
+                trips created
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- CITIES -->
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+
+            <div class="stat-icon green">
+                ⌖
+            </div>
+
+        </div>
+
+        <div class="stat-label">
+            TOTAL CITIES
+        </div>
+
+        <div class="stat-number">
+            {{ total_cities|default:"0" }}
+        </div>
+
+        <div class="stat-footer">
+
+            <span class="stat-up">
+                ● Available
+            </span>
+
+            <span class="stat-muted">
+                destinations
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- ACTIVITIES -->
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+
+            <div class="stat-icon blue">
+                ✦
+            </div>
+
+        </div>
+
+        <div class="stat-label">
+            TOTAL ACTIVITIES
+        </div>
+
+        <div class="stat-number">
+            {{ total_activities|default:"0" }}
+        </div>
+
+        <div class="stat-footer">
+
+            <span class="stat-up">
+                ●
+            </span>
+
+            <span class="stat-muted">
+                experiences
+            </span>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     FIRST ANALYTICS ROW
+===================================================== -->
+
+<div class="dashboard-grid">
+
+
+    <!-- USER GROWTH -->
+
+    <section class="panel">
+
+        <div class="panel-header">
+
+            <div>
+
+                <div class="panel-title">
+                    User Growth
+                </div>
+
+                <div class="panel-subtitle">
+                    USER REGISTRATION OVERVIEW
+                </div>
+
+            </div>
+
+            <span class="badge badge-purple">
+                Last 8 Weeks
+            </span>
+
+        </div>
+
+
+        <div class="panel-body">
+
+            <div class="chart-area">
+                {% for percentage in user_growth_percentages %}
+                <div class="chart-column">
+                    <div class="chart-bar" style="height:{{ percentage }}%"></div>
+                </div>
+                {% endfor %}
+            </div>
+
+
+            <div style="
+                display:flex;
+                justify-content:space-between;
+                margin-top:10px;
+                font-size:8px;
+                color:#999;
+            ">
+
+                <span>W1</span>
+                <span>W2</span>
+                <span>W3</span>
+                <span>W4</span>
+                <span>W5</span>
+                <span>W6</span>
+                <span>W7</span>
+                <span>W8</span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- POPULAR CITIES -->
+
+    <section class="panel">
+
+        <div class="panel-header">
+
+            <div>
+
+                <div class="panel-title">
+                    Popular Cities
+                </div>
+
+                <div class="panel-subtitle">
+                    MOST SELECTED DESTINATIONS
+                </div>
+
+            </div>
+
+            <a href="/admin-panel/cities/"
+               class="badge badge-orange">
+
+                View all →
+
+            </a>
+
+        </div>
+
+
+        <div class="panel-body">
+
+            <div class="city-list">
+
+                {% for city in popular_cities %}
+                <div class="city-row">
+                    <div class="city-rank">
+                        {{ forloop.counter|stringformat:"02d" }}
+                    </div>
+                    <div>
+                        <div class="city-name">
+                            {{ city.name }}
+                        </div>
+                        <span class="city-country">
+                            {{ city.country }}
+                        </span>
+                        <div class="progress">
+                            <span style="width:{{ city.popularity }}%"></span>
+                        </div>
+                    </div>
+                    <div class="city-value">
+                        {{ city.popularity }}%
+                    </div>
+                </div>
+                {% empty %}
+                <div style="padding: 20px; text-align: center; color: #999; font-size: 13px;">No cities added yet.</div>
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+
+<!-- =====================================================
+     SECOND ROW
+===================================================== -->
+
+<div class="analytics-grid">
+
+
+    <!-- POPULAR ACTIVITIES -->
+
+    <section class="panel">
+
+        <div class="panel-header">
+
+            <div>
+
+                <div class="panel-title">
+                    Popular Activities
+                </div>
+
+                <div class="panel-subtitle">
+                    WHAT USERS LOVE TO DO
+                </div>
+
+            </div>
+
+            <a href="/admin-panel/activities/"
+               class="badge badge-purple">
+
+                Explore →
+
+            </a>
+
+        </div>
+
+
+        <div class="panel-body">
+
+            <div class="activity-list">
+
+                {% for activity in popular_activities %}
+                <div class="activity-row">
+                    <div class="activity-icon">
+                        ✦
+                    </div>
+                    <div class="activity-copy">
+                        <strong>
+                            {{ activity.name }}
+                        </strong>
+                        <span>
+                            {{ activity.category|default:"Experience" }}
+                        </span>
+                    </div>
+                    <div class="activity-count">
+                        {{ activity.city.name|default:"Unknown City" }}
+                    </div>
+                </div>
+                {% empty %}
+                <div style="padding: 20px; text-align: center; color: #999; font-size: 13px;">No activities added yet.</div>
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- PLATFORM SNAPSHOT -->
+
+    <section class="panel">
+
+        <div class="panel-header">
+
+            <div>
+
+                <div class="panel-title">
+                    Platform Snapshot
+                </div>
+
+                <div class="panel-subtitle">
+                    CURRENT PLATFORM HEALTH
+                </div>
+
+            </div>
+
+            <span class="badge badge-green">
+                Healthy
+            </span>
+
+        </div>
+
+
+        <div class="panel-body">
+
+            <div class="city-list">
+
+
+                <div class="city-row">
+
+                    <div class="stat-icon green">
+                        ✓
+                    </div>
+
+                    <div>
+
+                        <div class="city-name">
+                            User Engagement
+                        </div>
+
+                        <span class="city-country">
+                            Platform activity
+                        </span>
+
+                    </div>
+
+                    <div class="city-value">
+                        Good
+                    </div>
+
+                </div>
+
+
+                <div class="city-row">
+
+                    <div class="stat-icon">
+                        ◉
+                    </div>
+
+                    <div>
+
+                        <div class="city-name">
+                            Trip Planning
+                        </div>
+
+                        <span class="city-country">
+                            Active itineraries
+                        </span>
+
+                    </div>
+
+                    <div class="city-value">
+                        Active
+                    </div>
+
+                </div>
+
+
+                <div class="city-row">
+
+                    <div class="stat-icon orange">
+                        ↗
+                    </div>
+
+                    <div>
+
+                        <div class="city-name">
+                            Travel Demand
+                        </div>
+
+                        <span class="city-country">
+                            Destination interest
+                        </span>
+
+                    </div>
+
+                    <div class="city-value">
+                        Rising
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+
+<!-- =====================================================
+     RECENT USERS
+===================================================== -->
+
+<div style="margin-top:16px;">
+
+<section class="panel">
+
+    <div class="panel-header">
+
+        <div>
+
+            <div class="panel-title">
+                Recent Users
+            </div>
+
+            <div class="panel-subtitle">
+                LATEST REGISTERED TRAVELLERS
+            </div>
+
+        </div>
+
+        <a href="/admin-panel/users/"
+           class="badge badge-purple">
+
+            View all →
+
+        </a>
+
+    </div>
+
+
+    <div class="table-wrap">
+
+        <table class="data-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>User</th>
+                    <th>Email</th>
+                    <th>Trips</th>
+                    <th>Status</th>
+                    <th>Joined</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+
+                <tr>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+
+                        <div class="user-cell">
+
+                            <div class="user-avatar">
+                                AS
+                            </div>
+
+                            <div>
+
+                                <div class="user-name">
+                                    Arjun Sharma
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </td>
+
+                    <td>
+                        arjun@example.com
+                    </td>
+
+                    <td>
+                        3
+                    </td>
+
+                    <td>
+                        <span class="badge badge-green">
+                            Active
+                        </span>
+                    </td>
+
+                    <td>
+                        Yesterday
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+
+                        <div class="user-cell">
+
+                            <div class="user-avatar">
+                                PS
+                            </div>
+
+                            <div>
+
+                                <div class="user-name">
+                                    Priya Shah
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </td>
+
+                    <td>
+                        priya@example.com
+                    </td>
+
+                    <td>
+                        7
+                    </td>
+
+                    <td>
+                        <span class="badge badge-orange">
+                            Active
+                        </span>
+                    </td>
+
+                    <td>
+                        2 days ago
+                    </td>
+
+                </tr>
+
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+</div>
+
+
+
+<!-- =====================================================
+     RECENT USERS
+===================================================== -->
+
+<div style="margin-top:16px;">
+
+<section class="panel">
+    <div class="panel-header">
+        <div>
+            <div class="panel-title">
+                Recent Users
+            </div>
+            <div class="panel-subtitle">
+                LATEST REGISTERED TRAVELLERS
+            </div>
+        </div>
+        <a href="/admin-panel/users/" class="badge badge-purple">
+            View all →
+        </a>
+    </div>
+
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Email</th>
+                    <th>Trips</th>
+                    <th>Status</th>
+                    <th>Joined</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in recent_users %}
+                <tr>
+                    <td>
+                        <div class="user-cell">
+                            <div class="user-avatar">
+                                {{ user.username|first|upper }}
+                            </div>
+                            <div>
+                                <div class="user-name">
+                                    {{ user.first_name|default:user.username }}
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.trip_set.count }}</td>
+                    <td>
+                        {% if user.is_active %}
+                        <span class="badge badge-green">Active</span>
+                        {% else %}
+                        <span class="badge badge-red">Inactive</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ user.date_joined|date:"M d, Y" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" style="text-align: center; padding: 20px; color: #999;">No users found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+</div>
+
+<!-- =====================================================
+     FINAL CTA
+===================================================== -->
+
+<div style="
+    margin-top:18px;
+    padding:20px 22px;
+    border-radius:16px;
+    background:var(--purple);
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+">
+
+    <div>
+
+        <div style="
+            font-size:9px;
+            letter-spacing:.13em;
+            font-weight:800;
+            opacity:.7;
+            margin-bottom:5px;
+        ">
+            GLOBETROTTER INSIGHTS
+        </div>
+
+        <strong style="
+            font-size:15px;
+        ">
+            Turn travel activity into meaningful insights.
+        </strong>
+
+        <div style="
+            font-size:10px;
+            opacity:.75;
+            margin-top:4px;
+        ">
+            Explore detailed user and travel analytics.
+        </div>
+
+    </div>
+
+
+    <a href="/admin-panel/analytics/"
+       style="
+            background:var(--orange);
+            color:#2B2528;
+            padding:10px 15px;
+            border-radius:9px;
+            font-size:10px;
+            font-weight:800;
+            white-space:nowrap;
+       ">
+
+        Open Analytics →
+
+    </a>
+
+</div>
+
+
+{% endblock %}

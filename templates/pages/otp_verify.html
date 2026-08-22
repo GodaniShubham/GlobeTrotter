@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block shell %}
+<div class="auth-safe">
+  <section class="auth-safe-visual">
+    <div class="auth-safe-brand">
+      <a href="{% url 'home' %}" class="auth-safe-brand-gt">GlobeTrotter</a>
+      <span class="auth-safe-brand-x">×</span>
+      <img src="https://www.odoo.com/web/static/img/odoo_logo.svg" alt="Odoo" class="auth-safe-brand-odoo">
+    </div>
+    <div class="auth-safe-photo auth-safe-photo-recovery"></div>
+    <div class="auth-safe-photo-wash"></div>
+    <div class="auth-safe-copy">
+      <div class="auth-safe-kicker">ACCOUNT RECOVERY</div>
+      <h1>Verify your<br><span>identity.</span></h1>
+      <p>We've sent a 6-digit code to your email. Enter it below to continue.</p>
+      <div class="auth-safe-note"><span></span>Keep your account secure.</div>
+    </div>
+    <div class="auth-safe-footer">GLOBETROTTER · TRAVEL PLANNING WORKSPACE</div>
+  </section>
+
+  <section class="auth-safe-form-pane">
+    <div class="auth-safe-form">
+      <div class="auth-safe-eyebrow">VERIFICATION</div>
+      <h2>Enter OTP</h2>
+      <p class="auth-safe-intro">Sent to {{ email }}</p>
+      
+      {% if messages %}
+        <div style="margin-bottom: 20px;">
+          {% for message in messages %}
+          <div class="pill {% if message.tags == 'error' %}pill-red{% else %}pill-purple{% endif %}" style="display:block; padding: 10px; margin-bottom: 10px; white-space: normal;">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <form method="POST" action="{% url 'otp_verify' %}">
+        {% csrf_token %}
+        <div class="auth-safe-field">
+          <label for="otp">6-Digit Code</label>
+          <input id="otp" type="text" name="otp" placeholder="123456" pattern="\d{6}" maxlength="6" autocomplete="one-time-code" required autofocus style="text-align: center; letter-spacing: 4px; font-size: 18px; font-weight: bold;">
+        </div>
+        <button class="btn btn-primary auth-safe-submit" type="submit">Verify Code <i class="hgi-stroke hgi-arrow-right-02"></i></button>
+      </form>
+      
+      <form method="POST" action="{% url 'otp_verify' %}" style="margin-top: 15px; text-align: center;">
+        {% csrf_token %}
+        <input type="hidden" name="resend" value="1">
+        <button class="btn btn-soft" type="submit" style="width: 100%;">Resend Code</button>
+      </form>
+      
+      <div class="auth-safe-footer-form" style="margin-top: 20px;"><a href="{% url 'login' %}">← Cancel</a></div>
+    </div>
+  </section>
+</div>
+{% endblock %}
