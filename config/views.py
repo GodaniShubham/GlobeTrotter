@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
 
 
 def page(template, title="GlobeTrotter", **context):
@@ -12,7 +13,15 @@ def _render(request, template, title, **context):
 
 
 def landing(request):
-    return _render(request, "pages/landing.html", "GlobeTrotter — Plan travel beautifully", public=True)
+    from trips.models import Trip
+    public_trip = Trip.objects.filter(is_public=True).first()
+    if not public_trip:
+        public_trip = Trip.objects.first() # fallback to any trip for the demo
+        
+    context = {
+        'public_trip': public_trip
+    }
+    return render(request, "pages/landing.html", context)
 
 
 def login_view(request):
@@ -51,16 +60,57 @@ def activity_search(request):
     return _render(request, "pages/activity_search.html", "Discover activities — GlobeTrotter", active="activities")
 
 
-def budget(request):
-    return _render(request, "pages/budget.html", "Trip budget — GlobeTrotter", active="budget")
+@login_required
+def budget(request, trip_id):
+    from trips.models import Trip
+    trip = get_object_or_404(Trip, id=trip_id, user=request.user)
+    stops = trip.stops.prefetch_related('itinerary_activities').all()
+    
+    total_cost = 0
+    cat_totals = {'Activities': 0, 'Transport': 0, 'Accommodation': 0, 'Meals': 0, 'Other': 0}
+    
+    for stop in stops:
+        for it_act in stop.itinerary_activities.all():
+            cost = float(it_act.custom_cost or it_act.activity.estimated_cost or 0)
+            total_cost += cost
+            cat = it_act.activity.activity_type
+            if cat in cat_totals:
+                cat_totals[cat] += cost
+            else:
+                cat_totals['Other'] += cost
+                
+    context = {
+        'page_title': f'{trip.name} Budget — GlobeTrotter',
+        'active': 'budget',
+        'trip': trip,
+        'total_cost': total_cost,
+        'cat_totals': cat_totals
+    }
+    return render(request, "pages/budget.html", context)
 
 
-def calendar_view(request):
-    return _render(request, "pages/calendar.html", "Trip calendar — GlobeTrotter", active="calendar")
+@login_required
+def calendar_view(request, trip_id):
+    from trips.models import Trip
+    trip = get_object_or_404(Trip, id=trip_id, user=request.user)
+    context = {
+        'page_title': f'{trip.name} Calendar — GlobeTrotter',
+        'active': 'calendar',
+        'trip': trip
+    }
+    return render(request, "pages/calendar.html", context)
 
 
-def public_itinerary(request):
-    return _render(request, "pages/public_itinerary.html", "Shared itinerary — GlobeTrotter", public=True)
+def public_itinerary(request, trip_id):
+    from trips.models import Trip
+    trip = get_object_or_404(Trip, id=trip_id, is_public=True)
+    stops = trip.stops.prefetch_related('itinerary_activities__activity').all()
+    context = {
+        'page_title': f'{trip.name} — GlobeTrotter',
+        'trip': trip,
+        'stops': stops
+    }
+    return render(request, "pages/public_itinerary.html", context)
 
 
 def profile(request):

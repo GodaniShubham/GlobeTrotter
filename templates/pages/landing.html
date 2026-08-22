@@ -26,7 +26,11 @@
         <p>GlobeTrotter brings cities, activities, dates, budgets and sharing into one calm workspace — inspired by Odoo's product clarity and designed for the joy of travel.</p>
         <div class="landing-cta-wrap">
           <div class="landing-cta-arrow" aria-hidden="true"><span class="script-note">Start here</span><img src="{% static 'art/arrow-purple.svg' %}" alt=""></div>
-          <div class="actions landing-actions"><a href="{% url 'signup' %}" class="btn btn-primary btn-hero"><span>Create your first trip</span><i class="hgi-stroke hgi-arrow-up-right-02"></i></a><a href="{% url 'public_itinerary' %}" class="btn btn-secondary">View shared trip</a></div>
+          <div class="actions landing-actions"><a href="{% url 'signup' %}" class="btn btn-primary btn-hero"><span>Create your first trip</span><i class="hgi-stroke hgi-arrow-up-right-02"></i></a>
+            {% if public_trip %}
+            <a href="{% url 'public_itinerary' public_trip.id %}" class="btn btn-secondary">View shared trip</a>
+            {% endif %}
+          </div>
         </div>
         <div class="landing-trust"><span>Multi-city</span><span>Budget-aware</span><span>Calendar-ready</span><span>Shareable</span></div>
       </div>

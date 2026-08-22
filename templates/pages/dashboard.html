@@ -24,8 +24,9 @@
 <div class="section-title"><div><h2>Continue planning</h2><p>Your most recent routes.</p></div><a href="{% url 'trips' %}" class="tiny-link">View all trips →</a></div>
 <div class="grid grid-3">
   {% for trip in upcoming_trips|slice:":3" %}
+  <a href="{% url 'builder' trip.id %}" style="text-decoration:none;color:inherit;display:block">
   <article class="trip-card">
-    <div class="trip-cover" style="background-color:#E8E6EB;">
+    <div class="trip-cover" {% if trip.cover_image %}style="background-image:url('{{ trip.cover_image.url }}')"{% else %}style="background-color:#E8E6EB;"{% endif %}>
         <div class="trip-cover-label">{{ trip.name }}</div>
     </div>
     <div class="trip-body">
@@ -38,10 +39,11 @@
         <div class="trip-desc">{{ trip.description|default:"No description yet." }}</div>
         <div class="trip-footer">
             <span class="pill pill-purple">Draft</span>
-            <a class="tiny-link" href="{% url 'builder' %}">Open →</a>
+            <span class="tiny-link">Open →</span>
         </div>
     </div>
   </article>
+  </a>
   {% empty %}
   <div style="grid-column: 1 / -1; padding: 40px; text-align: center; background: #fff; border-radius: 16px; border: 1px solid #E8E6EB;">
       <h3 style="margin-bottom:8px">Welcome to GlobeTrotter!</h3>
