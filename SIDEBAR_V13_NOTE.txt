@@ -1,0 +1,1 @@
+Sidebar V13: GlobeTrotter enlarged and given a restrained Odoo-purple tone, the bottom traveller profile card is removed, and replaced by a compact Settings link.

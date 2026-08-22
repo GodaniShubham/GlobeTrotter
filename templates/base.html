@@ -39,13 +39,16 @@
             <a href="{% url 'budget' %}" class="side-link {% if active == 'budget' %}is-active{% endif %}"><i class="hgi-stroke hgi-wallet-01"></i><span>Budget</span></a>
             <a href="{% url 'calendar' %}" class="side-link {% if active == 'calendar' %}is-active{% endif %}"><i class="hgi-stroke hgi-calendar-03"></i><span>Calendar</span></a>
         </nav>
+        <div class="sidebar-label">Community</div>
+        <nav class="side-nav community-nav-wrap">
+            <a href="{% url 'community' %}" class="side-link {% if active == 'community' %}is-active{% endif %}"><i class="hgi-stroke hgi-user-group"></i><span>Community</span></a>
+        </nav>
         <div class="sidebar-spacer"></div>
-        <a href="{% url 'profile' %}" class="profile-mini {% if active == 'profile' %}is-active{% endif %}">
-            <span class="avatar avatar-purple">AK</span>
-            <span class="profile-mini-copy"><strong>Alex Kapoor</strong><small>Traveller account</small></span>
+        <a href="{% url 'profile' %}" class="sidebar-settings-link {% if active == 'profile' %}is-active{% endif %}" aria-label="Settings">
             <i class="hgi-stroke hgi-settings-02"></i>
+            <span>Settings</span>
         </a>
-    </aside>
+</aside>
     <div class="main-frame">
         <header class="topbar">
             <button class="icon-btn mobile-menu" type="button" data-sidebar-toggle aria-label="Open navigation"><i class="hgi-stroke hgi-menu-01"></i></button>

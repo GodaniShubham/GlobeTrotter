@@ -1,101 +1,100 @@
 {% extends 'base.html' %}
 {% block shell %}
-<div class="auth-production">
-  <section class="auth-production-visual">
-    <div class="auth-production-brand">
-      <a class="auth-brand-gt" href="{% url 'home' %}">GlobeTrotter</a>
-      <span class="auth-brand-x">×</span>
-      <img class="auth-brand-odoo" src="https://www.odoo.com/web/static/img/odoo_logo.svg" alt="Odoo">
+<div class="gt-auth-v8">
+  <section class="gt-auth-v8-visual">
+    <div class="gt-auth-v8-brand">
+      <a class="gt-auth-v8-wordmark" href="{% url 'home' %}">GlobeTrotter</a>
+      <span class="gt-auth-v8-x">×</span>
+      <img class="gt-auth-v8-odoo" src="https://www.odoo.com/web/static/img/odoo_logo.svg" width="72" height="auto" alt="Odoo">
+    </div>
+      <a class="gt-auth-v8-wordmark" href="{% url 'home' %}">GlobeTrotter</a>
     </div>
 
-    <div class="auth-production-image"></div>
-    <div class="auth-production-wash"></div>
+    <div class="gt-auth-v8-photo"></div>
+    <div class="gt-auth-v8-overlay"></div>
 
-    <div class="auth-production-copy">
-      <div class="auth-production-kicker">PERSONALIZED MULTI-CITY TRAVEL</div>
+    <div class="gt-auth-v8-copy">
+      <div class="gt-auth-v8-kicker">PERSONALIZED MULTI-CITY TRAVEL</div>
       <h1>Plan beautifully.<br><span>Travel freely.</span></h1>
       <p>Build the route, shape the days, watch the budget and keep the whole journey together in one calm workspace.</p>
-      <div class="auth-production-note"><span></span>From the first idea to the last stop.</div>
+      <div class="gt-auth-v8-note"><span></span>From the first idea to the last stop.</div>
     </div>
 
-    <div class="auth-production-foot">GLOBETROTTER · TRAVEL PLANNING WORKSPACE</div>
+    <div class="gt-auth-v8-footer">GLOBETROTTER · TRAVEL PLANNING WORKSPACE</div>
   </section>
 
-  <section class="auth-production-form">
-    <div class="auth-production-form-inner">
+  <section class="gt-auth-v8-form">
+    <div class="gt-auth-v8-form-inner">
       {% if auth_mode == 'login' %}
-        <div class="auth-production-eyebrow">WELCOME BACK</div>
+        <div class="gt-auth-v8-eyebrow">WELCOME BACK</div>
         <h2>Sign in</h2>
-        <p class="auth-production-intro">Pick up where you left your next journey.</p>
+        <p class="gt-auth-v8-intro">Pick up where you left your next journey.</p>
 
         <form onsubmit="return demoSubmit(event,'Dashboard')">
-          <div class="auth-production-field">
+          <div class="gt-field-v8">
             <label for="login-email">Email address</label>
             <input id="login-email" type="email" placeholder="you@example.com" autocomplete="email" required>
           </div>
 
-          <div class="auth-production-field">
+          <div class="gt-field-v8">
             <label for="login-password">Password</label>
-            <div class="auth-production-password">
+            <div class="gt-password-v8">
               <input id="login-password" type="password" placeholder="Enter your password" autocomplete="current-password" required>
-              <button type="button" class="auth-production-eye" data-password-toggle data-target="login-password" aria-label="Show password">
+              <button class="gt-eye-v8" type="button" data-password-toggle data-target="login-password" aria-label="Show password" title="Show password">
                 <i class="hgi-stroke hgi-view"></i>
               </button>
             </div>
           </div>
 
-          <div class="auth-production-options">
-            <label><input type="checkbox"><span>Remember me</span></label>
-            <a href="/forgot-password/">Forgot password?</a>
+          <div class="gt-auth-v8-row">
+            <label class="gt-check-v8"><input type="checkbox"><span>Remember me</span></label>
+            <a href="/forgot-password/" class="gt-link-v8">Forgot password?</a>
           </div>
 
-          <button class="auth-production-submit" type="submit">Sign in <span>→</span></button>
+          <button class="gt-submit-v8" type="submit">Sign in <span>→</span></button>
         </form>
 
-        <div class="auth-production-safe">Your travel plans stay private to your account.</div>
-        <div class="auth-production-footer">New to GlobeTrotter? <a href="{% url 'signup' %}">Create an account</a></div>
+        <div class="gt-auth-v8-reassurance">Your travel plans stay private to your account.</div>
+        <div class="gt-auth-v8-footer-form">New to GlobeTrotter? <a href="{% url 'signup' %}">Create an account</a></div>
       {% else %}
-        <div class="auth-production-eyebrow">START PLANNING</div>
+        <div class="gt-auth-v8-eyebrow">START PLANNING</div>
         <h2>Create account</h2>
-        <p class="auth-production-intro">Set up your travel workspace and start shaping your next trip.</p>
+        <p class="gt-auth-v8-intro">Set up your travel workspace and start shaping your next trip.</p>
 
         <form onsubmit="return demoSubmit(event,'Dashboard')">
-          <div class="auth-production-namegrid">
-            <div class="auth-production-field">
+          <div class="gt-name-grid-v8">
+            <div class="gt-field-v8">
               <label for="signup-first-name">First name</label>
               <input id="signup-first-name" type="text" placeholder="Alex" autocomplete="given-name" required>
             </div>
-            <div class="auth-production-field">
+            <div class="gt-field-v8">
               <label for="signup-last-name">Last name</label>
               <input id="signup-last-name" type="text" placeholder="Kapoor" autocomplete="family-name" required>
             </div>
           </div>
 
-          <div class="auth-production-field">
+          <div class="gt-field-v8">
             <label for="signup-email">Email address</label>
             <input id="signup-email" type="email" placeholder="you@example.com" autocomplete="email" required>
           </div>
 
-          <div class="auth-production-field">
+          <div class="gt-field-v8">
             <label for="signup-password">Password</label>
-            <div class="auth-production-password">
+            <div class="gt-password-v8">
               <input id="signup-password" type="password" placeholder="Create a password" autocomplete="new-password" required>
-              <button type="button" class="auth-production-eye" data-password-toggle data-target="signup-password" aria-label="Show password">
+              <button class="gt-eye-v8" type="button" data-password-toggle data-target="signup-password" aria-label="Show password" title="Show password">
                 <i class="hgi-stroke hgi-view"></i>
               </button>
             </div>
           </div>
 
-          <label class="auth-production-terms">
-            <input type="checkbox" required>
-            <span>I agree to the terms and privacy policy.</span>
-          </label>
+          <label class="gt-check-v8 gt-terms-v8"><input type="checkbox" required><span>I agree to the terms and privacy policy.</span></label>
 
-          <button class="auth-production-submit" type="submit">Create account <span>→</span></button>
+          <button class="gt-submit-v8" type="submit">Create account <span>→</span></button>
         </form>
 
-        <div class="auth-production-safe">Start simple. Refine the journey as you go.</div>
-        <div class="auth-production-footer">Already have an account? <a href="{% url 'login' %}">Sign in</a></div>
+        <div class="gt-auth-v8-reassurance">Start simple. Refine the journey as you go.</div>
+        <div class="gt-auth-v8-footer-form">Already have an account? <a href="{% url 'login' %}">Sign in</a></div>
       {% endif %}
     </div>
   </section>

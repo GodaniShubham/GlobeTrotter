@@ -1,0 +1,1 @@
+Sidebar v12: removed the large visual gap after Community, kept profile pinned to the bottom, and added a clean divider so the account area reads as part of the navigation shell.
