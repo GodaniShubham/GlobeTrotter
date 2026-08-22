@@ -22,6 +22,7 @@ class Activity(AuditModel):
     duration = models.PositiveIntegerField(help_text="Estimated duration in minutes", default=60)
     estimated_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     image = models.ImageField(upload_to='activities/', null=True, blank=True)
+    external_image_url = models.URLField(max_length=1000, blank=True)
 
     class Meta:
         verbose_name_plural = "Activities"

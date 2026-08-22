@@ -1,0 +1,16 @@
+Travel Catalog V12 — image-backed city and activity catalog
+
+Uses the existing City.image / Activity.image fields when a local upload exists.
+Otherwise the UI falls back to external_image_url stored in the database.
+
+Setup:
+  python manage.py migrate
+  python manage.py seed_travel_catalog
+
+The seed command is idempotent and fills the existing travel catalog with curated
+city/activity image URLs. After that, Discover Cities and Discover Activities show
+real visual cards.
+
+For production deployment, replace external_image_url with your own CDN/object-storage
+URLs or upload properly licensed images to the existing ImageField. The application
+remains database-driven; no place/activity is hardcoded in the HTML.

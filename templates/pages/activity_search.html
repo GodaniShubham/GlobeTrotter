@@ -1,14 +1,65 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block crumb %}Discover activities{% endblock %}
 {% block content %}
-<div class="page-header"><div><div class="kicker">EXPERIENCE LIBRARY</div><h1 class="page-title">Find things worth a day.</h1><p class="page-subtitle">Choose activities by interest, duration and cost, then place them directly into the route.</p></div><a href="{% url 'builder' %}" class="btn btn-secondary">Back to builder</a></div>
-<div class="toolbar"><div class="searchbox" style="flex:1"><i class="hgi-stroke hgi-search-01"></i><input type="search" placeholder="Search food, museums, walks, adventure..." data-activity-search></div><div class="filters"><button class="filter-chip active" data-activity-filter="all">All</button><button class="filter-chip" data-activity-filter="Food">Food</button><button class="filter-chip" data-activity-filter="Culture">Culture</button><button class="filter-chip" data-activity-filter="Adventure">Adventure</button></div></div>
-<div class="activity-grid" data-activity-grid>
-  <article class="discover-card activity-item" data-type="Food" data-search="market breakfast tsukiji tokyo food"><div class="discover-image" style="background-image:url('https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=900&q=84')"></div><div class="discover-body"><div class="discover-top"><h3>Tsukiji market breakfast</h3><span class="pill pill-orange">Food</span></div><p>Fresh seafood, tamagoyaki and a morning wander through the outer market.</p><div class="discover-meta"><span class="pill">90 min</span><span class="pill">₹1,200</span><span class="pill">Easy</span></div><div class="discover-action"><span class="eyebrow">Tokyo</span><button class="btn btn-soft" data-add="Tsukiji market breakfast">Add</button></div></div></article>
-  <article class="discover-card activity-item" data-type="Culture" data-search="teamlab borderless tokyo art culture museum"><div class="discover-image" style="background-image:url('https://images.unsplash.com/photo-1531058020387-3be344556be6?auto=format&fit=crop&w=900&q=84')"></div><div class="discover-body"><div class="discover-top"><h3>TeamLab Borderless</h3><span class="pill pill-purple">Culture</span></div><p>Immersive digital art across a 2-hour indoor experience.</p><div class="discover-meta"><span class="pill">2 hours</span><span class="pill">₹2,600</span><span class="pill">Reserved</span></div><div class="discover-action"><span class="eyebrow">Tokyo</span><button class="btn btn-soft" data-add="TeamLab Borderless">Add</button></div></div></article>
-  <article class="discover-card activity-item" data-type="Culture" data-search="fushimi inari kyoto temple culture"><div class="discover-image" style="background-image:url('https://images.unsplash.com/photo-1478436127897-769e1b3f0f36?auto=format&fit=crop&w=900&q=84')"></div><div class="discover-body"><div class="discover-top"><h3>Fushimi Inari early walk</h3><span class="pill pill-purple">Culture</span></div><p>Start before the crowds and take the torii path at your own pace.</p><div class="discover-meta"><span class="pill">2 hours</span><span class="pill">Free</span><span class="pill">Moderate</span></div><div class="discover-action"><span class="eyebrow">Kyoto</span><button class="btn btn-soft" data-add="Fushimi Inari early walk">Add</button></div></div></article>
-  <article class="discover-card activity-item" data-type="Adventure" data-search="mountain hike adventure alps"><div class="discover-image" style="background-image:url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=84')"></div><div class="discover-body"><div class="discover-top"><h3>Alpine half-day hike</h3><span class="pill pill-green">Adventure</span></div><p>A scenic trail with a guide, open viewpoints and a flexible return.</p><div class="discover-meta"><span class="pill">4 hours</span><span class="pill">₹4,800</span><span class="pill">Active</span></div><div class="discover-action"><span class="eyebrow">Swiss Alps</span><button class="btn btn-soft" data-add="Alpine half-day hike">Add</button></div></div></article>
-  <article class="discover-card activity-item" data-type="Food" data-search="kyoto tea ceremony tea food culture"><div class="discover-image" style="background-image:url('https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=900&q=84')"></div><div class="discover-body"><div class="discover-top"><h3>Tea ceremony</h3><span class="pill pill-orange">Food</span></div><p>A quiet introduction to tea culture with a local host.</p><div class="discover-meta"><span class="pill">75 min</span><span class="pill">₹2,100</span><span class="pill">Hosted</span></div><div class="discover-action"><span class="eyebrow">Kyoto</span><button class="btn btn-soft" data-add="Tea ceremony">Add</button></div></div></article>
-  <article class="discover-card activity-item" data-type="Adventure" data-search="bali surf beach adventure"><div class="discover-image" style="background-image:url('https://images.unsplash.com/photo-1502680390469-be75c86b636f?auto=format&fit=crop&w=900&q=84')"></div><div class="discover-body"><div class="discover-top"><h3>Beginner surf session</h3><span class="pill pill-green">Adventure</span></div><p>Small-group lesson with board hire and a relaxed beach setup.</p><div class="discover-meta"><span class="pill">2 hours</span><span class="pill">₹2,400</span><span class="pill">Beginner</span></div><div class="discover-action"><span class="eyebrow">Bali</span><button class="btn btn-soft" data-add="Beginner surf session">Add</button></div></div></article>
+<div class="page-header">
+  <div><div class="kicker">EXPERIENCE LIBRARY</div><h1 class="page-title">Find things worth a day.</h1><div class="functional-script-note">pick what belongs in this route</div><p class="page-subtitle">Search the activity catalogue, choose a stop, and add the experience directly to the itinerary.</p></div>
+  {% if trip %}<a href="{% url 'builder' %}?trip={{ trip.pk }}" class="btn btn-secondary">Back to builder</a>{% endif %}
+</div>
+
+<div class="activity-discover-toolbar">
+  <form class="searchbox" method="get">
+    {% if trip %}<input type="hidden" name="trip" value="{{ trip.pk }}">{% endif %}
+    {% if selected_stop %}<input type="hidden" name="stop" value="{{ selected_stop.pk }}">{% endif %}
+    <i class="hgi-stroke hgi-search-01"></i><input name="q" value="{{ request.GET.q }}" type="search" placeholder="Search food, museums, walks, adventure..." autocomplete="off">
+  </form>
+  <div class="filters">
+    <a class="filter-chip {% if not request.GET.type %}active{% endif %}" href="?{% if trip %}trip={{ trip.pk }}{% endif %}{% if selected_stop %}&stop={{ selected_stop.pk }}{% endif %}">All</a>
+    {% for code,label in activity_types %}
+      <a class="filter-chip {% if request.GET.type == code %}active{% endif %}" href="?type={{ code|urlencode }}{% if trip %}&trip={{ trip.pk }}{% endif %}{% if selected_stop %}&stop={{ selected_stop.pk }}{% endif %}">{{ label }}</a>
+    {% endfor %}
+  </div>
+</div>
+
+{% if trip %}
+<div class="activity-target-bar">
+  <div><span class="eyebrow">ADD TO STOP</span><strong>{% if selected_stop %}{{ selected_stop.city.name }}{% else %}Choose a destination first{% endif %}</strong></div>
+  <select data-stop-selector>
+    <option value="">Choose stop</option>
+    {% for stop in stops %}
+      <option value="{{ stop.pk }}" {% if selected_stop and selected_stop.pk == stop.pk %}selected{% endif %}>{{ stop.city.name }} · {{ stop.arrival_date|date:"d M" }}—{{ stop.departure_date|date:"d M" }}</option>
+    {% endfor %}
+  </select>
+</div>
+{% endif %}
+
+<div class="activity-grid discover-real-grid">
+  {% for activity in activities %}
+  <article class="discover-card activity-item">
+    {% if activity.image %}<div class="discover-image" style="background-image:url('{{ activity.image.url }}')"></div>{% elif activity.external_image_url %}<div class="discover-image" style="background-image:url('{{ activity.external_image_url }}')"></div>{% else %}<div class="discover-image discover-image-fallback">{{ activity.name|slice:":1" }}</div>{% endif %}
+    <div class="discover-body">
+      <div class="discover-top"><h3>{{ activity.name }}</h3><span class="pill pill-purple">{{ activity.activity_type }}</span></div>
+      <p>{{ activity.description|default:"A useful addition to your route."|truncatechars:135 }}</p>
+      <div class="discover-meta"><span class="pill">{{ activity.duration }} min</span><span class="pill">₹{{ activity.estimated_cost|floatformat:0 }}</span><span class="pill">{{ activity.city.name }}</span></div>
+      <div class="discover-action">
+        <span class="eyebrow">{{ activity.city.country }}</span>
+        {% if trip and selected_stop %}
+        <button class="btn btn-soft js-add-activity" type="button" data-url="{% url 'trip_activity_add' %}" data-stop="{{ selected_stop.pk }}" data-activity="{{ activity.pk }}"><i class="hgi-stroke hgi-add-01"></i> Add</button>
+        {% elif trip %}
+        <button class="btn btn-soft" type="button" data-toast="Choose a stop above first">Choose stop</button>
+        {% else %}
+        <a class="btn btn-soft" href="{% url 'trips' %}">Choose a trip</a>
+        {% endif %}
+      </div>
+    </div>
+  </article>
+  {% empty %}
+  <div class="itinerary-empty-state">
+    <div class="kicker">ACTIVITY LIBRARY</div>
+    <h2>No activities match this search.</h2>
+    <p>Add activities to the selected city through Django Admin, then they will appear here automatically and can be added directly to your itinerary.</p>
+  </div>
+  {% endfor %}
 </div>
 {% endblock %}
+{% block extra_js %}<script src="{% static 'js/itinerary.js' %}"></script>{% endblock %}
