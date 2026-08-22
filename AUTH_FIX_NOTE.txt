@@ -1,2 +1,0 @@
-This V11 package uses a clean isolated auth template to prevent duplicate brand markup and CSS collisions.
-Forgot password still requires the backend developer to register /forgot-password/ in config/urls.py and render templates/pages/forgot_password.html.
