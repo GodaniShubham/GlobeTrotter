@@ -26,75 +26,26 @@
   <section class="gt-auth-v8-form">
     <div class="gt-auth-v8-form-inner">
       {% if auth_mode == 'login' %}
-        <div class="gt-auth-v8-eyebrow">WELCOME BACK</div>
-        <h2>Sign in</h2>
-        <p class="gt-auth-v8-intro">Pick up where you left your next journey.</p>
-
-        <form onsubmit="return demoSubmit(event,'Dashboard')">
-          <div class="gt-field-v8">
-            <label for="login-email">Email address</label>
-            <input id="login-email" type="email" placeholder="you@example.com" autocomplete="email" required>
-          </div>
-
-          <div class="gt-field-v8">
-            <label for="login-password">Password</label>
-            <div class="gt-password-v8">
-              <input id="login-password" type="password" placeholder="Enter your password" autocomplete="current-password" required>
-              <button class="gt-eye-v8" type="button" data-password-toggle data-target="login-password" aria-label="Show password" title="Show password">
-                <i class="hgi-stroke hgi-view"></i>
-              </button>
-            </div>
-          </div>
-
-          <div class="gt-auth-v8-row">
-            <label class="gt-check-v8"><input type="checkbox"><span>Remember me</span></label>
-            <a href="/forgot-password/" class="gt-link-v8">Forgot password?</a>
-          </div>
-
-          <button class="gt-submit-v8" type="submit">Sign in <span>→</span></button>
-        </form>
-
-        <div class="gt-auth-v8-reassurance">Your travel plans stay private to your account.</div>
-        <div class="gt-auth-v8-footer-form">New to GlobeTrotter? <a href="{% url 'signup' %}">Create an account</a></div>
+      <div class="kicker">WELCOME BACK</div><h2>Sign in</h2><p>Pick up where you left your next journey.</p>
+      <form method="POST">
+        {% csrf_token %}
+        <div class="field"><label>Email address</label><input type="email" name="email" placeholder="you@example.com" required></div>
+        <div class="field"><label>Password</label><input type="password" name="password" placeholder="••••••••" required minlength="8"></div>
+        <div style="display:flex;justify-content:flex-end;margin-top:8px"><a class="tiny-link" href="#">Forgot password?</a></div>
+        <button class="btn btn-primary" style="width:100%;margin-top:18px" type="submit">Sign in <i class="hgi-stroke hgi-arrow-right-02"></i></button>
+      </form>
+      <div class="auth-footer">New to GlobeTrotter? <a href="{% url 'signup' %}">Create an account</a></div>
       {% else %}
-        <div class="gt-auth-v8-eyebrow">START PLANNING</div>
-        <h2>Create account</h2>
-        <p class="gt-auth-v8-intro">Set up your travel workspace and start shaping your next trip.</p>
-
-        <form onsubmit="return demoSubmit(event,'Dashboard')">
-          <div class="gt-name-grid-v8">
-            <div class="gt-field-v8">
-              <label for="signup-first-name">First name</label>
-              <input id="signup-first-name" type="text" placeholder="Alex" autocomplete="given-name" required>
-            </div>
-            <div class="gt-field-v8">
-              <label for="signup-last-name">Last name</label>
-              <input id="signup-last-name" type="text" placeholder="Kapoor" autocomplete="family-name" required>
-            </div>
-          </div>
-
-          <div class="gt-field-v8">
-            <label for="signup-email">Email address</label>
-            <input id="signup-email" type="email" placeholder="you@example.com" autocomplete="email" required>
-          </div>
-
-          <div class="gt-field-v8">
-            <label for="signup-password">Password</label>
-            <div class="gt-password-v8">
-              <input id="signup-password" type="password" placeholder="Create a password" autocomplete="new-password" required>
-              <button class="gt-eye-v8" type="button" data-password-toggle data-target="signup-password" aria-label="Show password" title="Show password">
-                <i class="hgi-stroke hgi-view"></i>
-              </button>
-            </div>
-          </div>
-
-          <label class="gt-check-v8 gt-terms-v8"><input type="checkbox" required><span>I agree to the terms and privacy policy.</span></label>
-
-          <button class="gt-submit-v8" type="submit">Create account <span>→</span></button>
-        </form>
-
-        <div class="gt-auth-v8-reassurance">Start simple. Refine the journey as you go.</div>
-        <div class="gt-auth-v8-footer-form">Already have an account? <a href="{% url 'login' %}">Sign in</a></div>
+      <div class="kicker">START PLANNING</div><h2>Create your account</h2><p>A workspace for your routes, stays, activities and budget.</p>
+      <form method="POST">
+        {% csrf_token %}
+        <div class="form-grid"><div class="field"><label>First name</label><input type="text" name="first_name" placeholder="Alex" required></div><div class="field"><label>Last name</label><input type="text" name="last_name" placeholder="Kapoor" required></div></div>
+        <div class="field"><label>Email address</label><input type="email" name="email" placeholder="you@example.com" required></div>
+        <div class="field"><label>Password</label><input type="password" name="password" placeholder="Create a password (min 8 characters)" required minlength="8"></div>
+        <label style="display:flex;gap:8px;align-items:flex-start;font-size:10px;color:#7B7C83;margin-top:13px"><input type="checkbox" required style="margin-top:2px"> I agree to the product terms and privacy policy.</label>
+        <button class="btn btn-primary" style="width:100%;margin-top:18px" type="submit">Create account <i class="hgi-stroke hgi-arrow-right-02"></i></button>
+      </form>
+      <div class="auth-footer">Already have an account? <a href="{% url 'login' %}">Sign in</a></div>
       {% endif %}
     </div>
   </section>

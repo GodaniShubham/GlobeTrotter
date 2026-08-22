@@ -44,10 +44,25 @@
             <a href="{% url 'community' %}" class="side-link {% if active == 'community' %}is-active{% endif %}"><i class="hgi-stroke hgi-user-group"></i><span>Community</span></a>
         </nav>
         <div class="sidebar-spacer"></div>
+        <div class="sidebar-card">
+            <div class="sidebar-card-kicker">ODOO TRAVEL SUITE</div>
+            <strong>Everything for one memorable journey.</strong>
+            <p>Plan, budget, schedule and share from one workspace.</p>
+        </div>
+        {% if request.user.is_authenticated %}
+        <a href="{% url 'profile' %}" class="profile-mini {% if active == 'profile' %}is-active{% endif %}">
+            <span class="avatar avatar-purple">{{ request.user.first_name|first }}{{ request.user.last_name|first }}</span>
+            <span class="profile-mini-copy"><strong>{{ request.user.get_full_name|default:request.user.username }}</strong><small>Traveller account</small></span>
         <a href="{% url 'profile' %}" class="sidebar-settings-link {% if active == 'profile' %}is-active{% endif %}" aria-label="Settings">
             <i class="hgi-stroke hgi-settings-02"></i>
             <span>Settings</span>
         </a>
+        {% else %}
+        <a href="{% url 'login' %}" class="profile-mini">
+            <span class="avatar avatar-purple">?</span>
+            <span class="profile-mini-copy"><strong>Sign in</strong><small>To save your trips</small></span>
+        </a>
+        {% endif %}
 </aside>
     <div class="main-frame">
         <header class="topbar">
@@ -60,7 +75,12 @@
             <div class="topbar-actions">
                 <a class="icon-btn" href="{% url 'public_itinerary' %}" aria-label="Open shared itinerary"><i class="hgi-stroke hgi-share-08"></i></a>
                 <button class="icon-btn" type="button" aria-label="Notifications"><i class="hgi-stroke hgi-notification-02"></i><span class="notification-dot"></span></button>
-                <a class="topbar-profile" href="{% url 'profile' %}"><span class="avatar avatar-purple">AK</span><span>Alex</span><i class="hgi-stroke hgi-arrow-down-01"></i></a>
+                {% if request.user.is_authenticated %}
+                <a class="topbar-profile" href="{% url 'profile' %}"><span class="avatar avatar-purple">{{ request.user.first_name|first }}{{ request.user.last_name|first }}</span><span>{{ request.user.first_name|default:request.user.username }}</span><i class="hgi-stroke hgi-arrow-down-01"></i></a>
+                <a class="icon-btn" href="{% url 'logout' %}" title="Logout"><i class="hgi-stroke hgi-logout-01"></i></a>
+                {% else %}
+                <a class="btn btn-secondary" style="padding:4px 12px; margin-left:8px;" href="{% url 'login' %}">Sign in</a>
+                {% endif %}
             </div>
         </header>
         <main class="page-content">
@@ -70,6 +90,18 @@
 </div>
 {% endblock %}
 <script src="{% static 'js/site.js' %}"></script>
+{% if messages %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    {% for message in messages %}
+      setTimeout(() => {
+        if(typeof toast === 'function') toast("{{ message|escapejs }}");
+        else { const t = document.createElement('div'); t.className='gt-toast'; t.textContent="{{ message|escapejs }}"; document.body.appendChild(t); setTimeout(()=>t.remove(), 2200); }
+      }, {{ forloop.counter0 }} * 500);
+    {% endfor %}
+  });
+</script>
+{% endif %}
 {% block extra_js %}{% endblock %}
 </body>
 </html>

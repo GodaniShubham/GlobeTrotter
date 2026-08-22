@@ -1,11 +1,22 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static currency_tags %}
 {% block title %}GlobeTrotter — Odoo-powered travel planning{% endblock %}
 {% block shell %}
 <div class="landing-shell">
   <header class="public-topbar">
     <a href="{% url 'home' %}" class="public-logo"><span class="public-brand-mark"><span style="color:#714B67">o</span>doo</span><span style="color:#D0CDCF">×</span><strong>GlobeTrotter</strong></a>
-    <nav class="landing-nav"><a href="#journey">Your journey</a><a href="#discover">Discover</a><a href="#planning">Planning</a><a href="{% url 'login' %}">Sign in</a><a class="btn btn-primary" href="{% url 'signup' %}">Start planning</a></nav>
+    <nav class="landing-nav">
+      <a href="#journey">Your journey</a>
+      <a href="#discover">Discover</a>
+      <a href="#planning">Planning</a>
+      {% if request.user.is_authenticated %}
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+        <a class="btn btn-primary" href="{% url 'create_trip' %}">Plan new trip</a>
+      {% else %}
+        <a href="{% url 'login' %}">Sign in</a>
+        <a class="btn btn-primary" href="{% url 'signup' %}">Start planning</a>
+      {% endif %}
+    </nav>
   </header>
   <main>
     <section class="landing-hero">
@@ -24,7 +35,7 @@
           <div class="map-card-top"><span>07 DAYS</span><span>DELHI → PARIS → ROME</span></div>
           <div class="route-line"></div>
           <div class="map-point one"><b>01</b><span>Paris</span></div><div class="map-point two"><b>02</b><span>Rome</span></div><div class="map-point three"><b>03</b><span>Lisbon</span></div>
-          <div class="map-card-bottom"><span><i class="hgi-stroke hgi-calendar-03"></i> 12 Sep — 19 Sep</span><strong>₹ 1,42,400</strong></div>
+          <div class="map-card-bottom"><span><i class="hgi-stroke hgi-calendar-03"></i> 12 Sep — 19 Sep</span><strong>{{ 1700|convert:request.user }}</strong></div>
         </div>
         <div class="landing-photo-strip">
           <div class="landing-photo" style="background-image:url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=900&q=84')"><span>PARIS</span></div>
@@ -50,9 +61,9 @@
       <div class="landing-editorial">
         <article class="editorial-feature" style="background-image:url('https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=1200&q=84')"><div><small>GREECE · 5 DAYS</small><h3>Santorini, slow mornings and blue-hour dinners.</h3><a href="{% url 'cities' %}">See destination</a></div></article>
         <div class="editorial-list">
-          <article class="editorial-mini"><img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=480&q=84" alt="Kyoto"><div><small>JAPAN</small><h3>Kyoto, temples between train windows.</h3><p>From ₹18,000 / 4 days</p></div></article>
-          <article class="editorial-mini"><img src="https://images.unsplash.com/photo-1555881400-74d7acaacd8b?auto=format&fit=crop&w=480&q=84" alt="Lisbon"><div><small>PORTUGAL</small><h3>Lisbon, tiled streets and long lunches.</h3><p>From ₹24,500 / 5 days</p></div></article>
-          <article class="editorial-mini"><img src="https://images.unsplash.com/photo-1527668752968-14dc70a27c95?auto=format&fit=crop&w=480&q=84" alt="Swiss Alps"><div><small>SWITZERLAND</small><h3>Swiss Alps, crisp air and open rail lines.</h3><p>From ₹44,000 / 7 days</p></div></article>
+          <article class="editorial-mini"><img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=480&q=84" alt="Kyoto"><div><small>JAPAN</small><h3>Kyoto, temples between train windows.</h3><p>From {{ 215|convert:request.user }} / 4 days</p></div></article>
+          <article class="editorial-mini"><img src="https://images.unsplash.com/photo-1555881400-74d7acaacd8b?auto=format&fit=crop&w=480&q=84" alt="Lisbon"><div><small>PORTUGAL</small><h3>Lisbon, tiled streets and long lunches.</h3><p>From {{ 295|convert:request.user }} / 5 days</p></div></article>
+          <article class="editorial-mini"><img src="https://images.unsplash.com/photo-1527668752968-14dc70a27c95?auto=format&fit=crop&w=480&q=84" alt="Swiss Alps"><div><small>SWITZERLAND</small><h3>Swiss Alps, crisp air and open rail lines.</h3><p>From {{ 525|convert:request.user }} / 7 days</p></div></article>
         </div>
       </div>
     </section>
