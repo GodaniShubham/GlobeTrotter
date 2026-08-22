@@ -1,62 +1,74 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}GlobeTrotter{% endblock %}</title>
-    <!-- Tailwind CSS (CDN for rapid prototyping, replace with build step later) -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#714B67',
-                        dark: '#2F2930',
-                        accent: '#F6B73C',
-                        surface: '#FFFFFF',
-                        background: '#F7F7F7',
-                    }
-                }
-            }
-        }
-    </script>
+    <meta name="theme-color" content="#714B67">
+    <title>{% block title %}{{ page_title|default:'GlobeTrotter' }}{% endblock %}</title>
+    <link rel="stylesheet" href="https://use.hugeicons.com/font/icons.css">
+    <link rel="stylesheet" href="{% static 'css/site.css' %}">
     {% block extra_css %}{% endblock %}
 </head>
-<body class="bg-background text-dark font-sans antialiased">
-
-    <!-- Navigation -->
-    <nav class="bg-white shadow-sm border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex">
-                    <div class="flex-shrink-0 flex items-center">
-                        <a href="/" class="text-2xl font-bold text-primary">GlobeTrotter</a>
-                    </div>
-                </div>
-                <div class="flex items-center space-x-4">
-                    {% if user.is_authenticated %}
-                        <a href="#" class="text-gray-600 hover:text-primary">Dashboard</a>
-                        <a href="#" class="text-gray-600 hover:text-primary">Profile</a>
-                        <form method="post" action="{% url 'logout' %}" class="inline">
-                            {% csrf_token %}
-                            <button type="submit" class="text-gray-600 hover:text-primary">Logout</button>
-                        </form>
-                    {% else %}
-                        <a href="#" class="text-gray-600 hover:text-primary">Login</a>
-                        <a href="#" class="bg-primary text-white px-4 py-2 rounded-md hover:bg-opacity-90">Sign Up</a>
-                    {% endif %}
-                </div>
-            </div>
+<body class="{% block body_class %}{% endblock %}">
+{% block shell %}
+<div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+        <div class="brand-lockup">
+            <a class="odoo-mark" href="{% url 'home' %}" aria-label="Odoo">
+                <span class="odoo-ring">o</span><span class="odoo-word">doo</span>
+            </a>
+            <span class="brand-divider">×</span>
+            <span class="brand-name">GlobeTrotter</span>
         </div>
-    </nav>
-
-    <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {% block content %}
-        {% endblock %}
-    </main>
-
-    {% block extra_js %}{% endblock %}
+        <div class="sidebar-label">Workspace</div>
+        <nav class="side-nav">
+            <a href="{% url 'dashboard' %}" class="side-link {% if active == 'dashboard' %}is-active{% endif %}"><i class="hgi-stroke hgi-home-01"></i><span>Dashboard</span></a>
+            <a href="{% url 'trips' %}" class="side-link {% if active == 'trips' %}is-active{% endif %}"><i class="hgi-stroke hgi-briefcase-01"></i><span>My trips</span></a>
+            <a href="{% url 'create_trip' %}" class="side-link {% if active == 'create' %}is-active{% endif %}"><i class="hgi-stroke hgi-add-01"></i><span>Plan a trip</span></a>
+            <a href="{% url 'builder' %}" class="side-link {% if active == 'builder' %}is-active{% endif %}"><i class="hgi-stroke hgi-route-02"></i><span>Itinerary builder</span></a>
+            <a href="{% url 'itinerary' %}" class="side-link {% if active == 'itinerary' %}is-active{% endif %}"><i class="hgi-stroke hgi-list-view"></i><span>Itinerary view</span></a>
+        </nav>
+        <div class="sidebar-label">Discover</div>
+        <nav class="side-nav">
+            <a href="{% url 'cities' %}" class="side-link {% if active == 'cities' %}is-active{% endif %}"><i class="hgi-stroke hgi-location-01"></i><span>Cities</span></a>
+            <a href="{% url 'activities' %}" class="side-link {% if active == 'activities' %}is-active{% endif %}"><i class="hgi-stroke hgi-compass-01"></i><span>Activities</span></a>
+            <a href="{% url 'budget' %}" class="side-link {% if active == 'budget' %}is-active{% endif %}"><i class="hgi-stroke hgi-wallet-01"></i><span>Budget</span></a>
+            <a href="{% url 'calendar' %}" class="side-link {% if active == 'calendar' %}is-active{% endif %}"><i class="hgi-stroke hgi-calendar-03"></i><span>Calendar</span></a>
+        </nav>
+        <div class="sidebar-spacer"></div>
+        <div class="sidebar-card">
+            <div class="sidebar-card-kicker">ODOO TRAVEL SUITE</div>
+            <strong>Everything for one memorable journey.</strong>
+            <p>Plan, budget, schedule and share from one workspace.</p>
+        </div>
+        <a href="{% url 'profile' %}" class="profile-mini {% if active == 'profile' %}is-active{% endif %}">
+            <span class="avatar avatar-purple">AK</span>
+            <span class="profile-mini-copy"><strong>Alex Kapoor</strong><small>Traveller account</small></span>
+            <i class="hgi-stroke hgi-settings-02"></i>
+        </a>
+    </aside>
+    <div class="main-frame">
+        <header class="topbar">
+            <button class="icon-btn mobile-menu" type="button" data-sidebar-toggle aria-label="Open navigation"><i class="hgi-stroke hgi-menu-01"></i></button>
+            <div class="crumbs">
+                <span class="crumb-muted">GlobeTrotter</span>
+                <i class="hgi-stroke hgi-arrow-right-01"></i>
+                <span>{% block crumb %}Workspace{% endblock %}</span>
+            </div>
+            <div class="topbar-actions">
+                <a class="icon-btn" href="{% url 'public_itinerary' %}" aria-label="Open shared itinerary"><i class="hgi-stroke hgi-share-08"></i></a>
+                <button class="icon-btn" type="button" aria-label="Notifications"><i class="hgi-stroke hgi-notification-02"></i><span class="notification-dot"></span></button>
+                <a class="topbar-profile" href="{% url 'profile' %}"><span class="avatar avatar-purple">AK</span><span>Alex</span><i class="hgi-stroke hgi-arrow-down-01"></i></a>
+            </div>
+        </header>
+        <main class="page-content">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</div>
+{% endblock %}
+<script src="{% static 'js/site.js' %}"></script>
+{% block extra_js %}{% endblock %}
 </body>
 </html>
