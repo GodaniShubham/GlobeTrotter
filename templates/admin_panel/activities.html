@@ -1,0 +1,369 @@
+{% extends "admin_panel/base.html" %}
+
+{% block title %}
+Popular Activities · GlobeTrotter
+{% endblock %}
+
+{% block breadcrumb %}
+Popular Activities
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+
+        <div class="kicker">
+            ADMIN · EXPERIENCES
+        </div>
+
+        <h1 class="page-title">
+            Popular Activities
+        </h1>
+
+        <p class="page-subtitle">
+            Manage travel experiences and activities available to travellers.
+        </p>
+
+    </div>
+
+    <a
+        href="{% url 'admin_panel:activity_create' %}"
+        class="primary-action"
+    >
+        + Add Activity
+    </a>
+
+</div>
+
+
+<!-- STAT -->
+
+<div class="stats-grid">
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+            <div class="stat-icon">
+                ✦
+            </div>
+        </div>
+
+        <div class="stat-label">
+            TOTAL ACTIVITIES
+        </div>
+
+        <div class="stat-number">
+            {{ total_activities }}
+        </div>
+
+        <div class="stat-footer">
+            <span class="stat-up">
+                ● Experiences
+            </span>
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+            <div class="stat-icon green">
+                ⌖
+            </div>
+        </div>
+
+        <div class="stat-label">
+            CITIES COVERED
+        </div>
+
+        <div class="stat-number">
+            {{ cities|length }}
+        </div>
+
+        <div class="stat-footer">
+            <span class="stat-muted">
+                Available destinations
+            </span>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ACTIVITIES -->
+
+<section class="panel" style="margin-top:16px;">
+
+    <div class="panel-header">
+
+        <div>
+
+            <div class="panel-title">
+                All Activities
+            </div>
+
+            <div class="panel-subtitle">
+                TRAVEL EXPERIENCE MANAGEMENT
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- FILTER -->
+
+    <div class="user-toolbar">
+
+        <form
+            method="GET"
+            class="activity-filter-form"
+        >
+
+            <div class="user-search">
+
+                <span>⌕</span>
+
+                <input
+                    type="text"
+                    name="search"
+                    value="{{ search }}"
+                    placeholder="Search activities..."
+                >
+
+            </div>
+
+
+            <select name="city">
+
+                <option value="">
+                    All Cities
+                </option>
+
+                {% for city in cities %}
+
+                    <option
+                        value="{{ city.id }}"
+                        {% if selected_city == city.id|stringformat:"s" %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ city.name }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+
+            <select name="type">
+
+                <option value="">
+                    All Types
+                </option>
+
+                {% for type in activity_types %}
+
+                    <option
+                        value="{{ type }}"
+                        {% if selected_type == type %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ type }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+
+            <button
+                type="submit"
+                class="primary-action"
+                style="border:0;"
+            >
+                Filter
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- TABLE -->
+
+    <div class="table-wrap">
+
+        <table class="data-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>Activity</th>
+
+                    <th>City</th>
+
+                    <th>Type</th>
+
+                    <th>Duration</th>
+
+                    <th>Cost</th>
+
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+            {% for activity in activities %}
+
+                <tr>
+
+                    <td>
+
+                        <div class="user-cell">
+
+                            <div class="user-avatar">
+                                {{ activity.name|first|upper }}
+                            </div>
+
+                            <div>
+
+                                <div class="user-name">
+                                    {{ activity.name }}
+                                </div>
+
+                                <span class="user-email">
+                                    Experience
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </td>
+
+
+                    <td>
+                        {{ activity.city.name }}
+                    </td>
+
+
+                    <td>
+
+                        <span class="badge badge-purple">
+                            {{ activity.activity_type|default:"General" }}
+                        </span>
+
+                    </td>
+
+
+                    <td>
+                        {{ activity.duration|default:"—" }}
+                    </td>
+
+
+                    <td>
+
+                        <span class="badge badge-orange">
+                            ₹{{ activity.estimated_cost }}
+                        </span>
+
+                    </td>
+
+
+                    <td>
+
+                        <div style="
+                            display:flex;
+                            gap:6px;
+                        ">
+
+                            <a
+                                href="{% url 'admin_panel:activity_edit' activity.id %}"
+                                class="badge badge-purple"
+                            >
+                                Edit
+                            </a>
+
+
+                            <form
+                                method="POST"
+                                action="{% url 'admin_panel:activity_delete' activity.id %}"
+                                onsubmit="return confirm('Delete this activity?');"
+                            >
+
+                                {% csrf_token %}
+
+                                <button
+                                    type="submit"
+                                    class="badge badge-red"
+                                    style="
+                                        border:0;
+                                        cursor:pointer;
+                                    "
+                                >
+                                    Delete
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+
+            {% empty %}
+
+                <tr>
+
+                    <td
+                        colspan="6"
+                        style="
+                            text-align:center;
+                            padding:60px;
+                            color:#999;
+                        "
+                    >
+
+                        <div style="font-size:32px;">
+                            ✦
+                        </div>
+
+                        <strong style="
+                            display:block;
+                            margin-top:10px;
+                        ">
+                            No activities found
+                        </strong>
+
+                        <span>
+                            Add your first travel experience.
+                        </span>
+
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+{% endblock %}
