@@ -1,137 +1,385 @@
+# GlobeTrotter × Odoo
+
+> **A focused multi-city travel planning workspace for building trips, shaping itineraries, discovering places, tracking budgets, and sharing travel ideas.**
+
 <div align="center">
 
-  <img src="https://www.odoo.com/web/static/img/odoo_logo.svg" alt="Odoo Logo" width="150" />
-  <h1>GlobeTrotter × Odoo Travel Suite</h1>
-  
-  <p>
-    <strong>A personalized, AI-powered multi-city travel planning platform built with Django.</strong>
-  </p>
-
-  <p>
-    <a href="#features">Features</a> •
-    <a href="#demo-video">Demo Video</a> •
-    <a href="#getting-started">Getting Started</a> •
-    <a href="#tech-stack">Tech Stack</a>
-  </p>
+**Plan the route. Shape the days. Travel your way.**
 
 </div>
 
 ---
 
-## 🌟 Overview
+## Product at a glance
 
-GlobeTrotter helps users create trips, manage destinations and activities, organize itineraries, track estimated expenses, view plans on a calendar, and instantly generate full multi-day plans using AI.
+GlobeTrotter is a Django-based travel planning platform built around one idea: **the traveller stays in control of the journey**.
 
-Originally a frontend-first package, this system is now a fully integrated backend platform leveraging the Groq LLaMA 3 API for intelligent trip building and the Wikipedia REST API for automated image sourcing.
+The application brings trip creation, a manual itinerary builder, destination and activity discovery, budget planning, calendar views, public itinerary sharing, community features, account recovery, and an administrator workspace into one product.
 
----
+The current codebase contains these Django applications:
 
-## 🎥 Demo Video
-
-> **[Watch the full GlobeTrotter × Odoo Demo Video Here (Click to Play)](#)** 
-*(Replace with actual YouTube/Vimeo link)*
-
-<a href="#">
-  <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=2000&auto=format&fit=crop" alt="GlobeTrotter Video Thumbnail" width="100%" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
-</a>
+`accounts` · `activities` · `community` · `core` · `destinations` · `expenses` · `trips` · `transport` · `admin_panel`
 
 ---
 
-## ✨ Core Features
+## What you can do
 
-### 🤖 AI-Powered Itinerary Generation
-Stop planning manually. Tell GlobeTrotter your destination, pace, and interests, and the **Groq AI** integration will automatically build a realistic, day-by-day JSON itinerary and save it to your database.
-
-### 🖼️ Automated Wikipedia Image Fetching
-When the AI generates a trip, our backend automatically queries the **Wikipedia API** to fetch high-quality cover images for your destination and thumbnails for every single activity. No manual photo sourcing needed.
-
-### 🛡️ Secure OTP Email Authentication
-Custom-designed, mobile-responsive "GlobeTrotter × Odoo" email templates power a robust 6-digit OTP (One-Time Password) system for safe and reliable password recovery.
-
-### 📊 Dynamic Admin & Analytics Dashboard
-A dedicated, secure `/admin-panel/` built for platform administrators. Track rolling 8-week user growth, view the most popular destinations, manage users, and track platform adoption in real-time.
-
-### 🗺️ Full Travel Suite
-- **Multi-city Planner:** Drag-and-drop itinerary building for complex trips.
-- **Budget Tracking:** Keep an eye on estimated expenses across cities.
-- **Public Sharing:** Generate public links to share your itineraries with friends.
+| Area | What it provides |
+|---|---|
+| **Trip planning** | Create a trip with dates, then build the journey step by step. |
+| **Manual itinerary builder** | Add cities, set exact arrival/departure dates, add activities, choose times, attach notes, and set custom costs. |
+| **Destination discovery** | Browse/search cities from the travel catalogue. |
+| **Activity discovery** | Explore activities associated with destinations. |
+| **Budget** | Track planned travel spend and activity costs. |
+| **Calendar** | Review the journey in a calendar-oriented view. |
+| **Community** | Publish travel conversations, reply, like, save, share, report, and receive community notifications. |
+| **Password recovery** | Recover access using the configured password-recovery flow and OTP pages. |
+| **Admin workspace** | Manage users, cities, activities, analytics, and administrative settings from `/admin-panel/`. |
 
 ---
 
-## 🖼️ Gallery
+## The planning flow
 
-<div align="center">
-  <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=600&auto=format&fit=crop" width="48%" alt="Beach Destination" style="border-radius: 8px;"/>
-  <img src="https://images.unsplash.com/photo-1499856871958-5b9627545d1a?q=80&w=600&auto=format&fit=crop" width="48%" alt="Paris Destination" style="border-radius: 8px;"/>
-</div>
+```text
+Create Trip
+    │
+    ├── Trip name
+    ├── Start / end date
+    └── Trip note
+         │
+         ▼
+Manual Itinerary Builder
+         │
+         ├── Add destination
+         │      ├── Arrival
+         │      └── Departure
+         │
+         ├── Add activity
+         │      ├── Day
+         │      ├── Start / end time
+         │      ├── Cost
+         │      └── Notes
+         │
+         ▼
+Preview
+   ├── Itinerary
+   ├── Calendar
+   └── Budget
+```
+
+The manual planner is structured around explicit user choices rather than silently changing the traveller's plan.
 
 ---
 
-## 🛠️ Tech Stack
+## Community workspace
 
-- **Backend Framework:** Django (Python 3.13)
-- **Database:** SQLite (Local Dev) / MariaDB (Production)
-- **AI Integration:** Groq API (LLaMA 3 70B)
-- **Image Sourcing:** Wikipedia REST API
-- **Frontend:** Vanilla HTML, CSS, JavaScript (Mobile-First Responsive)
-- **Charting:** Custom CSS/JS HTML Charts
+The community module is wired as a full product area rather than a static feed.
+
+Current routes cover:
+
+```text
+/community/
+/community/new/
+/community/saved/
+/community/post/<id>/
+/community/post/<id>/reply/
+/community/post/<id>/like/
+/community/post/<id>/save/
+/community/post/<id>/share/
+/community/post/<id>/report/
+/community/post/<id>/updates/
+/community/notifications/
+/community/notifications/read/
+```
+
+This gives the product a social layer for asking questions, exchanging itineraries, discussing destinations, and keeping track of community activity.
 
 ---
 
-## 🚀 Getting Started
+## Admin workspace
 
-Follow these instructions to run GlobeTrotter locally on your machine.
+Administrative functionality lives under:
 
-### 1. Clone & Setup Environment
+```text
+/admin-panel/
+```
+
+The repository contains dedicated admin views/templates for:
+
+- Dashboard
+- Users
+- User details
+- Cities
+- City creation/editing
+- Activities
+- Activity creation/editing
+- Analytics
+- Settings
+
+The admin area is kept separate from the traveller-facing workspace so the two experiences can evolve independently.
+
+---
+
+## Technical architecture
+
+```text
+Browser
+   │
+   ▼
+Django URL Router
+   │
+   ├── accounts
+   ├── trips
+   ├── destinations
+   ├── activities
+   ├── expenses
+   ├── community
+   ├── transport
+   ├── core
+   └── admin_panel
+   │
+   ▼
+Django Models / Database
+```
+
+Frontend rendering is template-based with shared HTML/CSS/JavaScript and page-specific assets where needed.
+
+The project contains utility modules for AI generation and image fetching in:
+
+```text
+core/ai_generator.py
+core/image_fetcher.py
+```
+
+---
+
+## Tech stack
+
+### Backend
+
+- Python
+- Django
+- Django ORM
+- Django authentication/session stack
+- CSRF-protected forms
+
+### Frontend
+
+- HTML templates
+- CSS
+- Vanilla JavaScript
+- Responsive layouts
+- Shared application shell with page-specific styling
+
+### Data & integrations
+
+- Relational database through Django ORM
+- Pillow for image handling
+- `requests` for HTTP integrations
+- Environment-based configuration via `python-dotenv`
+
+Current dependency file:
+
+```text
+Django~=5.0.0
+PyMySQL>=1.2.0
+python-dotenv>=1.2.3
+requests>=2.31.0
+Pillow>=10.0.0
+```
+
+---
+
+## Project structure
+
+```text
+GlobeTrotter/
+├── accounts/              # Authentication, profiles, recovery
+├── activities/            # Activity catalogue
+├── admin_panel/           # Custom administrative workspace
+├── community/             # Posts, replies, reactions, notifications
+├── config/                # Django project configuration and routing
+├── core/                  # Shared utilities / integrations
+├── destinations/          # City and destination catalogue
+├── expenses/              # Expense and budget domain
+├── static/                # CSS, JavaScript, images, admin assets
+├── templates/             # Shared and page-specific templates
+├── transport/             # Transport domain
+├── trips/                 # Trips, stops, itinerary, calendar
+├── manage.py
+└── requirements.txt
+```
+
+---
+
+## Local setup
+
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/GodaniShubham/GlobeTrotter.git
 cd GlobeTrotter
-python -m venv venv
-venv\Scripts\activate
 ```
 
-### 2. Install Dependencies
+### 2. Create a virtual environment
+
+Windows:
+
+```powershell
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+```
+
+macOS / Linux:
 
 ```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### 3. Install dependencies
+
+```bash
+python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### 3. Environment Variables
-Create a `.env` file in the root directory and add the following keys:
-```ini
-DEBUG=True
-USE_LOCAL_DB=1
-GROQ=your_groq_api_key_here
-EMAIL_HOST_USER=your_email@gmail.com
-EMAIL_HOST_PASSWORD=your_app_password
-```
+### 4. Configure environment
 
-### 4. Database Setup & Seed
-Apply migrations and seed the database with 30+ Indian cities and a default itinerary:
+Create a local `.env` file from the repository's example configuration when available.
+
+Keep secrets out of Git. Typical configuration in this project includes:
+
+- `APP_PASSWORD`
+- `DB_HOST`
+- `DB_NAME`
+- `DB_PASSWORD`
+- `DB_PORT`
+- `DB_USER`
+- `DEBUG`
+- `FRONTEND_ONLY`
+- `SECRET_KEY`
+
+**Never commit passwords, API keys, or local environment files.**
+
+### 5. Apply migrations
+
 ```bash
 python manage.py migrate
-python seed_db.py
 ```
 
-### 5. Run the Server
+If your checkout includes the catalogue/setup seed command, run the relevant seed command after migrations.
+
+### 6. Start Django
+
 ```bash
 python manage.py runserver
 ```
-Open `http://127.0.0.1:8000/` in your browser.
 
-**Admin Access:**  
-Navigate to `/admin-panel/`  
-**Email:** `admin@globetrotter.com`  
-**Password:** `admin123`
+Open:
+
+```text
+http://127.0.0.1:8000/
+```
 
 ---
 
-## 👨‍💻 Author
+## Important development routes
 
-**Godani Shubham** — Backend Developer  
-GitHub: [@GodaniShubham](https://github.com/GodaniShubham)
+| Route | Purpose |
+|---|---|
+| `/` | Landing page |
+| `/login/` | Sign in |
+| `/signup/` | Create account |
+| `/dashboard/` | Travel dashboard |
+| `/trips/new/` | Start a new trip |
+| `/trips/` | Trip library |
+| `/trip/builder/?trip=<id>` | Manual itinerary builder |
+| `/trip/itinerary/?trip=<id>` | Itinerary preview |
+| `/discover/cities/` | City discovery |
+| `/discover/activities/` | Activity discovery |
+| `/trip/budget/?trip=<id>` | Budget view |
+| `/trip/calendar/?trip=<id>` | Calendar view |
+| `/community/` | Community |
+| `/community/notifications/` | Notifications |
+| `/admin-panel/` | Custom admin workspace |
+
+---
+
+## Development checks
+
+Before committing changes:
+
+```bash
+python manage.py check
+```
+
+After schema/model changes:
+
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+For a clean repository state:
+
+```bash
+git status
+```
+
+Keep generated artifacts, temporary implementation notes, local databases, secrets, and environment files out of the production repository unless intentionally required.
+
+---
+
+## Design direction
+
+GlobeTrotter follows an editorial travel-workspace aesthetic:
+
+- Odoo-inspired collaboration
+- GlobeTrotter-led brand identity
+- Purple / teal brand accents
+- Spacious cards and calm surfaces
+- Strong travel typography
+- Handwritten editorial accents used selectively
+- Responsive desktop and mobile layouts
+- Functional UI before decoration
+
+The product should feel like a **well-designed travel desk**, not a spreadsheet.
+
+---
+
+## Current capabilities detected in this build
+
+- ✅ Admin Panel
+- ✅ Community
+- ✅ Manual Itinerary Builder
+- ✅ City Discovery
+- ✅ Activity Discovery
+- ✅ Trip Budget
+- ✅ Trip Calendar
+- ✅ Password Recovery
+
+---
+
+## Contributor principles
+
+1. Preserve backend contracts when refining templates.
+2. Prefer compatible trip-specific URL patterns when evolving routes.
+3. Keep ownership checks on user-owned trip and community resources.
+4. Preserve CSRF protection on state-changing forms and requests.
+5. Add migrations through Django instead of rewriting applied migration history.
+6. Keep feature-specific styling isolated so the shared application shell remains stable.
+
+---
+
+## Project
+
+**Repository:** `GodaniShubham/GlobeTrotter`  
+**Product:** `GlobeTrotter × Odoo`  
+**Focus:** Multi-city travel planning, itinerary building, discovery, budgeting, community, and administration.
 
 <div align="center">
-  <p><i>Building the future of travel planning with Odoo.</i></p>
+
+### Plan the route. Shape the days. Travel freely.
+
 </div>
