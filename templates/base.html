@@ -8,7 +8,7 @@
     <title>{% block title %}{{ page_title|default:'GlobeTrotter' }}{% endblock %}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://use.hugeicons.com/font/icons.css">
     <link rel="stylesheet" href="{% static 'css/site.css' %}">
     {% block extra_css %}{% endblock %}
@@ -18,11 +18,11 @@
 <div class="app-shell">
     <aside class="sidebar" id="sidebar">
         <div class="brand-lockup">
-            <a class="odoo-mark" href="{% url 'home' %}" aria-label="Odoo">
-                <span class="odoo-ring">o</span><span class="odoo-word">doo</span>
+            <a class="brand-globetrotter" href="{% url 'home' %}" aria-label="GlobeTrotter">GlobeTrotter</a>
+            <span class="brand-x">×</span>
+            <a class="odoo-brand-image" href="https://www.odoo.com/" target="_blank" rel="noreferrer" aria-label="Odoo">
+                <img src="https://www.odoo.com/web/static/img/odoo_logo.svg" alt="Odoo">
             </a>
-            <span class="brand-divider">×</span>
-            <span class="brand-name">GlobeTrotter</span>
         </div>
         <div class="sidebar-label">Workspace</div>
         <nav class="side-nav">
@@ -40,11 +40,6 @@
             <a href="{% url 'calendar' %}" class="side-link {% if active == 'calendar' %}is-active{% endif %}"><i class="hgi-stroke hgi-calendar-03"></i><span>Calendar</span></a>
         </nav>
         <div class="sidebar-spacer"></div>
-        <div class="sidebar-card">
-            <div class="sidebar-card-kicker">ODOO TRAVEL SUITE</div>
-            <strong>Everything for one memorable journey.</strong>
-            <p>Plan, budget, schedule and share from one workspace.</p>
-        </div>
         <a href="{% url 'profile' %}" class="profile-mini {% if active == 'profile' %}is-active{% endif %}">
             <span class="avatar avatar-purple">AK</span>
             <span class="profile-mini-copy"><strong>Alex Kapoor</strong><small>Traveller account</small></span>
