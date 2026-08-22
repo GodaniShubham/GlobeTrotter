@@ -248,8 +248,6 @@ def city_create(request):
         description = request.POST.get("description", "").strip()
         cost_index = request.POST.get("cost_index") or 0
         popularity = request.POST.get("popularity") or 0
-        image = request.FILES.get("image")
-        external_image_url = request.POST.get("external_image_url", "").strip()
 
         if not name or not country:
             messages.error(
@@ -266,8 +264,6 @@ def city_create(request):
             description=description,
             cost_index=cost_index,
             popularity=popularity,
-            image=image,
-            external_image_url=external_image_url,
         )
 
         messages.success(
@@ -320,9 +316,6 @@ def city_edit(request, city_id):
         city.popularity = request.POST.get(
             "popularity"
         ) or 0
-        if request.FILES.get("image"):
-            city.image = request.FILES.get("image")
-        city.external_image_url = request.POST.get("external_image_url", "").strip()
 
         city.save()
 
@@ -447,8 +440,6 @@ def activity_create(request):
         estimated_cost = request.POST.get(
             "estimated_cost"
         ) or 0
-        image = request.FILES.get("image")
-        external_image_url = request.POST.get("external_image_url", "").strip()
 
 
         if not name or not city_id:
@@ -482,8 +473,6 @@ def activity_create(request):
             duration=duration,
 
             estimated_cost=estimated_cost,
-            image=image,
-            external_image_url=external_image_url,
 
         )
 
@@ -548,9 +537,6 @@ def activity_edit(request, activity_id):
         activity.estimated_cost = request.POST.get(
             "estimated_cost"
         ) or 0
-        if request.FILES.get("image"):
-            activity.image = request.FILES.get("image")
-        activity.external_image_url = request.POST.get("external_image_url", "").strip()
 
         activity.save()
 
