@@ -1,1 +1,0 @@
-Fixed malformed templates/base.html around the authenticated sidebar/profile block. Removed stray {% endif %}"> and duplicated else/profile markup. The template now has one balanced if/else/endif block.
