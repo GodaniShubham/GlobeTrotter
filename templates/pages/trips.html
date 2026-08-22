@@ -27,11 +27,19 @@
     </div>
   </article>
   {% empty %}
-  <div style="grid-column: 1 / -1; padding: 40px; text-align: center; background: #fff; border-radius: 16px; border: 1px solid #E8E6EB;">
-      <h3 style="margin-bottom:8px">No trips yet</h3>
-      <p class="muted">Start planning your first journey.</p>
-      <a href="{% url 'create_trip' %}" class="btn btn-primary" style="margin-top:16px">Create Trip</a>
-  </div>
-  {% endfor %}
+  <section class="trips-empty-state">
+    <div class="trips-empty-copy">
+      <div class="trips-empty-eyebrow"><span></span> NEXT JOURNEY</div>
+      <h2>No upcoming trips <em>yet.</em></h2>
+      <p>Your calendar is completely open. Start with a destination, shape the route, and turn the blank space into a journey worth remembering.</p>
+      <div class="trips-empty-actions">
+        <a href="{% url 'create_trip' %}" class="btn btn-primary"><i class="hgi-stroke hgi-add-01"></i> Start planning</a>
+        <a href="{% url 'cities' %}" class="trips-empty-text-link">Explore destinations <i class="hgi-stroke hgi-arrow-up-right-02"></i></a>
+      </div>
+      <div class="trips-empty-signoff"><span>one place</span><b>→</b><span>one route</span><b>→</b><span>your story</span></div>
+    </div>
+    <div class="trips-empty-image" role="img" aria-label="Mountain lake travel destination"></div>
+  </section>
+{% endfor %}
 </div>
 {% endblock %}

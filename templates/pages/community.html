@@ -1,120 +1,141 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block crumb %}Community{% endblock %}
 {% block content %}
-<div class="page-header">
+<div class="page-header community-page-head">
   <div>
     <div class="kicker">GLOBETROTTER COMMUNITY</div>
     <h1 class="page-title">Travel with people who get it.</h1>
-    <p class="page-subtitle">Share routes, ask questions, swap ideas and find inspiration from other travellers.</p>
+    <p class="page-subtitle">Ask better questions, share real routes and learn from travellers who have already been there.</p>
   </div>
   <div class="actions">
-    <button class="btn btn-secondary" data-toast="Saved posts opened"><i class="hgi-stroke hgi-bookmark-02"></i> Saved</button>
-    <button class="btn btn-primary" data-toast="Post composer opened"><i class="hgi-stroke hgi-edit-02"></i> New post</button>
+    {% if request.user.is_authenticated %}
+      <a class="btn btn-secondary" href="{% url 'community_saved' %}"><i class="hgi-stroke hgi-bookmark-02"></i> Saved</a>
+      <a class="btn btn-primary" href="{% url 'community_new' %}"><i class="hgi-stroke hgi-edit-02"></i> New post</a>
+    {% else %}
+      <a class="btn btn-primary" href="{% url 'login' %}?next={% url 'community_new' %}">Sign in to post</a>
+    {% endif %}
   </div>
 </div>
 
-<section class="community-shell">
+<section class="community-shell" data-community-feed>
   <div class="community-hero">
     <div class="community-hero-copy">
       <div class="kicker">COMMUNITY TAB</div>
       <h1>Make the route better together.</h1>
-      <p>From first-time city plans to tiny local discoveries, the community keeps your travel planning connected to real experiences.</p>
-      <div class="community-hero-note">the best ideas often come from another traveller</div>
+      <p>Real experiences, practical answers and thoughtful ideas — organised with the same calm product structure as the rest of your GlobeTrotter workspace.</p>
+      <div class="community-hero-note">good trips get better when people compare notes</div>
     </div>
     <div class="community-hero-art" aria-hidden="true"></div>
   </div>
 
-  <div class="community-toolbar">
+  <form class="community-toolbar" method="get" action="{% url 'community' %}">
     <div class="community-search">
       <i class="hgi-stroke hgi-search-01"></i>
-      <input type="search" placeholder="Search conversations, cities or activities" aria-label="Search community">
+      <input type="search" name="q" value="{{ search_query }}" placeholder="Search conversations, cities or travellers" aria-label="Search community">
+      {% if selected_category %}<input type="hidden" name="category" value="{{ selected_category }}">{% endif %}
+      <input type="hidden" name="sort" value="{{ sort }}">
+      <button class="community-search-submit" type="submit" aria-label="Search"><i class="hgi-stroke hgi-arrow-right-02"></i></button>
+      {% if search_query %}<a class="community-search-clear" href="{% url 'community' %}{% if selected_category or sort != 'hot' %}?{% if selected_category %}category={{ selected_category }}&{% endif %}{% if sort != 'hot' %}sort={{ sort }}{% endif %}{% endif %}">Clear</a>{% endif %}
     </div>
-    <div class="community-filters">
-      <button class="filter-chip active">All</button>
-      <button class="filter-chip">Destinations</button>
-      <button class="filter-chip">Itineraries</button>
-      <button class="filter-chip">Tips</button>
-      <button class="filter-chip">Questions</button>
+    <div class="community-filters" role="tablist" aria-label="Community categories">
+      <a class="filter-chip {% if not selected_category %}active{% endif %}" href="{% url 'community' %}?sort={{ sort }}{% if search_query %}&q={{ search_query|urlencode }}{% endif %}">All</a>
+      {% for code,label in categories %}
+        <a class="filter-chip {% if selected_category == code %}active{% endif %}" href="{% url 'community' %}?category={{ code }}&sort={{ sort }}{% if search_query %}&q={{ search_query|urlencode }}{% endif %}">{{ label }}</a>
+      {% endfor %}
+    </div>
+  </form>
+
+  <div class="community-feed-controls">
+    <div class="community-results-bar">
+      <span><strong>{{ total_results }}</strong> conversation{{ total_results|pluralize }}{% if search_query %} for “{{ search_query }}”{% endif %}</span>
+      {% if selected_category %}<span class="community-filter-context">{{ selected_category|title }}</span>{% endif %}
+    </div>
+    <div class="community-sort">
+      <span class="eyebrow">SORT</span>
+      <a class="{% if sort == 'hot' %}active{% endif %}" href="{% url 'community' %}?sort=hot{% if search_query %}&q={{ search_query|urlencode }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}">Hot</a>
+      <a class="{% if sort == 'new' %}active{% endif %}" href="{% url 'community' %}?sort=new{% if search_query %}&q={{ search_query|urlencode }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}">New</a>
+      <a class="{% if sort == 'top' %}active{% endif %}" href="{% url 'community' %}?sort=top{% if search_query %}&q={{ search_query|urlencode }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}">Top</a>
     </div>
   </div>
 
   <div class="community-layout">
     <div class="community-feed">
-      <article class="community-post">
+      {% for post in posts %}
+      <article class="community-post" data-post-card="{{ post.pk }}" data-post-updated="{{ post.updated_at|date:'c' }}">
         <div class="community-post-top">
-          <span class="community-avatar">AC</span>
-          <div class="community-post-author"><strong>Aisha Chen</strong><small>Tokyo · 18 min ago</small></div>
-          <button class="icon-btn" aria-label="More actions"><i class="hgi-stroke hgi-more-horizontal"></i></button>
+          <a class="community-avatar community-avatar-link" href="{% url 'profile' %}" aria-label="{{ post.author.get_full_name|default:post.author.username }}">
+            {{ post.author.first_name|first|default:post.author.username|first|upper }}{{ post.author.last_name|first }}
+          </a>
+          <div class="community-post-author">
+            <strong>{{ post.author.get_full_name|default:post.author.username }}</strong>
+            <small>{% if post.city %}{{ post.city.name }} · {% endif %}{{ post.created_at|timesince }} ago</small>
+          </div>
+          {% if request.user == post.author or request.user.is_staff %}
+          <form method="post" action="{% url 'community_delete' post.pk %}" class="community-inline-form js-community-delete-form" data-post="{{ post.pk }}">
+            {% csrf_token %}<button class="icon-btn" type="submit" aria-label="Remove post"><i class="hgi-stroke hgi-delete-02"></i></button>
+          </form>
+          {% endif %}
         </div>
         <div class="community-post-body">
-          <h3>Is 7 days enough for Tokyo, Kyoto and Osaka?</h3>
-          <p>I’m trying to keep two slower mornings in the plan without missing the classics. How would you divide the days?</p>
+          <div class="community-post-category">{{ post.get_category_display }}{% if post.city %} · {{ post.city.name }}{% endif %}</div>
+          <h3><a class="community-post-link" href="{% url 'community_post' post.pk %}">{{ post.title }}</a></h3>
+          <p>{{ post.body|truncatechars:260 }}</p>
         </div>
         <div class="community-post-meta">
-          <div class="community-post-stats"><span>28 replies</span><span>64 likes</span></div>
-          <div class="community-post-actions"><button class="btn btn-quiet">Reply</button><button class="btn btn-quiet">Save</button></div>
+          <div class="community-post-stats">
+            <button class="community-stat-button js-community-open" type="button" data-open-url="{% url 'community_post' post.pk %}">
+              <i class="hgi-stroke hgi-message-02"></i><span data-reply-count="{{ post.pk }}">{{ post.reply_count }}</span>
+            </button>
+            <button class="community-stat-button js-community-like {% if post.is_liked %}is-active{% endif %}" type="button" data-url="{% url 'community_like' post.pk %}" data-post="{{ post.pk }}">
+              <i class="hgi-stroke hgi-thumbs-up"></i><span data-like-count="{{ post.pk }}">{{ post.like_count }}</span>
+            </button>
+            <button class="community-stat-button js-community-save {% if post.is_saved %}is-active{% endif %}" type="button" data-url="{% url 'community_save' post.pk %}" data-post="{{ post.pk }}">
+              <i class="hgi-stroke hgi-bookmark-02"></i><span data-save-count="{{ post.pk }}">{{ post.save_count }}</span>
+            </button>
+          </div>
+          <div class="community-post-actions">
+            <a class="btn btn-quiet" href="{% url 'community_post' post.pk %}">Open thread</a>
+            <button class="btn btn-quiet js-community-share" type="button"
+                data-share-url="{{ request.scheme }}://{{ request.get_host }}{% url 'community_post' post.pk %}"
+                data-share-title="{{ post.title|escapejs }}"
+                data-share-record-url="{% url 'community_share' post.pk %}">Share</button>
+          </div>
         </div>
       </article>
+      {% empty %}
+      <div class="community-empty panel">
+        <div class="kicker">NOTHING HERE YET</div>
+        <h3>Try a different search or start the conversation.</h3>
+        <p>Good community threads begin with a useful question, a real route or a detail you wish someone had told you earlier.</p>
+        {% if request.user.is_authenticated %}<a class="btn btn-primary" href="{% url 'community_new' %}">Start a post</a>{% endif %}
+      </div>
+      {% endfor %}
 
-      <article class="community-post">
-        <div class="community-post-top">
-          <span class="community-avatar avatar-orange">RS</span>
-          <div class="community-post-author"><strong>Rohan Shah</strong><small>Swiss Alps · 42 min ago</small></div>
-          <button class="icon-btn" aria-label="More actions"><i class="hgi-stroke hgi-more-horizontal"></i></button>
-        </div>
-        <div class="community-post-body">
-          <h3>Best scenic rail segments between Zurich and Interlaken?</h3>
-          <p>Looking for the most beautiful route, not necessarily the fastest one. Bonus points for easy stopovers.</p>
-        </div>
-        <div class="community-post-meta">
-          <div class="community-post-stats"><span>17 replies</span><span>41 likes</span></div>
-          <div class="community-post-actions"><button class="btn btn-quiet">Reply</button><button class="btn btn-quiet">Save</button></div>
-        </div>
-      </article>
-
-      <article class="community-post">
-        <div class="community-post-top">
-          <span class="community-avatar avatar-green">MJ</span>
-          <div class="community-post-author"><strong>Maya Joseph</strong><small>Lisbon · 1 hr ago</small></div>
-          <button class="icon-btn" aria-label="More actions"><i class="hgi-stroke hgi-more-horizontal"></i></button>
-        </div>
-        <div class="community-post-body">
-          <h3>One neighbourhood in Lisbon you would never skip?</h3>
-          <p>Putting together a short city break and want one area that feels local, walkable and easy to explore without rushing.</p>
-        </div>
-        <div class="community-post-meta">
-          <div class="community-post-stats"><span>12 replies</span><span>33 likes</span></div>
-          <div class="community-post-actions"><button class="btn btn-quiet">Reply</button><button class="btn btn-quiet">Save</button></div>
-        </div>
-      </article>
-
-      <article class="community-post">
-        <div class="community-post-top">
-          <span class="community-avatar avatar-blue">DN</span>
-          <div class="community-post-author"><strong>Dev Nair</strong><small>Bali · 2 hrs ago</small></div>
-          <button class="icon-btn" aria-label="More actions"><i class="hgi-stroke hgi-more-horizontal"></i></button>
-        </div>
-        <div class="community-post-body">
-          <h3>Slow travel: how much empty time do you actually leave?</h3>
-          <p>I’m experimenting with one open block each day so the itinerary feels less like a checklist. What works for you?</p>
-        </div>
-        <div class="community-post-meta">
-          <div class="community-post-stats"><span>9 replies</span><span>22 likes</span></div>
-          <div class="community-post-actions"><button class="btn btn-quiet">Reply</button><button class="btn btn-quiet">Save</button></div>
-        </div>
-      </article>
+      {% if page_obj.has_other_pages %}
+      <nav class="community-pagination" aria-label="Community pages">
+        {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}{% if search_query %}&q={{ search_query|urlencode }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}&sort={{ sort }}">Previous</a>{% endif %}
+        <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}{% if search_query %}&q={{ search_query|urlencode }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}&sort={{ sort }}">Next</a>{% endif %}
+      </nav>
+      {% endif %}
     </div>
 
     <aside class="community-sidebar">
       <div class="panel-head">
-        <div><h3>Popular this week</h3><div class="eyebrow">TRAVEL CONVERSATIONS</div></div>
+        <div><h3>Popular this week</h3><div class="eyebrow">MOST ENGAGING</div></div>
       </div>
-      <div class="community-topic"><strong>Japan autumn itineraries</strong><span>128 posts</span></div>
-      <div class="community-topic"><strong>Budget travel planning</strong><span>93 posts</span></div>
-      <div class="community-topic"><strong>Solo city breaks</strong><span>76 posts</span></div>
-      <div class="community-topic"><strong>Slow travel ideas</strong><span>64 posts</span></div>
-      <div class="community-topic"><strong>Family-friendly routes</strong><span>51 posts</span></div>
+      {% for post in popular_posts %}
+      <a class="community-topic" href="{% url 'community_post' post.pk %}">
+        <strong>{{ post.title|truncatechars:54 }}</strong>
+        <span>{{ post.reply_count }} replies</span>
+      </a>
+      {% empty %}
+      <div class="community-topic"><strong>Be the first to start a conversation.</strong></div>
+      {% endfor %}
+      <div class="community-sidebar-foot">Odoo-inspired structure. GlobeTrotter community energy.</div>
     </aside>
   </div>
 </section>
 {% endblock %}
+{% block extra_js %}<script src="{% static 'js/community.js' %}"></script>{% endblock %}

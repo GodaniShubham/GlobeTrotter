@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block crumb %}Saved community posts{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><div class="kicker">COMMUNITY</div><h1 class="page-title">Saved conversations.</h1><p class="page-subtitle">Keep useful answers close while you plan.</p></div>
+  <a class="btn btn-secondary" href="{% url 'community' %}">Browse community</a>
+</div>
+<section class="community-saved-list">
+{% for post in posts %}
+<article class="panel community-saved-card" data-post-card="{{ post.pk }}">
+  <div><div class="kicker">{{ post.get_category_display|upper }}{% if post.city %} · {{ post.city.name|upper }}{% endif %}</div>
+  <h3>{{ post.title }}</h3><p><span data-reply-count="{{ post.pk }}">{{ post.reply_count }}</span> replies · <span data-like-count="{{ post.pk }}">{{ post.like_count }}</span> likes · <span data-save-count="{{ post.pk }}">{{ post.save_count }}</span> saves</p></div>
+  <div class="actions"><a class="btn btn-secondary" href="{% url 'community_post' post.pk %}">Open</a><button class="btn btn-quiet is-active js-community-save" type="button" data-url="{% url 'community_save' post.pk %}" data-post="{{ post.pk }}">Unsave</button></div>
+</article>
+{% empty %}
+<div class="community-empty panel"><div class="kicker">SAVED POSTS</div><h3>Nothing saved yet.</h3><p>Save a useful answer while you browse and it will stay here for your next trip.</p><a class="btn btn-primary" href="{% url 'community' %}">Explore community</a></div>
+{% endfor %}
+</section>
+{% endblock %}
+{% block extra_js %}<script src="{% static 'js/community.js' %}"></script>{% endblock %}

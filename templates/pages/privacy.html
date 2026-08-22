@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block crumb %}Privacy{% endblock %}
+{% block content %}
+<div class="page-header"><div><div class="kicker">PROFILE</div><h1 class="page-title">Privacy & account</h1><p class="page-subtitle">Control what is visible, what is shared, and how your travel workspace is handled.</p></div><a class="btn btn-secondary" href="/profile/">Back to profile</a></div>
+<div class="privacy-layout">
+  <section class="panel panel-pad">
+    <div class="privacy-row"><div><strong>Public trip sharing</strong><p>Allow shared itineraries to show your name.</p></div><label class="switch"><input type="checkbox" checked><span></span></label></div>
+    <div class="rule"></div>
+    <div class="privacy-row"><div><strong>Community profile visibility</strong><p>Let other travellers discover your community profile.</p></div><label class="switch"><input type="checkbox" checked><span></span></label></div>
+    <div class="rule"></div>
+    <div class="privacy-row"><div><strong>Activity recommendations</strong><p>Use your saved places and preferences to personalize discovery.</p></div><label class="switch"><input type="checkbox" checked><span></span></label></div>
+  </section>
+  <section class="panel panel-pad"><div class="kicker">DANGER ZONE</div><h3>Delete account</h3><p class="muted">Permanently remove your account, trips, saved destinations and community activity.</p><button class="btn btn-danger" data-toast="Account deletion confirmation would open here">Delete account</button></section>
+</div>
+{% endblock %}

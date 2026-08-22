@@ -1,0 +1,18 @@
+COMMUNITY MISSING POST FIX
+
+Problem:
+  /community/post/3/ returned "No CommunityPost matches the given query"
+  because that primary-key record does not exist (or is unpublished).
+
+Fix:
+  1. post_detail now redirects gracefully to /community/ with a message when the post is missing.
+  2. Added a safe, idempotent demo-data command for local/staging testing:
+       python manage.py seed_community
+     Or for a specific existing user:
+       python manage.py seed_community --username YOUR_USERNAME
+
+  Do NOT run this in production unless you intentionally want demo/sample posts.
+
+Important:
+  Real posts created through the Community form are saved to the configured database
+  (your MySQL when the backend developer runs the project against MySQL).

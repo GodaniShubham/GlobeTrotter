@@ -1,0 +1,34 @@
+GlobeTrotter Community V7 — production social layer
+
+Added:
+  - Dynamic hot/new/top feed sorting.
+  - Search and category filtering.
+  - Pagination.
+  - Post likes, saves and dynamic counters.
+  - Comment likes with dynamic counters.
+  - Nested replies using the existing CommunityReply.parent relation.
+  - AJAX reply creation.
+  - Reply delete for author/staff.
+  - Share / copy-link UX.
+  - Mention notifications using @username.
+  - Notifications for post replies, nested replies, post likes and reply likes.
+  - Notification center with unread count and mark-all-read.
+  - Near-real-time polling for open threads (4s) and global notifications (5s).
+  - Production-safe transaction boundaries and unique constraints for likes.
+  - Admin registrations and regression tests.
+  - Fixed malformed base profile markup in the shared base template.
+
+Database:
+  Run:
+    python manage.py makemigrations community
+    python manage.py migrate
+
+  The new migration is community/migrations/0002_social_realtime.py.
+  The same migration works against SQLite for local development and MySQL for the
+  backend developer's environment.
+
+Real-time:
+  This uses HTTP polling, not WebSockets/Redis. It gives near-real-time updates
+  with the current stack. For a high-concurrency production deployment, the
+  endpoints can later be replaced by Django Channels/WebSockets without changing
+  the data model or UI contracts.

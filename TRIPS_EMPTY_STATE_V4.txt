@@ -1,0 +1,1 @@
+Redesigned the empty My Trips state using only the existing Django trips loop and create_trip/cities routes. Removed the old yellow pill treatment, added a split editorial hero with travel photography, improved hierarchy, responsive behavior, and a two-tone GlobeTrotter wordmark (Globe purple / Trotter teal) to pair with Odoo.

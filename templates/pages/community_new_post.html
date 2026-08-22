@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block crumb %}New community post{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/community.css' %}">{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><div class="kicker">COMMUNITY</div><h1 class="page-title">Start a conversation.</h1><p class="page-subtitle">Ask something useful, share a route, or leave a tip another traveller can actually use.</p></div>
+  <div class="actions"><a class="btn btn-secondary" href="{% url 'community' %}">Cancel</a></div>
+</div>
+<form method="post" class="community-compose-grid" novalidate>
+  {% csrf_token %}
+  <section class="panel panel-pad">
+    <div class="kicker">POST DETAILS</div>
+    {% if form.non_field_errors %}<div class="community-form-error">{{ form.non_field_errors }}</div>{% endif %}
+    <div class="community-field"><label for="id_title">Title</label>{{ form.title }}{% if form.title.errors %}<div class="community-form-error">{{ form.title.errors|striptags }}</div>{% endif %}</div>
+    <div class="form-grid community-form-grid">
+      <div class="community-field"><label for="id_category">Category</label>{{ form.category }}</div>
+      <div class="community-field"><label for="id_city">Destination <span>optional</span></label>{{ form.city }}</div>
+    </div>
+    <div class="community-field"><label for="id_body">Your post</label>{{ form.body }}{% if form.body.errors %}<div class="community-form-error">{{ form.body.errors|striptags }}</div>{% endif %}</div>
+    <div class="community-compose-footer"><div class="muted">Be specific, kind and useful. Your post will appear in the community feed immediately.</div><button class="btn btn-primary" type="submit">Publish post <span>→</span></button></div>
+  </section>
+  <aside class="community-guidance">
+    <div class="panel panel-pad"><div class="kicker">MAKE IT GOOD</div><h3>Posts people save.</h3>
+      <div class="guidance-item"><span>01</span><div><strong>Give context</strong><p>Dates, pace, budget and the kind of trip you are planning.</p></div></div>
+      <div class="guidance-item"><span>02</span><div><strong>Ask one clear thing</strong><p>Focused questions get better answers than broad ones.</p></div></div>
+      <div class="guidance-item"><span>03</span><div><strong>Share what you learned</strong><p>Useful details make future itineraries easier for everyone.</p></div></div>
+    </div>
+  </aside>
+</form>
+{% endblock %}

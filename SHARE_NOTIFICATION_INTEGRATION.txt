@@ -1,0 +1,29 @@
+Topbar Share + Activity Center
+
+Share:
+  - Global top-right Share opens an actionable share dialog.
+  - Community post: shares the exact community conversation URL and records the chosen channel.
+  - Itinerary: shares /share/sample-trip/ so the recipient gets the public itinerary view.
+  - Other pages: shares the current page URL.
+  - Channels: Web Share API, Copy link, WhatsApp, Email.
+  - Community share events are stored in CommunityShare.
+
+Notifications:
+  - Community interactions are stored in CommunityNotification.
+  - The Activity Center filters All / Community / Trips.
+  - The same notification table can carry trip notifications.
+  - To make trip notifications truly event-driven, call helpers from community/notification_service.py
+    in the relevant trips views/services. Examples:
+      notify_trip_created(recipient=user, actor=request.user, trip_name=trip.title, url=...)
+      notify_trip_updated(...)
+      notify_trip_shared(...)
+      notify_budget_alert(...)
+
+  This patch cannot safely modify the trips app because the current frontend patch source does not
+  include the trips app source code. The notification service is intentionally decoupled so the
+  backend developer can call it from the existing trip create/update/share/budget logic without
+  replacing any trip code.
+
+Migration:
+  python manage.py migrate
+  Migration: community/migrations/0003_share_and_trip_notifications.py

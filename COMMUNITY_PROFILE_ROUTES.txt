@@ -1,0 +1,10 @@
+Frontend pages added:
+  /community/new/            -> templates/pages/community_new_post.html
+  /community/post/1/         -> templates/pages/community_post.html (and similar IDs)
+  /community/saved/          -> templates/pages/community_saved.html
+  /profile/preferences/      -> templates/pages/preferences.html
+  /profile/saved/            -> templates/pages/saved_destinations.html
+  /profile/privacy/          -> templates/pages/privacy.html
+
+Backend developer should add simple GET render views/URLs for these pages.
+No existing models or auth logic are changed by these templates.

@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block crumb %}Saved destinations{% endblock %}
+{% block content %}
+<div class="page-header"><div><div class="kicker">PROFILE</div><h1 class="page-title">Saved destinations</h1><p class="page-subtitle">Places you want to come back to when it is time to build the next trip.</p></div><a class="btn btn-primary" href="/discover/cities/">Discover destinations</a></div>
+<div class="saved-destination-grid">
+  <article class="saved-destination-card"><img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=900&q=82" alt="Paris"><div><span>FRANCE</span><h3>Paris</h3><p>Food · Museums · Slow mornings</p><button class="btn btn-secondary">Plan a trip</button></div></article>
+  <article class="saved-destination-card"><img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=900&q=82" alt="Kyoto"><div><span>JAPAN</span><h3>Kyoto</h3><p>Culture · Walks · Cafés</p><button class="btn btn-secondary">Plan a trip</button></div></article>
+  <article class="saved-destination-card"><img src="https://images.unsplash.com/photo-1527668752968-14dc70a27c95?auto=format&fit=crop&w=900&q=82" alt="Swiss Alps"><div><span>SWITZERLAND</span><h3>Swiss Alps</h3><p>Rail · Nature · Scenic routes</p><button class="btn btn-secondary">Plan a trip</button></div></article>
+  <article class="saved-destination-card"><img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=900&q=82" alt="Bali"><div><span>INDONESIA</span><h3>Bali</h3><p>Beaches · Wellness · Cafés</p><button class="btn btn-secondary">Plan a trip</button></div></article>
+</div>
+{% endblock %}
