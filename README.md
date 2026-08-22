@@ -91,6 +91,8 @@ Current routes cover:
 /community/notifications/
 /community/notifications/read/
 ```
+> **[Watch the full GlobeTrotter × Odoo Demo Video Here (Click to Play)](#)** 
+*([https://drive.google.com/file/d/1AR_jGWX2f2O3xJr2DHjf-QO8d0M1PFWn/view?usp=sharing])*
 
 This gives the product a social layer for asking questions, exchanging itineraries, discussing destinations, and keeping track of community activity.
 
