@@ -4,25 +4,28 @@ from django.urls import path
 from django.conf.urls.static import static
 from config import views
 from pathlib import Path
+from accounts import views as account_views
+from trips import views as trips_views
 
 BASE_DIR = Path(settings.BASE_DIR)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.landing, name='home'),
-    path('login/', views.login_view, name='login'),
-    path('signup/', views.signup_view, name='signup'),
-    path('dashboard/', views.dashboard, name='dashboard'),
-    path('trips/new/', views.create_trip, name='create_trip'),
-    path('trips/', views.trips, name='trips'),
-    path('trip/builder/', views.builder, name='builder'),
-    path('trip/itinerary/', views.itinerary, name='itinerary'),
+    path('login/', account_views.login_view, name='login'),
+    path('signup/', account_views.signup_view, name='signup'),
+    path('logout/', account_views.logout_view, name='logout'),
+    path('dashboard/', trips_views.dashboard_view, name='dashboard'),
+    path('trips/new/', trips_views.create_trip_view, name='create_trip'),
+    path('trips/', trips_views.trips_view, name='trips'),
+    path('trip/builder/', trips_views.builder_view, name='builder'),
+    path('trip/itinerary/', trips_views.itinerary_view, name='itinerary'),
     path('discover/cities/', views.city_search, name='cities'),
     path('discover/activities/', views.activity_search, name='activities'),
     path('trip/budget/', views.budget, name='budget'),
     path('trip/calendar/', views.calendar_view, name='calendar'),
     path('share/sample-trip/', views.public_itinerary, name='public_itinerary'),
-    path('profile/', views.profile, name='profile'),
+    path('profile/', account_views.profile_view, name='profile'),
     path('analytics/', views.admin_dashboard, name='analytics'),
 ]
 
