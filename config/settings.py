@@ -26,10 +26,15 @@ load_dotenv(BASE_DIR / '.env')
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-default-key-for-dev-globetrotter-2026')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', 'False').lower() in ('true', '1', 't')
+# Frontend-first development should always serve Django static assets locally.
+# The production/backend configuration can turn DEBUG off later.
+FRONTEND_ONLY = os.getenv('FRONTEND_ONLY', 'True').lower() in ('true', '1', 't', 'yes', 'on')
 
-ALLOWED_HOSTS = []
+# SECURITY WARNING: don't run with debug turned on in production!
+# While FRONTEND_ONLY is enabled, keep DEBUG on so /static/ is served by runserver.
+DEBUG = True if FRONTEND_ONLY else os.getenv('DEBUG', 'False').lower() in ('true', '1', 't', 'yes', 'on')
+
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -82,20 +87,30 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/6.1/ref/settings/#databases
+# Frontend-first mode uses SQLite so the UI can run independently while
+# the backend developer finishes the MySQL integration. Set FRONTEND_ONLY=False
+# in .env when the project is ready to use MySQL.
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('DB_NAME', 'globetrotter'),
-        'USER': os.getenv('DB_USER', 'root'),
-        'PASSWORD': os.getenv('DB_PASSWORD', ''),
-        'HOST': os.getenv('DB_HOST', '127.0.0.1'),
-        'PORT': os.getenv('DB_PORT', '3306'),
+if FRONTEND_ONLY:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'frontend.sqlite3',
+        }
     }
-}
-import pymysql
-pymysql.install_as_MySQLdb()
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.getenv('DB_NAME', 'globetrotter'),
+            'USER': os.getenv('DB_USER', 'root'),
+            'PASSWORD': os.getenv('DB_PASSWORD', ''),
+            'HOST': os.getenv('DB_HOST', '127.0.0.1'),
+            'PORT': os.getenv('DB_PORT', '3306'),
+        }
+    }
+    import pymysql
+    pymysql.install_as_MySQLdb()
 
 
 # Password validation
@@ -132,8 +147,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 
 # Email

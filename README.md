@@ -1,6 +1,6 @@
 # GlobeTrotter
 
-A personalized multi-city travel planning platform built with **Django and MySQL**.
+A personalized multi-city travel planning platform built with **Django**. This frontend-first package runs independently with SQLite while the MySQL backend is being developed.
 
 GlobeTrotter helps users create trips, manage destinations and activities, organize itineraries, track estimated expenses, view plans on a calendar, and share trips with others.
 
@@ -25,19 +25,24 @@ GlobeTrotter helps users create trips, manage destinations and activities, organ
 
 ## Getting Started
 
-```bash
-git clone https://github.com/GodaniShubham/globetrotter.git
-cd globetrotter
+### Frontend-only mode (recommended while the backend is in progress)
 
+```bash
 python -m venv venv
 venv\Scripts\activate
-
 pip install -r requirements.txt
 python manage.py migrate
 python manage.py runserver
 ```
 
-Configure your MySQL database and environment variables before running the project.
+Open `http://127.0.0.1:8000/`.
+
+This package defaults to `FRONTEND_ONLY=True`, which uses a local SQLite database only for Django's built-in framework tables. No MySQL server is required to render and test the frontend screens.
+
+### Switch back to MySQL later
+
+Set `FRONTEND_ONLY=False` in `.env` and provide the `DB_*` values for the backend environment.
+
 
 ## Project Status
 
