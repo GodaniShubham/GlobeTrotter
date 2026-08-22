@@ -58,4 +58,17 @@
     return false;
   };
 
+
+  document.querySelectorAll('[data-auth-password]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const input=document.getElementById(btn.getAttribute('data-auth-password'));
+      if(!input) return;
+      const visible=input.type==='text';
+      input.type=visible?'password':'text';
+      btn.setAttribute('aria-label',visible?'Show password':'Hide password');
+      const icon=btn.querySelector('i');
+      if(icon) icon.className=visible?'hgi-stroke hgi-view':'hgi-stroke hgi-view-off';
+    });
+  });
+
 })();
