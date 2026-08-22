@@ -29,7 +29,7 @@ Originally a frontend-first package, this system is now a fully integrated backe
 ## 🎥 Demo Video
 
 > **[Watch the full GlobeTrotter × Odoo Demo Video Here (Click to Play)](#)** 
-*(Replace with actual YouTube/Vimeo link)*
+*([https://drive.google.com/file/d/1AR_jGWX2f2O3xJr2DHjf-QO8d0M1PFWn/view?usp=sharing])*
 
 <a href="#">
   <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=2000&auto=format&fit=crop" alt="GlobeTrotter Video Thumbnail" width="100%" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
