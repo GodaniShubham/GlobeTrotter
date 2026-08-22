@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 {% block crumb %}My trips{% endblock %}
 {% block content %}
-<div class="page-header"><div><div class="kicker">TRAVEL LIBRARY</div><h1 class="page-title">My trips</h1><p class="page-subtitle">Everything you are planning, from first idea to ready-to-go itinerary.</p></div><div class="actions"><a href="{% url 'create_trip' %}" class="btn btn-primary"><i class="hgi-stroke hgi-add-01"></i> New trip</a></div></div>
-<div class="toolbar"><div class="filters"><button class="filter-chip active" data-trip-filter="all">All trips</button><button class="filter-chip" data-trip-filter="upcoming">Upcoming</button><button class="filter-chip" data-trip-filter="draft">Drafts</button><button class="filter-chip" data-trip-filter="ready">Ready</button></div><div class="searchbox"><i class="hgi-stroke hgi-search-01"></i><input type="search" placeholder="Search trips..." data-trip-search></div></div>
+<div class="page-header"><div><div class="kicker">TRAVEL LIBRARY</div><h1 class="page-title annotated-title">My trips<span class="hand-note">all the places still ahead</span></h1><p class="page-subtitle">Everything you are planning, from first idea to ready-to-go itinerary.</p></div><div class="actions"><a href="{% url 'create_trip' %}" class="btn btn-primary"><i class="hgi-stroke hgi-add-01"></i> New trip</a></div></div>
+<div class="route-banner"><span class="route-note">sort the story, then keep moving</span><span class="route-line"></span></div><div class="toolbar"><div class="filters"><button class="filter-chip active" data-trip-filter="all">All trips</button><button class="filter-chip" data-trip-filter="upcoming">Upcoming</button><button class="filter-chip" data-trip-filter="draft">Drafts</button><button class="filter-chip" data-trip-filter="ready">Ready</button></div><div class="searchbox"><i class="hgi-stroke hgi-search-01"></i><input type="search" placeholder="Search trips..." data-trip-search></div></div>
 <div class="grid grid-3" data-trip-grid>
   {% for trip in trips %}
   <a href="{% url 'builder' trip.id %}" style="text-decoration:none;color:inherit;display:block">

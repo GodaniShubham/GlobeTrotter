@@ -1,0 +1,12 @@
+Community frontend screen is included as templates/pages/community.html.
+
+If the backend is ready for it, add:
+    def community(request):
+        return render(request, "pages/community.html")
+to config/views.py
+
+and:
+    path("community/", views.community, name="community"),
+to config/urls.py
+
+This screen is separate from the admin/analytics dashboard. It is a user-facing community feature based on the supplied Screen 10 wireframe.

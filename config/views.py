@@ -11,7 +11,10 @@ def _render(request, template, title, **context):
     context.setdefault("page_title", title)
     return render(request, template, context)
 
-
+def forgot_password(request):
+    return render(request, "pages/forgot_password.html")
+def community(request):
+    return render(request, "pages/community.html")
 def landing(request):
     from trips.models import Trip
     public_trip = Trip.objects.filter(is_public=True).first()

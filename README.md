@@ -19,7 +19,7 @@ GlobeTrotter helps users create trips, manage destinations and activities, organ
 ## Tech Stack
 
 * **Backend:** Django, Python
-* **Database:** MySQL
+* **Database:** MySQL 
 * **Frontend:** HTML, CSS, JavaScript
 * **Charts:** Chart.js
 
@@ -50,6 +50,6 @@ Set `FRONTEND_ONLY=False` in `.env` and provide the `DB_*` values for the backen
 
 ## Author
 
-**Godani Shubham**
+**Godani Shubham**Backend developer
 
 GitHub: [@GodaniShubham](https://github.com/GodaniShubham)

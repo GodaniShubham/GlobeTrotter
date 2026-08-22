@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% block crumb %}Community{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="kicker">GLOBETROTTER COMMUNITY</div>
+    <h1 class="page-title">Travel with people who get it.</h1>
+    <p class="page-subtitle">Share routes, ask questions, swap ideas and find inspiration from other travellers.</p>
+  </div>
+  <div class="actions">
+    <button class="btn btn-secondary" data-toast="Saved posts opened"><i class="hgi-stroke hgi-bookmark-02"></i> Saved</button>
+    <button class="btn btn-primary" data-toast="Post composer opened"><i class="hgi-stroke hgi-edit-02"></i> New post</button>
+  </div>
+</div>
+
+<section class="community-shell">
+  <div class="community-hero">
+    <div class="community-hero-copy">
+      <div class="kicker">COMMUNITY TAB</div>
+      <h1>Make the route better together.</h1>
+      <p>From first-time city plans to tiny local discoveries, the community keeps your travel planning connected to real experiences.</p>
+      <div class="community-hero-note">the best ideas often come from another traveller</div>
+    </div>
+    <div class="community-hero-art" aria-hidden="true"></div>
+  </div>
+
+  <div class="community-toolbar">
+    <div class="community-search">
+      <i class="hgi-stroke hgi-search-01"></i>
+      <input type="search" placeholder="Search conversations, cities or activities" aria-label="Search community">
+    </div>
+    <div class="community-filters">
+      <button class="filter-chip active">All</button>
+      <button class="filter-chip">Destinations</button>
+      <button class="filter-chip">Itineraries</button>
+      <button class="filter-chip">Tips</button>
+      <button class="filter-chip">Questions</button>
+    </div>
+  </div>
+
+  <div class="community-layout">
+    <div class="community-feed">
+      <article class="community-post">
+        <div class="community-post-top">
+          <span class="community-avatar">AC</span>
+          <div class="community-post-author"><strong>Aisha Chen</strong><small>Tokyo · 18 min ago</small></div>
+          <button class="icon-btn" aria-label="More actions"><i class="hgi-stroke hgi-more-horizontal"></i></button>
+        </div>
+        <div class="community-post-body">
+          <h3>Is 7 days enough for Tokyo, Kyoto and Osaka?</h3>
+          <p>I’m trying to keep two slower mornings in the plan without missing the classics. How would you divide the days?</p>
+        </div>
+        <div class="community-post-meta">
+          <div class="community-post-stats"><span>28 replies</span><span>64 likes</span></div>
+          <div class="community-post-actions"><button class="btn btn-quiet">Reply</button><button class="btn btn-quiet">Save</button></div>
+        </div>
+      </article>
+
+      <article class="community-post">
+        <div class="community-post-top">
+          <span class="community-avatar avatar-orange">RS</span>
+          <div class="community-post-author"><strong>Rohan Shah</strong><small>Swiss Alps · 42 min ago</small></div>
+          <button class="icon-btn" aria-label="More actions"><i class="hgi-stroke hgi-more-horizontal"></i></button>
+        </div>
+        <div class="community-post-body">
+          <h3>Best scenic rail segments between Zurich and Interlaken?</h3>
+          <p>Looking for the most beautiful route, not necessarily the fastest one. Bonus points for easy stopovers.</p>
+        </div>
+        <div class="community-post-meta">
+          <div class="community-post-stats"><span>17 replies</span><span>41 likes</span></div>
+          <div class="community-post-actions"><button class="btn btn-quiet">Reply</button><button class="btn btn-quiet">Save</button></div>
+        </div>
+      </article>
+
+      <article class="community-post">
+        <div class="community-post-top">
+          <span class="community-avatar avatar-green">MJ</span>
+          <div class="community-post-author"><strong>Maya Joseph</strong><small>Lisbon · 1 hr ago</small></div>
+          <button class="icon-btn" aria-label="More actions"><i class="hgi-stroke hgi-more-horizontal"></i></button>
+        </div>
+        <div class="community-post-body">
+          <h3>One neighbourhood in Lisbon you would never skip?</h3>
+          <p>Putting together a short city break and want one area that feels local, walkable and easy to explore without rushing.</p>
+        </div>
+        <div class="community-post-meta">
+          <div class="community-post-stats"><span>12 replies</span><span>33 likes</span></div>
+          <div class="community-post-actions"><button class="btn btn-quiet">Reply</button><button class="btn btn-quiet">Save</button></div>
+        </div>
+      </article>
+
+      <article class="community-post">
+        <div class="community-post-top">
+          <span class="community-avatar avatar-blue">DN</span>
+          <div class="community-post-author"><strong>Dev Nair</strong><small>Bali · 2 hrs ago</small></div>
+          <button class="icon-btn" aria-label="More actions"><i class="hgi-stroke hgi-more-horizontal"></i></button>
+        </div>
+        <div class="community-post-body">
+          <h3>Slow travel: how much empty time do you actually leave?</h3>
+          <p>I’m experimenting with one open block each day so the itinerary feels less like a checklist. What works for you?</p>
+        </div>
+        <div class="community-post-meta">
+          <div class="community-post-stats"><span>9 replies</span><span>22 likes</span></div>
+          <div class="community-post-actions"><button class="btn btn-quiet">Reply</button><button class="btn btn-quiet">Save</button></div>
+        </div>
+      </article>
+    </div>
+
+    <aside class="community-sidebar">
+      <div class="panel-head">
+        <div><h3>Popular this week</h3><div class="eyebrow">TRAVEL CONVERSATIONS</div></div>
+      </div>
+      <div class="community-topic"><strong>Japan autumn itineraries</strong><span>128 posts</span></div>
+      <div class="community-topic"><strong>Budget travel planning</strong><span>93 posts</span></div>
+      <div class="community-topic"><strong>Solo city breaks</strong><span>76 posts</span></div>
+      <div class="community-topic"><strong>Slow travel ideas</strong><span>64 posts</span></div>
+      <div class="community-topic"><strong>Family-friendly routes</strong><span>51 posts</span></div>
+    </aside>
+  </div>
+</section>
+{% endblock %}

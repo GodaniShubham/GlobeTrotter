@@ -1,36 +1,101 @@
 {% extends 'base.html' %}
 {% block shell %}
-<div class="auth-page">
-  <section class="auth-visual">
-    <div class="auth-copy">
-      <a class="public-logo" href="{% url 'home' %}" style="position:relative;z-index:2"><span class="public-brand-mark"><span style="color:#714B67">o</span>doo</span><span style="color:#C7C2C5">×</span><strong>GlobeTrotter</strong></a>
-      <div><div class="kicker">ODOO × GLOBETROTTER</div><h1>Travel planning, with a point of view.</h1><p class="auth-quote">“The best itinerary is the one that leaves space for the unexpected.”</p></div>
-      <div style="font-size:10px;color:#6F6A66;position:relative;z-index:2">Personalized multi-city travel planning · built for focused journeys.</div>
+<div class="auth-safe">
+  <section class="auth-safe-visual">
+    <div class="auth-safe-brand">
+      <a href="{% url 'home' %}" class="auth-safe-brand-gt">GlobeTrotter</a>
+      <span class="auth-safe-brand-x">×</span>
+      <img src="https://www.odoo.com/web/static/img/odoo_logo.svg" alt="Odoo" class="auth-safe-brand-odoo">
     </div>
+
+    <div class="auth-safe-photo {% if auth_mode == 'signup' %}auth-safe-photo-signup{% endif %}"></div>
+    <div class="auth-safe-photo-wash"></div>
+
+    <div class="auth-safe-copy">
+      <div class="auth-safe-kicker">PERSONALIZED MULTI-CITY TRAVEL</div>
+      <h1>Plan beautifully.<br><span>Travel freely.</span></h1>
+      <p>Build the route, shape the days, watch the budget and keep the whole journey together in one calm workspace.</p>
+      <div class="auth-safe-note"><span></span>From the first idea to the last stop.</div>
+    </div>
+
+    <div class="auth-safe-footer">GLOBETROTTER · TRAVEL PLANNING WORKSPACE</div>
   </section>
-  <section class="auth-form-wrap">
-    <div class="auth-form">
+
+  <section class="auth-safe-form-pane">
+    <div class="auth-safe-form">
       {% if auth_mode == 'login' %}
-      <div class="kicker">WELCOME BACK</div><h2>Sign in</h2><p>Pick up where you left your next journey.</p>
-      <form method="POST">
-        {% csrf_token %}
-        <div class="field"><label>Email address</label><input type="email" name="email" placeholder="you@example.com" required></div>
-        <div class="field"><label>Password</label><input type="password" name="password" placeholder="••••••••" required minlength="8"></div>
-        <div style="display:flex;justify-content:flex-end;margin-top:8px"><a class="tiny-link" href="#">Forgot password?</a></div>
-        <button class="btn btn-primary" style="width:100%;margin-top:18px" type="submit">Sign in <i class="hgi-stroke hgi-arrow-right-02"></i></button>
-      </form>
-      <div class="auth-footer">New to GlobeTrotter? <a href="{% url 'signup' %}">Create an account</a></div>
+        <div class="auth-safe-eyebrow">WELCOME BACK</div>
+        <h2>Sign in</h2>
+        <p class="auth-safe-intro">Pick up where you left your next journey.</p>
+
+        <form method="POST">
+          {% csrf_token %}
+          <div class="auth-safe-field">
+            <label for="login-email">Email address</label>
+            <input id="login-email" type="email" name="email" placeholder="you@example.com" autocomplete="email" required>
+          </div>
+
+          <div class="auth-safe-field">
+            <label for="login-password">Password</label>
+            <div class="auth-safe-password">
+              <input id="login-password" type="password" name="password" placeholder="Enter your password" autocomplete="current-password" required minlength="8">
+              <button type="button" class="auth-safe-eye" data-auth-password="login-password" aria-label="Show password">
+                <i class="hgi-stroke hgi-view"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="auth-safe-options">
+            <span></span>
+            <a class="tiny-link" href="{% url 'forgot_password' %}">Forgot password?</a>
+          </div>
+
+          <button class="btn btn-primary auth-safe-submit" type="submit">Sign in <i class="hgi-stroke hgi-arrow-right-02"></i></button>
+        </form>
+
+        <div class="auth-safe-footer-form">New to GlobeTrotter? <a href="{% url 'signup' %}">Create an account</a></div>
       {% else %}
-      <div class="kicker">START PLANNING</div><h2>Create your account</h2><p>A workspace for your routes, stays, activities and budget.</p>
-      <form method="POST">
-        {% csrf_token %}
-        <div class="form-grid"><div class="field"><label>First name</label><input type="text" name="first_name" placeholder="Alex" required></div><div class="field"><label>Last name</label><input type="text" name="last_name" placeholder="Kapoor" required></div></div>
-        <div class="field"><label>Email address</label><input type="email" name="email" placeholder="you@example.com" required></div>
-        <div class="field"><label>Password</label><input type="password" name="password" placeholder="Create a password (min 8 characters)" required minlength="8"></div>
-        <label style="display:flex;gap:8px;align-items:flex-start;font-size:10px;color:#7B7C83;margin-top:13px"><input type="checkbox" required style="margin-top:2px"> I agree to the product terms and privacy policy.</label>
-        <button class="btn btn-primary" style="width:100%;margin-top:18px" type="submit">Create account <i class="hgi-stroke hgi-arrow-right-02"></i></button>
-      </form>
-      <div class="auth-footer">Already have an account? <a href="{% url 'login' %}">Sign in</a></div>
+        <div class="auth-safe-eyebrow">START PLANNING</div>
+        <h2>Create your account</h2>
+        <p class="auth-safe-intro">A workspace for your routes, stays, activities and budget.</p>
+
+        <form method="POST">
+          {% csrf_token %}
+          <div class="auth-safe-name-grid">
+            <div class="auth-safe-field">
+              <label for="signup-first-name">First name</label>
+              <input id="signup-first-name" type="text" name="first_name" placeholder="Alex" autocomplete="given-name" required>
+            </div>
+            <div class="auth-safe-field">
+              <label for="signup-last-name">Last name</label>
+              <input id="signup-last-name" type="text" name="last_name" placeholder="Kapoor" autocomplete="family-name" required>
+            </div>
+          </div>
+
+          <div class="auth-safe-field">
+            <label for="signup-email">Email address</label>
+            <input id="signup-email" type="email" name="email" placeholder="you@example.com" autocomplete="email" required>
+          </div>
+
+          <div class="auth-safe-field">
+            <label for="signup-password">Password</label>
+            <div class="auth-safe-password">
+              <input id="signup-password" type="password" name="password" placeholder="Create a password (min 8 characters)" autocomplete="new-password" required minlength="8">
+              <button type="button" class="auth-safe-eye" data-auth-password="signup-password" aria-label="Show password">
+                <i class="hgi-stroke hgi-view"></i>
+              </button>
+            </div>
+          </div>
+
+          <label class="auth-safe-terms">
+            <input type="checkbox" required>
+            <span>I agree to the product terms and privacy policy.</span>
+          </label>
+
+          <button class="btn btn-primary auth-safe-submit" type="submit">Create account <i class="hgi-stroke hgi-arrow-right-02"></i></button>
+        </form>
+
+        <div class="auth-safe-footer-form">Already have an account? <a href="{% url 'login' %}">Sign in</a></div>
       {% endif %}
     </div>
   </section>
