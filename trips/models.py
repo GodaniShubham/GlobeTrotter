@@ -27,7 +27,7 @@ class Trip(AuditModel):
 
 class TripStop(AuditModel):
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE, related_name='stops')
-    # city = models.ForeignKey('destinations.City', on_delete=models.CASCADE, related_name='trip_stops') # to be added in Phase 3
+    city = models.ForeignKey('destinations.City', on_delete=models.CASCADE, related_name='trip_stops')
     arrival_date = models.DateField()
     departure_date = models.DateField()
     order = models.PositiveIntegerField(default=0)
@@ -37,3 +37,20 @@ class TripStop(AuditModel):
 
     def __str__(self):
         return f"Stop {self.order} for {self.trip.name}"
+
+class ItineraryActivity(AuditModel):
+    trip_stop = models.ForeignKey(TripStop, on_delete=models.CASCADE, related_name='itinerary_activities')
+    activity = models.ForeignKey('activities.Activity', on_delete=models.CASCADE, related_name='planned_instances')
+    date = models.DateField(null=True, blank=True)
+    start_time = models.TimeField(null=True, blank=True)
+    end_time = models.TimeField(null=True, blank=True)
+    notes = models.TextField(blank=True)
+    custom_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['date', 'start_time', 'order']
+        verbose_name_plural = "Itinerary Activities"
+
+    def __str__(self):
+        return f"{self.activity.name} on {self.date}"

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Trip, TripStop
+from .models import Trip, TripStop, ItineraryActivity
 
 @admin.register(Trip)
 class TripAdmin(admin.ModelAdmin):
@@ -10,6 +10,13 @@ class TripAdmin(admin.ModelAdmin):
 
 @admin.register(TripStop)
 class TripStopAdmin(admin.ModelAdmin):
-    list_display = ('trip', 'arrival_date', 'departure_date', 'order')
+    list_display = ('trip', 'city', 'arrival_date', 'departure_date', 'order')
     list_filter = ('arrival_date',)
+    readonly_fields = ('created_at', 'updated_at', 'created_ip', 'created_location')
+
+@admin.register(ItineraryActivity)
+class ItineraryActivityAdmin(admin.ModelAdmin):
+    list_display = ('activity', 'trip_stop', 'date', 'start_time')
+    list_filter = ('date',)
+    search_fields = ('activity__name', 'notes')
     readonly_fields = ('created_at', 'updated_at', 'created_ip', 'created_location')
